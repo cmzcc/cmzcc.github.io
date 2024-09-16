@@ -2,8 +2,9 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 10px;
 }
 .music-gallery img {
-  margin: 10px;
   width: 30%;
+  height: auto;
 }
