@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<search>
+  <entry>
+    <title>博客网站的创建教程</title>
+    <url>/2024/09/16/%E7%BD%91%E7%AB%99%E7%9A%84%E6%90%AD%E5%BB%BA/</url>
+    <content><![CDATA[<h1 id="博客网站的创建"><a href="#博客网站的创建" class="headerlink" title="博客网站的创建"></a>博客网站的创建</h1><h2 id="1-前期准备工作"><a href="#1-前期准备工作" class="headerlink" title="1.前期准备工作"></a>1.前期准备工作</h2><h3 id="1-Git-Node-js-Hexo的安装"><a href="#1-Git-Node-js-Hexo的安装" class="headerlink" title="(1)Git Node.js Hexo的安装"></a>(1)Git Node.js Hexo的安装</h3><h5 id="这里就不讲git-node-js的安装了，网上直接下就完了"><a href="#这里就不讲git-node-js的安装了，网上直接下就完了" class="headerlink" title="这里就不讲git node.js的安装了，网上直接下就完了"></a>这里就不讲git node.js的安装了，网上直接下就完了</h5><h5 id="下面是hexo的安装，cmd就能运行，不过还是建议用GBH专门找一个文件夹"><a href="#下面是hexo的安装，cmd就能运行，不过还是建议用GBH专门找一个文件夹" class="headerlink" title="下面是hexo的安装，cmd就能运行，不过还是建议用GBH专门找一个文件夹"></a>下面是hexo的安装，cmd就能运行，不过还是建议用GBH专门找一个文件夹</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli -g  # 全局安装 Hexo CLI</span><br><span class="line">hexo init blog  # 初始化 Hexo 项目，创建 &#x27;blog&#x27; 目录</span><br><span class="line">cd blog  # 进入 &#x27;blog&#x27; 目录</span><br><span class="line">npm install  # 安装 Hexo 项目依赖</span><br><span class="line">hexo s  # 启动 Hexo </span><br></pre></td></tr></table></figure>
+
+
+
+]]></content>
+      <categories>
+        <category>教程</category>
+      </categories>
+      <tags>
+        <tag>Hexo</tag>
+        <tag>博客搭建</tag>
+        <tag>前端</tag>
+      </tags>
+  </entry>
+</search>
