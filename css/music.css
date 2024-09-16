@@ -1,0 +1,9 @@
+.music-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+.music-gallery img {
+  margin: 10px;
+  width: 30%;
+}
