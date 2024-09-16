@@ -2024,6 +2024,48 @@ figure.highlight pre .javascript .function {
   flex-direction: column;
   min-height: 100vh;
 }
+.about-gallery {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.about-gallery img {
+  margin: 10px;
+  width: 45%;
+}
+.music-gallery {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: box;
+  display: flex;
+  -webkit-box-lines: multiple;
+  -moz-box-lines: multiple;
+  -o-box-lines: multiple;
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -o-box-pack: center;
+  -ms-flex-pack: center;
+  -webkit-justify-content: center;
+  justify-content: center;
+}
+.music-gallery img {
+  margin: 10px;
+  width: 30%;
+}
 .layout {
   display: -webkit-box;
   display: -moz-box;
@@ -4335,7 +4377,7 @@ figure.highlight pre .javascript .function {
   padding-right: 4px;
 }
 #waline-wrap textarea {
-  background: url("comment-cover") 100% 100% no-repeat;
+  background: url("comment-cover.jpg") 100% 100% no-repeat;
 }
 #waline-wrap textarea:focus {
   background-image: none;
