@@ -1,12 +1,73 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>c++中关于深拷贝与重载赋值运算符的思考</title>
+    <url>/2024/09/17/c-%E4%B8%AD%E5%85%B3%E4%BA%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E9%87%8D%E8%BD%BD%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E6%80%9D%E8%80%83/</url>
+    <content><![CDATA[<h3 id="1-深拷贝"><a href="#1-深拷贝" class="headerlink" title="1.深拷贝"></a>1.深拷贝</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class instance</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">	int age;</span><br><span class="line">	int* height;</span><br><span class="line">instance(int a,int h)</span><br><span class="line">&#123;</span><br><span class="line">	age = a;</span><br><span class="line">	cout &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">	height=new int(h);</span><br><span class="line">	cout &lt;&lt; *height &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line">~instance()</span><br><span class="line">&#123;</span><br><span class="line">	if (height != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		delete height;</span><br><span class="line">		height = NULL;</span><br><span class="line">		cout &lt;&lt; &quot;已清空&quot; &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">instance(const instance&amp; p)</span><br><span class="line">&#123;</span><br><span class="line">	age = p.age;</span><br><span class="line">	//height = p.height;编译器默认实现的就是这行代码</span><br><span class="line">	//深拷贝如下</span><br><span class="line">	height = new int(*p.height); </span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//浅拷贝使两个height指向同一内存地址，会导致将已释放的内存再次释放，引发双重释放安全问题</span><br><span class="line">void test01()</span><br><span class="line">&#123;</span><br><span class="line">	instance p1(18,160);</span><br><span class="line">	instance p2(p1);</span><br><span class="line">	cout &lt;&lt; p2.age &lt;&lt;*p2.height&lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	test01();</span><br><span class="line">	system(&quot;pause&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-重载赋值运算符"><a href="#2-重载赋值运算符" class="headerlink" title="2.重载赋值运算符"></a>2.重载赋值运算符</h2><p>z众所周知，运算符重载后使运算符能实现原本无法完成的工作<br>赋值运算符，这里我们实现类对类的赋值。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">class MyClass &#123;</span><br><span class="line">private:</span><br><span class="line">    char* data;</span><br><span class="line"></span><br><span class="line">public:</span><br><span class="line">    // 默认构造函数</span><br><span class="line">    MyClass(const char* str = &quot;&quot;) &#123;</span><br><span class="line">        data = new char[strlen(str) + 1];</span><br><span class="line">        strcpy(data, str);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 拷贝构造函数</span><br><span class="line">    MyClass(const MyClass&amp; other) &#123;</span><br><span class="line">        data = new char[strlen(other.data) + 1];</span><br><span class="line">        strcpy(data, other.data);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 重载赋值运算符</span><br><span class="line">    MyClass&amp; operator=(const MyClass&amp; other) &#123;</span><br><span class="line">        if (this == &amp;other) &#123;</span><br><span class="line">            return *this;  // 处理自赋值情况</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        // 先释放原有资源</span><br><span class="line">        delete[] data;</span><br><span class="line"></span><br><span class="line">        // 分配新内存并拷贝数据</span><br><span class="line">        data = new char[strlen(other.data) + 1];</span><br><span class="line">        strcpy(data, other.data);</span><br><span class="line"></span><br><span class="line">        return *this;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 析构函数</span><br><span class="line">    ~MyClass() &#123;</span><br><span class="line">        delete[] data;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 打印数据</span><br><span class="line">    void print() const &#123;</span><br><span class="line">        std::cout &lt;&lt; data &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    MyClass a(&quot;Hello&quot;);</span><br><span class="line">    MyClass b(&quot;World&quot;);</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; &quot;Before assignment:&quot; &lt;&lt; std::endl;</span><br><span class="line">    a.print(); // 输出 &quot;Hello&quot;</span><br><span class="line">    b.print(); // 输出 &quot;World&quot;</span><br><span class="line"></span><br><span class="line">    a = b; // 使用重载的赋值运算符</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; &quot;After assignment:&quot; &lt;&lt; std::endl;</span><br><span class="line">    a.print(); // 输出 &quot;World&quot;</span><br><span class="line">    b.print(); // 输出 &quot;World&quot;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="注意：一定要将被赋值对象中在堆中的数据释放掉。"><a href="#注意：一定要将被赋值对象中在堆中的数据释放掉。" class="headerlink" title="注意：一定要将被赋值对象中在堆中的数据释放掉。"></a>注意：一定要将被赋值对象中在堆中的数据释放掉。</h3><h3 id="否则会导致旧资源直接被新资源赋值后，内存覆盖掉"><a href="#否则会导致旧资源直接被新资源赋值后，内存覆盖掉" class="headerlink" title="否则会导致旧资源直接被新资源赋值后，内存覆盖掉"></a>否则会导致旧资源直接被新资源赋值后，内存覆盖掉</h3><h2 id="有内存泄露，资源浪费的风险，以及未定义行为的风险"><a href="#有内存泄露，资源浪费的风险，以及未定义行为的风险" class="headerlink" title="有内存泄露，资源浪费的风险，以及未定义行为的风险"></a>有内存泄露，资源浪费的风险，以及未定义行为的风险</h2><h4 id="具体会不会发生所谓的双重释放，个人认为不会"><a href="#具体会不会发生所谓的双重释放，个人认为不会" class="headerlink" title="具体会不会发生所谓的双重释放，个人认为不会"></a>具体会不会发生所谓的双重释放，个人认为不会</h4>]]></content>
+      <categories>
+        <category>思考</category>
+      </categories>
+      <tags>
+        <tag>重载</tag>
+        <tag>深拷贝</tag>
+        <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>博客网站的创建教程</title>
     <url>/2024/09/16/%E7%BD%91%E7%AB%99%E7%9A%84%E6%90%AD%E5%BB%BA/</url>
-    <content><![CDATA[<h1 id="博客网站的创建"><a href="#博客网站的创建" class="headerlink" title="博客网站的创建"></a>博客网站的创建</h1><h2 id="1-前期准备工作"><a href="#1-前期准备工作" class="headerlink" title="1.前期准备工作"></a>1.前期准备工作</h2><h3 id="1-Git-Node-js-Hexo的安装"><a href="#1-Git-Node-js-Hexo的安装" class="headerlink" title="(1)Git Node.js Hexo的安装"></a>(1)Git Node.js Hexo的安装</h3><h5 id="这里就不讲git-node-js的安装了，网上直接下就完了"><a href="#这里就不讲git-node-js的安装了，网上直接下就完了" class="headerlink" title="这里就不讲git node.js的安装了，网上直接下就完了"></a>这里就不讲git node.js的安装了，网上直接下就完了</h5><h5 id="下面是hexo的安装，cmd就能运行，不过还是建议用GBH专门找一个文件夹"><a href="#下面是hexo的安装，cmd就能运行，不过还是建议用GBH专门找一个文件夹" class="headerlink" title="下面是hexo的安装，cmd就能运行，不过还是建议用GBH专门找一个文件夹"></a>下面是hexo的安装，cmd就能运行，不过还是建议用GBH专门找一个文件夹</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli -g  # 全局安装 Hexo CLI</span><br><span class="line">hexo init blog  # 初始化 Hexo 项目，创建 &#x27;blog&#x27; 目录</span><br><span class="line">cd blog  # 进入 &#x27;blog&#x27; 目录</span><br><span class="line">npm install  # 安装 Hexo 项目依赖</span><br><span class="line">hexo s  # 启动 Hexo </span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<h1 id="博客网站的创建"><a href="#博客网站的创建" class="headerlink" title="博客网站的创建"></a>博客网站的创建</h1><h2 id="1-前期准备工作"><a href="#1-前期准备工作" class="headerlink" title="1.前期准备工作"></a>1.前期准备工作</h2><h3 id="1-Git-Node-js-Hexo的安装"><a href="#1-Git-Node-js-Hexo的安装" class="headerlink" title="(1)Git Node.js Hexo的安装"></a>(1)Git Node.js Hexo的安装</h3><h5 id="这里就不讲git-node-js的安装了，网上直接下就完了"><a href="#这里就不讲git-node-js的安装了，网上直接下就完了" class="headerlink" title="这里就不讲git node.js的安装了，网上直接下就完了"></a>这里就不讲git node.js的安装了，网上直接下就完了</h5><h5 id="下面是hexo的安装，建议专门找一个文件夹，用GBH运行"><a href="#下面是hexo的安装，建议专门找一个文件夹，用GBH运行" class="headerlink" title="下面是hexo的安装，建议专门找一个文件夹，用GBH运行"></a>下面是hexo的安装，建议专门找一个文件夹，用GBH运行</h5><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">npm install hexo-cli -g  # 全局安装 Hexo CLI</span><br><span class="line">hexo init blog  # 初始化 Hexo 项目，创建 &#x27;blog&#x27; 目录</span><br><span class="line">cd blog  # 进入 &#x27;blog&#x27; 目录</span><br><span class="line">npm install  # 安装 Hexo 项目依赖</span><br><span class="line">hexo s  # 启动 Hexo </span><br></pre></td></tr></table></figure>
 
+<h3 id="（2）主题拷贝"><a href="#（2）主题拷贝" class="headerlink" title="（2）主题拷贝"></a>（2）主题拷贝</h3><p>在hexo网页中（友链中有链接）最下面能看到409种主题（前人的智慧），然后在里面选择一个你感兴趣的主题就好了</p>
+<p>这里个人推荐几个：Next,butterfly,ayer</p>
+<p>然后找到GitHub，在你的文件夹下找到theme,git clone即可，不要忘记修改_config.yml</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">theme: butterfly//最后几行</span><br></pre></td></tr></table></figure>
 
+<p>然后尝试看看你的页面吧</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo cl//清空缓存</span><br><span class="line">hexo g//生成静态网页</span><br><span class="line">hexo s//生成本地网页</span><br></pre></td></tr></table></figure>
 
+<h2 id="2-尝试发布，公开"><a href="#2-尝试发布，公开" class="headerlink" title="2.尝试发布，公开"></a>2.尝试发布，公开</h2><h3 id="（1）尝试发布第一篇博客"><a href="#（1）尝试发布第一篇博客" class="headerlink" title="（1）尝试发布第一篇博客"></a>（1）尝试发布第一篇博客</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo new post &quot;第一篇博客&quot;</span><br></pre></td></tr></table></figure>
+
+<p>然后重新生成静态网页，本地网页，应该就能看见了</p>
+<p>其原理是</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo new [layout] &quot;title&quot;</span><br></pre></td></tr></table></figure>
+
+<p>等以后可以在博客的md文件中加入标签和分类</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">title: 博客网站的创建教程</span><br><span class="line">date: 2024-09-16</span><br><span class="line">categories: [教程]</span><br><span class="line">tags: [Hexo, 博客搭建, 前端]</span><br></pre></td></tr></table></figure>
+
+<p>比如这篇文章的</p>
+<h3 id="（2）发布在github-io上"><a href="#（2）发布在github-io上" class="headerlink" title="（2）发布在github.io上"></a>（2）发布在github.io上</h3><p>首先在你的github账号上新建一个名为cmzcc.github.io的仓库（这里cmzcc换成你的github名字即可）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">deploy: </span><br><span class="line">  type: git</span><br><span class="line">  repo: https://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@github.com/cmzcc/cmzcc.github.io.git</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
+
+<p>在_config.yml进行以上修改，repo中用<a href="https://github.com/cmzcc/cmzcc.github.io.git%E5%8D%B3%E5%8F%AF%EF%BC%8C%E4%B8%AD%E9%97%B4%E9%82%A3%E4%B8%80%E6%AE%B5%E6%98%AF%E9%80%9A%E8%A1%8C%E8%AF%81">https://github.com/cmzcc/cmzcc.github.io.git即可，中间那一段是通行证</a></p>
+<p>在github主页中的&#x2F;setting&#x2F;developer setting&#x2F;personal access tokens&#x2F;tokens(classic)申请即可</p>
+<p>然后运行</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>运行完成后，你应该就能在<a href="https://cmzcc.github.io中见到它了/">https://cmzcc.github.io中见到它了</a></p>
+<h2 id="3-个人DIY"><a href="#3-个人DIY" class="headerlink" title="3.个人DIY"></a>3.个人DIY</h2><h3 id="（1）修改主题配置"><a href="#（1）修改主题配置" class="headerlink" title="（1）修改主题配置"></a>（1）修改主题配置</h3><p>将&#x2F;theme&#x2F;“主题名称”&#x2F;_config.yml复制一份，到你的hexo根目录下，改名为_config.”主题名”.yml（备份，太重要了，血的教训）</p>
+<p>所有比较善解人意的主题，都会有readme，可能github仓库里不全，那就在作者的个人博客中。</p>
+<p>接下来就是个人发挥时间，大部分功能你只要选择true or flase即可</p>
+<h3 id="2-子页"><a href="#2-子页" class="headerlink" title="(2) 子页"></a>(2) 子页</h3><p>初始情况下我们只有自己写的博客这一个子页，如果想新加几个子页，就需要用以下代码</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo new &quot;子页名&quot;</span><br></pre></td></tr></table></figure>
+
+<p>ps:你的主题中会给你配置好一些常见的子页的配置，直接就能得到帅气页面（eg:link,tag,category…）</p>
+<p>然后在根目录下&#x2F;source&#x2F;中就能找到那个文件夹。</p>
+<p>接下来对文件夹下的md文件进行编辑即可，这里推荐一个md文档编辑器：typora</p>
+<h3 id="（3）其他功能"><a href="#（3）其他功能" class="headerlink" title="（3）其他功能"></a>（3）其他功能</h3><p>可以预见，个人网站花样极多，发挥你的想象力吧</p>
+<h3 id="搜素系统："><a href="#搜素系统：" class="headerlink" title="搜素系统："></a>搜素系统：</h3><p>个人建议本地搜素就够了</p>
+<h3 id="评论系统："><a href="#评论系统：" class="headerlink" title="评论系统："></a>评论系统：</h3><p>推荐一下<a href="https://www.bilibili.com/video/BV1Ft4y1A73f/?spm_id_from=333.1350.jump_directly&vd_source=1b08578fef86fba5aa90cd3727dff591">waline</a>,主要是免费。</p>
+<p>打字机效果，看板娘等需要在github上找插件</p>
+<p>————————————————————————————————————————————————————————————</p>
+<p>完结撒花，希望多多评论</p>
+<p>Ciallo～(∠・ω&lt; )⌒☆</p>
 ]]></content>
       <categories>
         <category>教程</category>
