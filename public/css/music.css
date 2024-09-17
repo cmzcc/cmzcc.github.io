@@ -1,0 +1,15 @@
+.music-gallery {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+}
+.music-item {
+  width: 30%;
+  text-align: center;
+  margin-bottom: 20px;
+}
+.music-item img {
+  width: 100%;
+  height: auto;
+}
