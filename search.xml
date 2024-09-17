@@ -44,14 +44,14 @@
 
 <p>比如这篇文章的</p>
 <h3 id="（2）发布在github-io上"><a href="#（2）发布在github-io上" class="headerlink" title="（2）发布在github.io上"></a>（2）发布在github.io上</h3><p>首先在你的github账号上新建一个名为cmzcc.github.io的仓库（这里cmzcc换成你的github名字即可）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">deploy: </span><br><span class="line">  type: git</span><br><span class="line">  repo: https://github.com/cmzcc/cmzcc.github.io.git</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">deploy: </span><br><span class="line">  type: git</span><br><span class="line">  repo: https:/github.com/cmzcc/cmzcc.github.io.git</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
 
-<p>在_config.yml进行以上修改，repo中用<a href="https://github.com/cmzcc/cmzcc.github.io.git%E5%8D%B3%E5%8F%AF%EF%BC%8C%E4%B8%AD%E9%97%B4%E5%8F%AF%E4%BB%A5%E5%8A%A0%E9%80%9A%E8%A1%8C%E8%AF%81">https://github.com/cmzcc/cmzcc.github.io.git即可，中间可以加通行证</a></p>
+<p>在_config.yml进行以上修改，repo中用github.com&#x2F;cmzcc&#x2F;cmzcc.github.io.git即可，中间可以加通行证</p>
 <p>在github主页中的&#x2F;setting&#x2F;developer setting&#x2F;personal access tokens&#x2F;tokens(classic)申请即可，在&#x2F;&#x2F;后加通行证然后加@</p>
 <p>然后运行</p>
 <figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
 
-<p>运行完成后，你应该就能在<a href="https://cmzcc.github.io中见到它了/">https://cmzcc.github.io中见到它了</a></p>
+<p>运行完成后，你应该就能在https:&#x2F;cmzcc.github.io中见到它了</p>
 <h2 id="3-个人DIY"><a href="#3-个人DIY" class="headerlink" title="3.个人DIY"></a>3.个人DIY</h2><h3 id="（1）修改主题配置"><a href="#（1）修改主题配置" class="headerlink" title="（1）修改主题配置"></a>（1）修改主题配置</h3><p>将&#x2F;theme&#x2F;“主题名称”&#x2F;_config.yml复制一份，到你的hexo根目录下，改名为_config.”主题名”.yml（备份，太重要了，血的教训）</p>
 <p>所有比较善解人意的主题，都会有readme，可能github仓库里不全，那就在作者的个人博客中。</p>
 <p>接下来就是个人发挥时间，大部分功能你只要选择true or flase即可</p>
