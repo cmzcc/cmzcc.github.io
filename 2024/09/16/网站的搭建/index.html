@@ -1,0 +1,241 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>博客网站的创建教程 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="博客网站的创建1.前期准备工作(1)Git Node.js Hexo的安装这里就不讲git node.js的安装了，网上直接下就完了下面是hexo的安装，建议专门找一个文件夹，用GBH运行12345npm install hexo-cli -g  # 全局安装 Hexo CLIhexo init blog  # 初始化 Hexo 项目，创建 &#x27;blog&#x27; 目录cd blog">
+<meta property="og:type" content="article">
+<meta property="og:title" content="博客网站的创建教程">
+<meta property="og:url" content="https://cmzcc.github.io/2024/09/16/%E7%BD%91%E7%AB%99%E7%9A%84%E6%90%AD%E5%BB%BA/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="博客网站的创建1.前期准备工作(1)Git Node.js Hexo的安装这里就不讲git node.js的安装了，网上直接下就完了下面是hexo的安装，建议专门找一个文件夹，用GBH运行12345npm install hexo-cli -g  # 全局安装 Hexo CLIhexo init blog  # 初始化 Hexo 项目，创建 &#x27;blog&#x27; 目录cd blog">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover5.jpg">
+<meta property="article:published_time" content="2024-09-15T16:00:00.000Z">
+<meta property="article:modified_time" content="2024-09-17T01:58:14.253Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="Hexo">
+<meta property="article:tag" content="博客搭建">
+<meta property="article:tag" content="前端">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover5.jpg"><link rel="shortcut icon" href="/%5Bobject%20Object%5D"><link rel="canonical" href="https://cmzcc.github.io/2024/09/16/%E7%BD%91%E7%AB%99%E7%9A%84%E6%90%AD%E5%BB%BA/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '博客网站的创建教程',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-09-17 09:58:14'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover5.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">博客网站的创建教程</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">博客网站的创建教程</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="fa-fw post-meta-icon far fa-calendar-alt"></i><span class="post-meta-label">Created</span><time datetime="2024-09-15T16:00:00.000Z" title="Created 2024-09-16 00:00:00">2024-09-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%99%E7%A8%8B/">教程</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span class="waline-pageview-count" data-path="/2024/09/16/%E7%BD%91%E7%AB%99%E7%9A%84%E6%90%AD%E5%BB%BA/"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="博客网站的创建"><a href="#博客网站的创建" class="headerlink" title="博客网站的创建"></a>博客网站的创建</h1><h2 id="1-前期准备工作"><a href="#1-前期准备工作" class="headerlink" title="1.前期准备工作"></a>1.前期准备工作</h2><h3 id="1-Git-Node-js-Hexo的安装"><a href="#1-Git-Node-js-Hexo的安装" class="headerlink" title="(1)Git Node.js Hexo的安装"></a>(1)Git Node.js Hexo的安装</h3><h5 id="这里就不讲git-node-js的安装了，网上直接下就完了"><a href="#这里就不讲git-node-js的安装了，网上直接下就完了" class="headerlink" title="这里就不讲git node.js的安装了，网上直接下就完了"></a>这里就不讲git node.js的安装了，网上直接下就完了</h5><h5 id="下面是hexo的安装，建议专门找一个文件夹，用GBH运行"><a href="#下面是hexo的安装，建议专门找一个文件夹，用GBH运行" class="headerlink" title="下面是hexo的安装，建议专门找一个文件夹，用GBH运行"></a>下面是hexo的安装，建议专门找一个文件夹，用GBH运行</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">npm install hexo-cli -g  # 全局安装 Hexo CLI</span><br><span class="line">hexo init blog  # 初始化 Hexo 项目，创建 &#x27;blog&#x27; 目录</span><br><span class="line">cd blog  # 进入 &#x27;blog&#x27; 目录</span><br><span class="line">npm install  # 安装 Hexo 项目依赖</span><br><span class="line">hexo s  # 启动 Hexo </span><br></pre></td></tr></table></figure>
+
+<h3 id="（2）主题拷贝"><a href="#（2）主题拷贝" class="headerlink" title="（2）主题拷贝"></a>（2）主题拷贝</h3><p>在hexo网页中（友链中有链接）最下面能看到409种主题（前人的智慧），然后在里面选择一个你感兴趣的主题就好了</p>
+<p>这里个人推荐几个：Next,butterfly,ayer</p>
+<p>然后找到GitHub，在你的文件夹下找到theme,git clone即可，不要忘记修改_config.yml</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">theme: butterfly//最后几行</span><br></pre></td></tr></table></figure>
+
+<p>然后尝试看看你的页面吧</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">hexo cl//清空缓存</span><br><span class="line">hexo g//生成静态网页</span><br><span class="line">hexo s//生成本地网页</span><br></pre></td></tr></table></figure>
+
+<h2 id="2-尝试发布，公开"><a href="#2-尝试发布，公开" class="headerlink" title="2.尝试发布，公开"></a>2.尝试发布，公开</h2><h3 id="（1）尝试发布第一篇博客"><a href="#（1）尝试发布第一篇博客" class="headerlink" title="（1）尝试发布第一篇博客"></a>（1）尝试发布第一篇博客</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new post &quot;第一篇博客&quot;</span><br></pre></td></tr></table></figure>
+
+<p>然后重新生成静态网页，本地网页，应该就能看见了</p>
+<p>其原理是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new [layout] &quot;title&quot;</span><br></pre></td></tr></table></figure>
+
+<p>等以后可以在博客的md文件中加入标签和分类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">title: 博客网站的创建教程</span><br><span class="line">date: 2024-09-16</span><br><span class="line">categories: [教程]</span><br><span class="line">tags: [Hexo, 博客搭建, 前端]</span><br></pre></td></tr></table></figure>
+
+<p>比如这篇文章的</p>
+<h3 id="（2）发布在github-io上"><a href="#（2）发布在github-io上" class="headerlink" title="（2）发布在github.io上"></a>（2）发布在github.io上</h3><p>首先在你的github账号上新建一个名为cmzcc.github.io的仓库（这里cmzcc换成你的github名字即可）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">deploy: </span><br><span class="line">  type: git</span><br><span class="line">  repo: https://github.com/cmzcc/cmzcc.github.io.git</span><br><span class="line">  branch: main</span><br></pre></td></tr></table></figure>
+
+<p>在_config.yml进行以上修改，repo中用<a target="_blank" rel="noopener" href="https://github.com/cmzcc/cmzcc.github.io.git%E5%8D%B3%E5%8F%AF%EF%BC%8C%E4%B8%AD%E9%97%B4%E5%8F%AF%E4%BB%A5%E5%8A%A0%E9%80%9A%E8%A1%8C%E8%AF%81">https://github.com/cmzcc/cmzcc.github.io.git即可，中间可以加通行证</a></p>
+<p>在github主页中的&#x2F;setting&#x2F;developer setting&#x2F;personal access tokens&#x2F;tokens(classic)申请即可，在&#x2F;&#x2F;后加通行证然后加@</p>
+<p>然后运行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo d</span><br></pre></td></tr></table></figure>
+
+<p>运行完成后，你应该就能在<a target="_blank" rel="noopener" href="https://cmzcc.github.io中见到它了/">https://cmzcc.github.io中见到它了</a></p>
+<h2 id="3-个人DIY"><a href="#3-个人DIY" class="headerlink" title="3.个人DIY"></a>3.个人DIY</h2><h3 id="（1）修改主题配置"><a href="#（1）修改主题配置" class="headerlink" title="（1）修改主题配置"></a>（1）修改主题配置</h3><p>将&#x2F;theme&#x2F;“主题名称”&#x2F;_config.yml复制一份，到你的hexo根目录下，改名为_config.”主题名”.yml（备份，太重要了，血的教训）</p>
+<p>所有比较善解人意的主题，都会有readme，可能github仓库里不全，那就在作者的个人博客中。</p>
+<p>接下来就是个人发挥时间，大部分功能你只要选择true or flase即可</p>
+<h3 id="2-子页"><a href="#2-子页" class="headerlink" title="(2) 子页"></a>(2) 子页</h3><p>初始情况下我们只有自己写的博客这一个子页，如果想新加几个子页，就需要用以下代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">hexo new &quot;子页名&quot;</span><br></pre></td></tr></table></figure>
+
+<p>ps:你的主题中会给你配置好一些常见的子页的配置，直接就能得到帅气页面（eg:link,tag,category…）</p>
+<p>然后在根目录下&#x2F;source&#x2F;中就能找到那个文件夹。</p>
+<p>接下来对文件夹下的md文件进行编辑即可，这里推荐一个md文档编辑器：typora</p>
+<h3 id="（3）其他功能"><a href="#（3）其他功能" class="headerlink" title="（3）其他功能"></a>（3）其他功能</h3><p>可以预见，个人网站花样极多，发挥你的想象力吧</p>
+<h3 id="搜素系统："><a href="#搜素系统：" class="headerlink" title="搜素系统："></a>搜素系统：</h3><p>个人建议本地搜素就够了</p>
+<h3 id="评论系统："><a href="#评论系统：" class="headerlink" title="评论系统："></a>评论系统：</h3><p>推荐一下<a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1Ft4y1A73f/?spm_id_from=333.1350.jump_directly&vd_source=1b08578fef86fba5aa90cd3727dff591">waline</a>,主要是免费。</p>
+<p>打字机效果，看板娘等需要在github上找插件</p>
+<p>————————————————————————————————————————————————————</p>
+<p>完结撒花，希望多多评论</p>
+<p>Ciallo～(∠・ω&lt; )⌒☆</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2024/09/16/%E7%BD%91%E7%AB%99%E7%9A%84%E6%90%AD%E5%BB%BA/">https://cmzcc.github.io/2024/09/16/%E7%BD%91%E7%AB%99%E7%9A%84%E6%90%AD%E5%BB%BA/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Hexo/">Hexo</a><a class="post-meta__tags" href="/tags/%E5%8D%9A%E5%AE%A2%E6%90%AD%E5%BB%BA/">博客搭建</a><a class="post-meta__tags" href="/tags/%E5%89%8D%E7%AB%AF/">前端</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover5.jpg" data-sites="wechat,weibo,qq,sina_weibo,email"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-full" href="/2024/09/17/c-%E4%B8%AD%E5%85%B3%E4%BA%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E9%87%8D%E8%BD%BD%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E6%80%9D%E8%80%83/" title="c++中关于深拷贝与重载赋值运算符的思考"><img class="cover" src="/img/text-cover5.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">c++中关于深拷贝与重载赋值运算符的思考</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">2</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">6</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">2</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">尾生期于梁下，水至不去，终抱梁柱而死</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%8D%9A%E5%AE%A2%E7%BD%91%E7%AB%99%E7%9A%84%E5%88%9B%E5%BB%BA"><span class="toc-number">1.</span> <span class="toc-text">博客网站的创建</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E5%89%8D%E6%9C%9F%E5%87%86%E5%A4%87%E5%B7%A5%E4%BD%9C"><span class="toc-number">1.1.</span> <span class="toc-text">1.前期准备工作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-Git-Node-js-Hexo%E7%9A%84%E5%AE%89%E8%A3%85"><span class="toc-number">1.1.1.</span> <span class="toc-text">(1)Git Node.js Hexo的安装</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E8%BF%99%E9%87%8C%E5%B0%B1%E4%B8%8D%E8%AE%B2git-node-js%E7%9A%84%E5%AE%89%E8%A3%85%E4%BA%86%EF%BC%8C%E7%BD%91%E4%B8%8A%E7%9B%B4%E6%8E%A5%E4%B8%8B%E5%B0%B1%E5%AE%8C%E4%BA%86"><span class="toc-number">1.1.1.0.1.</span> <span class="toc-text">这里就不讲git node.js的安装了，网上直接下就完了</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E4%B8%8B%E9%9D%A2%E6%98%AFhexo%E7%9A%84%E5%AE%89%E8%A3%85%EF%BC%8C%E5%BB%BA%E8%AE%AE%E4%B8%93%E9%97%A8%E6%89%BE%E4%B8%80%E4%B8%AA%E6%96%87%E4%BB%B6%E5%A4%B9%EF%BC%8C%E7%94%A8GBH%E8%BF%90%E8%A1%8C"><span class="toc-number">1.1.1.0.2.</span> <span class="toc-text">下面是hexo的安装，建议专门找一个文件夹，用GBH运行</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E4%B8%BB%E9%A2%98%E6%8B%B7%E8%B4%9D"><span class="toc-number">1.1.2.</span> <span class="toc-text">（2）主题拷贝</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E5%B0%9D%E8%AF%95%E5%8F%91%E5%B8%83%EF%BC%8C%E5%85%AC%E5%BC%80"><span class="toc-number">1.2.</span> <span class="toc-text">2.尝试发布，公开</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E5%B0%9D%E8%AF%95%E5%8F%91%E5%B8%83%E7%AC%AC%E4%B8%80%E7%AF%87%E5%8D%9A%E5%AE%A2"><span class="toc-number">1.2.1.</span> <span class="toc-text">（1）尝试发布第一篇博客</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%882%EF%BC%89%E5%8F%91%E5%B8%83%E5%9C%A8github-io%E4%B8%8A"><span class="toc-number">1.2.2.</span> <span class="toc-text">（2）发布在github.io上</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%B8%AA%E4%BA%BADIY"><span class="toc-number">1.3.</span> <span class="toc-text">3.个人DIY</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%881%EF%BC%89%E4%BF%AE%E6%94%B9%E4%B8%BB%E9%A2%98%E9%85%8D%E7%BD%AE"><span class="toc-number">1.3.1.</span> <span class="toc-text">（1）修改主题配置</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%AD%90%E9%A1%B5"><span class="toc-number">1.3.2.</span> <span class="toc-text">(2) 子页</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%EF%BC%883%EF%BC%89%E5%85%B6%E4%BB%96%E5%8A%9F%E8%83%BD"><span class="toc-number">1.3.3.</span> <span class="toc-text">（3）其他功能</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%90%9C%E7%B4%A0%E7%B3%BB%E7%BB%9F%EF%BC%9A"><span class="toc-number">1.3.4.</span> <span class="toc-text">搜素系统：</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%84%E8%AE%BA%E7%B3%BB%E7%BB%9F%EF%BC%9A"><span class="toc-number">1.3.5.</span> <span class="toc-text">评论系统：</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/09/17/c-%E4%B8%AD%E5%85%B3%E4%BA%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E9%87%8D%E8%BD%BD%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E6%80%9D%E8%80%83/" title="c++中关于深拷贝与重载赋值运算符的思考"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c++中关于深拷贝与重载赋值运算符的思考"/></a><div class="content"><a class="title" href="/2024/09/17/c-%E4%B8%AD%E5%85%B3%E4%BA%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E9%87%8D%E8%BD%BD%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E6%80%9D%E8%80%83/" title="c++中关于深拷贝与重载赋值运算符的思考">c++中关于深拷贝与重载赋值运算符的思考</a><time datetime="2024-09-17T00:45:45.000Z" title="Created 2024-09-17 08:45:45">2024-09-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/09/16/%E7%BD%91%E7%AB%99%E7%9A%84%E6%90%AD%E5%BB%BA/" title="博客网站的创建教程"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="博客网站的创建教程"/></a><div class="content"><a class="title" href="/2024/09/16/%E7%BD%91%E7%AB%99%E7%9A%84%E6%90%AD%E5%BB%BA/" title="博客网站的创建教程">博客网站的创建教程</a><time datetime="2024-09-15T16:00:00.000Z" title="Created 2024-09-16 00:00:00">2024-09-16</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: true,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
