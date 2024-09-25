@@ -3,9 +3,10 @@
   <entry>
     <title>Github拒绝push</title>
     <url>/2024/09/19/Github%E6%8B%92%E7%BB%9Dpush/</url>
-    <content><![CDATA[<h2 id="Github-拒绝了你的push"><a href="#Github-拒绝了你的push" class="headerlink" title="Github 拒绝了你的push"></a>Github 拒绝了你的push</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> ! [remote rejected] HEAD -&gt; main (push declined due to repository rule violations)</span><br><span class="line">error: failed to push some refs to &#x27;https://github.com/cmzcc/cmzcc.github.io.git&#x27;</span><br><span class="line">FATAL Something&#x27;s wrong. Maybe you can find the solution here: https://hexo.io/docs/troubleshooting.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    <content><![CDATA[<h2 id="Github-拒绝了你的push"><a href="#Github-拒绝了你的push" class="headerlink" title="Github 拒绝了你的push"></a>Github 拒绝了你的push</h2><p>你有没有出现以下问题？</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> ! [remote rejected] HEAD -&gt; main (push declined due to repository rule violations)</span><br><span class="line">error: failed to push some refs to &#x27;https://github.com/cmzcc/cmzcc.github.io.git&#x27;</span><br><span class="line">FATAL Something&#x27;s wrong. Maybe you can find the solution here: https://hexo.io/docs/troubleshooting.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h4 id="今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教。"><a href="#今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教。" class="headerlink" title="今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教。"></a>今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教。</h4><h3 id="1-出现问题的原因"><a href="#1-出现问题的原因" class="headerlink" title="1.出现问题的原因"></a>1.出现问题的原因</h3><h4 id="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用。"><a href="#出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用。" class="headerlink" title="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用。"></a>出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用。</h4><h4 id="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用。"><a href="#我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用。" class="headerlink" title="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用。"></a>我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用。</h4><h3 id="2-解决方法"><a href="#2-解决方法" class="headerlink" title="2.解决方法"></a>2.解决方法</h3><h4 id="（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下。"><a href="#（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下。" class="headerlink" title="（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下。"></a>（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下。</h4><h4 id="（2）找到你放网站的仓库，add-file看到没有"><a href="#（2）找到你放网站的仓库，add-file看到没有" class="headerlink" title="（2）找到你放网站的仓库，add file看到没有"></a>（2）找到你放网站的仓库，add file看到没有<img src="C:\Users\27215\Desktop\md.png" alt="md"></h4><h4 id="然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去。（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"><a href="#然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去。（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）" class="headerlink" title="然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去。（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"></a>然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去。（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）</h4><h4 id="等上传完毕后，不要退出！！！"><a href="#等上传完毕后，不要退出！！！" class="headerlink" title="等上传完毕后，不要退出！！！"></a>等上传完毕后，不要退出！！！</h4><h4 id="点下面的提交即可，你的网站就水灵灵的更新啦。"><a href="#点下面的提交即可，你的网站就水灵灵的更新啦。" class="headerlink" title="点下面的提交即可，你的网站就水灵灵的更新啦。"></a>点下面的提交即可，你的网站就水灵灵的更新啦。</h4>]]></content>
+<h4 id="今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教。"><a href="#今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教。" class="headerlink" title="今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教。"></a>今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教。</h4><h3 id="1-出现问题的原因"><a href="#1-出现问题的原因" class="headerlink" title="1.出现问题的原因"></a>1.出现问题的原因</h3><h4 id="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用。"><a href="#出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用。" class="headerlink" title="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用。"></a>出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用。</h4><h4 id="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用。"><a href="#我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用。" class="headerlink" title="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用。"></a>我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用。</h4><h3 id="2-解决方法"><a href="#2-解决方法" class="headerlink" title="2.解决方法"></a>2.解决方法</h3><h4 id="（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下。"><a href="#（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下。" class="headerlink" title="（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下。"></a>（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下。</h4><h4 id="（2）找到你放网站的仓库，add-file看到没有"><a href="#（2）找到你放网站的仓库，add-file看到没有" class="headerlink" title="（2）找到你放网站的仓库，add file看到没有"></a>（2）找到你放网站的仓库，add file看到没有</h4><h4 id="然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去。（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"><a href="#然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去。（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）" class="headerlink" title="然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去。（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"></a>然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去。（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）</h4><h4 id="等上传完毕后，不要退出！！！"><a href="#等上传完毕后，不要退出！！！" class="headerlink" title="等上传完毕后，不要退出！！！"></a>等上传完毕后，不要退出！！！</h4><h4 id="点下面的提交即可，你的网站就水灵灵的更新啦。"><a href="#点下面的提交即可，你的网站就水灵灵的更新啦。" class="headerlink" title="点下面的提交即可，你的网站就水灵灵的更新啦。"></a>点下面的提交即可，你的网站就水灵灵的更新啦。</h4>]]></content>
       <categories>
         <category>经验</category>
       </categories>
@@ -132,6 +133,55 @@
 <h1 id="通过遍历确定二叉树"><a href="#通过遍历确定二叉树" class="headerlink" title="通过遍历确定二叉树"></a>通过遍历确定二叉树</h1><p>首先，一种遍历是肯定不能的</p>
 <p>前序遍历＋后序也不能</p>
 <p>但中序＋任意就可以</p>
+<p>下面是后序和中序的一个例子</p>
+<p>给定二叉树的<strong>后序遍历</strong>和<strong>中序遍历</strong>，可以确定这棵二叉树的结构。</p>
+<ul>
+<li><strong>后序遍历</strong>：<code>dabec</code></li>
+<li><strong>中序遍历</strong>：<code>debac</code></li>
+</ul>
+<h3 id="重建二叉树的步骤"><a href="#重建二叉树的步骤" class="headerlink" title="重建二叉树的步骤"></a>重建二叉树的步骤</h3><ol>
+<li><p><strong>后序遍历的特点</strong>：后序遍历的最后一个节点是根节点。因此，通过后序遍历可以找到二叉树的根节点。</p>
+<ul>
+<li>在后序遍历 <code>dabec</code> 中，最后一个元素 <code>c</code> 是二叉树的根节点。</li>
+</ul>
+</li>
+<li><p><strong>在中序遍历中找到根节点</strong>：通过中序遍历，可以将二叉树分为左子树和右子树。</p>
+<ul>
+<li>中序遍历是 <code>debac</code>，根节点 <code>c</code> 在中序遍历中的位置是最后一位，因此 <code>deba</code> 是左子树，右子树为空。</li>
+</ul>
+</li>
+<li><p><strong>递归构建左子树</strong>：</p>
+<ul>
+<li>左子树的中序遍历是 <code>deba</code>，左子树的后序遍历是 <code>dabe</code>（从后序遍历中取去掉根节点的部分）。</li>
+<li>继续对 <code>dabe</code> 和 <code>deba</code> 递归构建。</li>
+</ul>
+</li>
+<li><p><strong>对左子树进行递归构建</strong>：</p>
+<ul>
+<li>在后序遍历 <code>dabe</code> 中，最后一个元素 <code>e</code> 是左子树的根节点。</li>
+<li>在中序遍历 <code>deba</code> 中，根节点 <code>e</code> 的位置将 <code>d</code> 和 <code>ba</code> 分为左右子树，左子树为 <code>d</code>，右子树为 <code>ba</code>。</li>
+</ul>
+</li>
+<li><p><strong>递归构建左子树和右子树</strong>：</p>
+<ul>
+<li>对左子树 <code>d</code>，中序遍历和后序遍历均为 <code>d</code>，因此它是叶子节点。</li>
+<li>对右子树 <code>ba</code>：<ul>
+<li>在后序遍历 <code>ba</code> 中，根节点是 <code>a</code>，剩下的 <code>b</code> 是它的左子树。</li>
+<li>对左子树 <code>b</code>，中序遍历和后序遍历均为 <code>b</code>，因此它是叶子节点。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="最终二叉树的结构"><a href="#最终二叉树的结构" class="headerlink" title="最终二叉树的结构"></a>最终二叉树的结构</h3><p>将上述步骤的结果组合在一起，二叉树的形状如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    c</span><br><span class="line">   /</span><br><span class="line">  e</span><br><span class="line"> / \</span><br><span class="line">d   a</span><br><span class="line">   /</span><br><span class="line">  b</span><br></pre></td></tr></table></figure>
+
+<h3 id="详细解释"><a href="#详细解释" class="headerlink" title="详细解释"></a>详细解释</h3><ul>
+<li>根节点是 <code>c</code>，它的左子树是 <code>e</code>。</li>
+<li>节点 <code>e</code> 的左子树是 <code>d</code>，右子树是 <code>a</code>。</li>
+<li>节点 <code>a</code> 有一个左子树 <code>b</code>，而 <code>b</code> 和 <code>d</code> 都是叶子节点。</li>
+</ul>
+<p>通过后序遍历和中序遍历，我们成功地重建了这棵二叉树。</p>
 <hr>
 <h1 id="递归-vs-非递归"><a href="#递归-vs-非递归" class="headerlink" title="递归 vs. 非递归"></a>递归 vs. 非递归</h1><ol>
 <li><p><strong>递归遍历</strong>：</p>
@@ -346,6 +396,92 @@
         <tag>unity</tag>
         <tag>打卡</tag>
         <tag>闲得无聊所以发发</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>线索化二叉树及其遍历</title>
+    <url>/2024/09/25/%E7%BA%BF%E7%B4%A2%E5%8C%96%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E5%85%B6%E9%81%8D%E5%8E%86/</url>
+    <content><![CDATA[<h1 id="线索化二叉树"><a href="#线索化二叉树" class="headerlink" title="线索化二叉树"></a>线索化二叉树</h1><h3 id="以下是实现该结构并进行中序遍历的代码："><a href="#以下是实现该结构并进行中序遍历的代码：" class="headerlink" title="以下是实现该结构并进行中序遍历的代码："></a>以下是实现该结构并进行中序遍历的代码：</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义线索二叉树节点的结构</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ThreadedNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> value;                      <span class="comment">// 节点的值</span></span><br><span class="line">    ThreadedNode* left;             <span class="comment">// 指向左子节点</span></span><br><span class="line">    ThreadedNode* right;            <span class="comment">// 指向右子节点</span></span><br><span class="line">    <span class="type">bool</span> lThread;                   <span class="comment">// 左指针是否为线索</span></span><br><span class="line">    <span class="type">bool</span> rThread;                   <span class="comment">// 右指针是否为线索</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造函数初始化节点值，并将左右指针初始化为空，线索标志初始化为 false</span></span><br><span class="line">    <span class="built_in">ThreadedNode</span>(<span class="type">int</span> val) : <span class="built_in">value</span>(val), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>), <span class="built_in">lThread</span>(<span class="literal">false</span>), <span class="built_in">rThread</span>(<span class="literal">false</span>) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入节点并构建线索二叉树的函数</span></span><br><span class="line"><span class="function">ThreadedNode* <span class="title">insert</span><span class="params">(ThreadedNode* root, <span class="type">int</span> key)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 创建一个新节点</span></span><br><span class="line">    ThreadedNode* newNode = <span class="keyword">new</span> <span class="built_in">ThreadedNode</span>(key);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果树为空，直接返回新节点作为根节点</span></span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">nullptr</span>) <span class="keyword">return</span> newNode;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// `current` 用于跟踪当前节点，`parent` 用于跟踪当前节点的父节点</span></span><br><span class="line">    ThreadedNode* current = root;</span><br><span class="line">    ThreadedNode* parent = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 找到要插入的位置</span></span><br><span class="line">    <span class="keyword">while</span> (current != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        parent = current;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 插入左子树</span></span><br><span class="line">        <span class="keyword">if</span> (key &lt; current-&gt;value) &#123;</span><br><span class="line">            <span class="comment">// 如果左指针不是线索，继续向左子树移动</span></span><br><span class="line">            <span class="keyword">if</span> (!current-&gt;lThread)</span><br><span class="line">                current = current-&gt;left;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">break</span>; <span class="comment">// 遇到线索停止</span></span><br><span class="line">        &#125; </span><br><span class="line">        <span class="comment">// 插入右子树</span></span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 如果右指针不是线索，继续向右子树移动</span></span><br><span class="line">            <span class="keyword">if</span> (!current-&gt;rThread)</span><br><span class="line">                current = current-&gt;right;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">break</span>; <span class="comment">// 遇到线索停止</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据值的大小决定插入到左子树还是右子树</span></span><br><span class="line">    <span class="keyword">if</span> (key &lt; parent-&gt;value) &#123;</span><br><span class="line">        <span class="comment">// 左子树插入</span></span><br><span class="line">        newNode-&gt;left = parent-&gt;left;  <span class="comment">// 新节点的左指针指向父节点的左指针</span></span><br><span class="line">        newNode-&gt;right = parent;       <span class="comment">// 新节点的右指针指向父节点</span></span><br><span class="line">        parent-&gt;lThread = <span class="literal">false</span>;       <span class="comment">// 插入后，父节点的左指针不再是线索</span></span><br><span class="line">        parent-&gt;left = newNode;        <span class="comment">// 父节点的左子树变为新节点</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 右子树插入</span></span><br><span class="line">        newNode-&gt;right = parent-&gt;right; <span class="comment">// 新节点的右指针指向父节点的右指针</span></span><br><span class="line">        newNode-&gt;left = parent;         <span class="comment">// 新节点的左指针指向父节点</span></span><br><span class="line">        parent-&gt;rThread = <span class="literal">false</span>;        <span class="comment">// 插入后，父节点的右指针不再是线索</span></span><br><span class="line">        parent-&gt;right = newNode;        <span class="comment">// 父节点的右子树变为新节点</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回根节点</span></span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 找到中序遍历的起点（即最左边的节点）</span></span><br><span class="line"><span class="function">ThreadedNode* <span class="title">leftmost</span><span class="params">(ThreadedNode* node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (node == <span class="literal">nullptr</span>) <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// 一直移动到没有左子节点的节点</span></span><br><span class="line">    <span class="keyword">while</span> (!node-&gt;lThread) </span><br><span class="line">        node = node-&gt;left;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线索化二叉树的中序遍历</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">inOrderTraversal</span><span class="params">(ThreadedNode* root)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 从最左边的节点开始</span></span><br><span class="line">    ThreadedNode* current = <span class="built_in">leftmost</span>(root);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 遍历整个树</span></span><br><span class="line">    <span class="keyword">while</span> (current != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="comment">// 输出当前节点的值</span></span><br><span class="line">        cout &lt;&lt; current-&gt;value &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果当前节点的右指针是线索，直接跳到下一个中序节点</span></span><br><span class="line">        <span class="keyword">if</span> (current-&gt;rThread)</span><br><span class="line">            current = current-&gt;right;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="comment">// 否则找到当前节点右子树中的最左节点</span></span><br><span class="line">            current = <span class="built_in">leftmost</span>(current-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ThreadedNode* root = <span class="literal">nullptr</span>;  <span class="comment">// 创建一个空的线索二叉树</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 插入节点，构建线索二叉树</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">5</span>);  <span class="comment">// 插入根节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">3</span>);  <span class="comment">// 插入左子节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">8</span>);  <span class="comment">// 插入右子节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">2</span>);  <span class="comment">// 插入左子树中的左子节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">4</span>);  <span class="comment">// 插入左子树中的右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 线索化后的中序遍历</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;中序遍历: &quot;</span>;</span><br><span class="line">    <span class="built_in">inOrderTraversal</span>(root);</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码说明："><a href="#代码说明：" class="headerlink" title="代码说明："></a>代码说明：</h3><ol>
+<li><p><strong>树的结构</strong>：</p>
+<ul>
+<li>我们插入节点顺序为 <code>5, 3, 8, 2, 4</code>，构造如下的树：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   4</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>中序遍历顺序</strong>：</p>
+<ul>
+<li>中序遍历的顺序是：<strong>先访问左子树，再访问根节点，最后访问右子树</strong>。</li>
+<li>对于这棵树的中序遍历顺序是：<code>2 3 4 5 8</code>。</li>
+</ul>
+</li>
+<li><p><strong>关键函数</strong>：</p>
+<ul>
+<li><code>insert</code>：在二叉树中插入节点，同时维护线索化指针。</li>
+<li><code>leftmost</code>：寻找中序遍历中最左边的节点，作为遍历起点。</li>
+<li><code>inOrderTraversal</code>：通过线索化指针进行中序遍历。</li>
+</ul>
+</li>
+</ol>
+<h3 id="输出结果："><a href="#输出结果：" class="headerlink" title="输出结果："></a>输出结果：</h3><p>运行此代码，输出将会是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">中序遍历: 2 3 4 5 8</span><br></pre></td></tr></table></figure>
+
+<h1 id="解释："><a href="#解释：" class="headerlink" title="解释："></a>解释：</h1><h3 id="1-初始状态："><a href="#1-初始状态：" class="headerlink" title="1. 初始状态："></a>1. <strong>初始状态</strong>：</h3><p>我们创建了一个空的线索二叉树 <code>root</code>，即 <code>root = nullptr</code>。</p>
+<h3 id="2-插入节点-5："><a href="#2-插入节点-5：" class="headerlink" title="2. 插入节点 5："></a>2. <strong>插入节点 5</strong>：</h3><ul>
+<li>调用 <code>insert(root, 5)</code>。</li>
+<li>因为 <code>root</code> 是 <code>nullptr</code>，直接返回新节点 <code>5</code> 作为根节点。此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">5</span><br></pre></td></tr></table></figure></li>
+<li><code>5</code> 没有子节点，也没有线索。</li>
+</ul>
+<h3 id="3-插入节点-3："><a href="#3-插入节点-3：" class="headerlink" title="3. 插入节点 3："></a>3. <strong>插入节点 3</strong>：</h3><ul>
+<li>调用 <code>insert(root, 3)</code>，即在节点 <code>5</code> 的基础上插入。</li>
+<li><code>3 &lt; 5</code>，因此我们将其插入到 <code>5</code> 的左子树中。</li>
+<li>节点 <code>3</code> 的右指针作为线索指向节点 <code>5</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  5</span><br><span class="line"> /</span><br><span class="line">3</span><br><span class="line"> \</span><br><span class="line">  5 (线索)</span><br></pre></td></tr></table></figure></li>
+<li><code>5</code> 的左指针不再是线索，它现在有一个真正的左子树（节点 <code>3</code>）。</li>
+</ul>
+<h3 id="4-插入节点-8："><a href="#4-插入节点-8：" class="headerlink" title="4. 插入节点 8："></a>4. <strong>插入节点 8</strong>：</h3><ul>
+<li>调用 <code>insert(root, 8)</code>，即在当前树结构上插入。</li>
+<li><code>8 &gt; 5</code>，因此我们将其插入到节点 <code>5</code> 的右子树中。</li>
+<li>节点 <code>8</code> 的左指针作为线索指向节点 <code>5</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  5</span><br><span class="line"> / \</span><br><span class="line">3   8</span><br><span class="line"> \</span><br><span class="line">  5 (线索)</span><br><span class="line">  8 (线索)</span><br></pre></td></tr></table></figure></li>
+<li>节点 <code>5</code> 的右指针现在指向真正的右子树（节点 <code>8</code>）。</li>
+</ul>
+<h3 id="5-插入节点-2："><a href="#5-插入节点-2：" class="headerlink" title="5. 插入节点 2："></a>5. <strong>插入节点 2</strong>：</h3><ul>
+<li>调用 <code>insert(root, 2)</code>，即在当前树结构上插入。</li>
+<li><code>2 &lt; 5</code>，继续向左走，<code>2 &lt; 3</code>，因此我们将其插入到节点 <code>3</code> 的左子树中。</li>
+<li>节点 <code>2</code> 的右指针作为线索指向节点 <code>3</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   5 (线索)</span><br><span class="line">   \</span><br><span class="line">    3 (线索)</span><br></pre></td></tr></table></figure></li>
+<li>节点 <code>3</code> 的左指针不再是线索，它现在有一个真正的左子树（节点 <code>2</code>）。</li>
+</ul>
+<h3 id="6-插入节点-4："><a href="#6-插入节点-4：" class="headerlink" title="6. 插入节点 4："></a>6. <strong>插入节点 4</strong>：</h3><ul>
+<li>调用 <code>insert(root, 4)</code>，即在当前树结构上插入。</li>
+<li><code>4 &lt; 5</code>，继续向左走，<code>4 &gt; 3</code>，因此我们将其插入到节点 <code>3</code> 的右子树中。</li>
+<li>节点 <code>4</code> 的右指针作为线索指向节点 <code>5</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   4</span><br><span class="line">     \</span><br><span class="line">      5 (线索)</span><br><span class="line">   \</span><br><span class="line">    3 (线索)</span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="7-树的最终结构："><a href="#7-树的最终结构：" class="headerlink" title="7. 树的最终结构："></a>7. <strong>树的最终结构</strong>：</h3><p>经过上述插入操作，最终树的结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   4</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>左子树是：<code>3 -&gt; 2, 3 -&gt; 4</code>，并且线索指向相应的节点。</li>
+</ul>
+<h3 id="8-中序遍历过程："><a href="#8-中序遍历过程：" class="headerlink" title="8. 中序遍历过程："></a>8. <strong>中序遍历过程</strong>：</h3><h4 id="步骤-1：找到最左边的节点"><a href="#步骤-1：找到最左边的节点" class="headerlink" title="步骤 1：找到最左边的节点"></a>步骤 1：找到最左边的节点</h4><ul>
+<li>调用 <code>leftmost(root)</code>，找到树中最左边的节点，即 <code>2</code>。</li>
+</ul>
+<h4 id="步骤-2：遍历中序节点"><a href="#步骤-2：遍历中序节点" class="headerlink" title="步骤 2：遍历中序节点"></a>步骤 2：遍历中序节点</h4><ul>
+<li>当前节点是 <code>2</code>，输出 <code>2</code>，然后查看 <code>2</code> 的右指针，发现它是线索指向节点 <code>3</code>，因此移动到节点 <code>3</code>。</li>
+<li>当前节点是 <code>3</code>，输出 <code>3</code>，然后查看 <code>3</code> 的右指针，发现它指向节点 <code>4</code>，移动到节点 <code>4</code>。</li>
+<li>当前节点是 <code>4</code>，输出 <code>4</code>，然后查看 <code>4</code> 的右指针，发现它是线索，指向节点 <code>5</code>，移动到节点 <code>5</code>。</li>
+<li>当前节点是 <code>5</code>，输出 <code>5</code>，然后查看 <code>5</code> 的右指针，指向真正的右子树，找到最左边的节点 <code>8</code>。</li>
+<li>当前节点是 <code>8</code>，输出 <code>8</code>，然后它没有右子树或线索，遍历结束。</li>
+</ul>
+<h3 id="9-中序遍历输出："><a href="#9-中序遍历输出：" class="headerlink" title="9. 中序遍历输出："></a>9. <strong>中序遍历输出</strong>：</h3><p>最终中序遍历输出是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">2 3 4 5 8</span><br></pre></td></tr></table></figure>
+
+<p>这就是整个代码的运行过程和中序遍历结果。</p>
+]]></content>
+      <categories>
+        <category>经验</category>
+      </categories>
+      <tags>
+        <tag>二叉树</tag>
+        <tag>数据结构与算法</tag>
       </tags>
   </entry>
 </search>
