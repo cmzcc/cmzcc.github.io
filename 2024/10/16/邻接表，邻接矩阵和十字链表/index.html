@@ -1,0 +1,306 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>邻接表，邻接矩阵和十字链表 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1. 邻接表的实现邻接表使用一个数组或 vector 来存储每个顶点的边列表。每个顶点的边列表存储在一个链表或 vector 中。 12345678910111213141516171819202122232425262728293031323334353637383940414243#include &lt;iostream&gt;#include &lt;vector&gt;using nam">
+<meta property="og:type" content="article">
+<meta property="og:title" content="邻接表，邻接矩阵和十字链表">
+<meta property="og:url" content="https://cmzcc.github.io/2024/10/16/%E9%82%BB%E6%8E%A5%E8%A1%A8%EF%BC%8C%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%E5%92%8C%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="1. 邻接表的实现邻接表使用一个数组或 vector 来存储每个顶点的边列表。每个顶点的边列表存储在一个链表或 vector 中。 12345678910111213141516171819202122232425262728293031323334353637383940414243#include &lt;iostream&gt;#include &lt;vector&gt;using nam">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover4.jpg">
+<meta property="article:published_time" content="2024-10-16T13:22:58.000Z">
+<meta property="article:modified_time" content="2024-10-16T14:00:15.670Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="数据结构与算法">
+<meta property="article:tag" content="图">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover4.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2024/10/16/%E9%82%BB%E6%8E%A5%E8%A1%A8%EF%BC%8C%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%E5%92%8C%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '邻接表，邻接矩阵和十字链表',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-10-16 22:00:15'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover4.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">邻接表，邻接矩阵和十字链表</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">邻接表，邻接矩阵和十字链表</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-10-16T13:22:58.000Z" title="Created 2024-10-16 21:22:58">2024-10-16</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-10-16T14:00:15.670Z" title="Updated 2024-10-16 22:00:15">2024-10-16</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BB%8F%E9%AA%8C/">经验</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="1-邻接表的实现"><a href="#1-邻接表的实现" class="headerlink" title="1. 邻接表的实现"></a>1. 邻接表的实现</h3><p>邻接表使用一个数组或 <code>vector</code> 来存储每个顶点的边列表。每个顶点的边列表存储在一个链表或 <code>vector</code> 中。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Graph</span> &#123;</span><br><span class="line">    <span class="type">int</span> V; <span class="comment">// 顶点数量</span></span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; adj; <span class="comment">// 邻接表</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Graph</span>(<span class="type">int</span> V) &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;V = V;</span><br><span class="line">        adj.<span class="built_in">resize</span>(V);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">addEdge</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> v)</span> </span>&#123;</span><br><span class="line">        adj[u].<span class="built_in">push_back</span>(v);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">printGraph</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; V; i++) &#123;</span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;Vertex &quot;</span> &lt;&lt; i &lt;&lt; <span class="string">&quot;:&quot;</span>;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> v : adj[i]) &#123;</span><br><span class="line">                cout &lt;&lt; <span class="string">&quot; -&gt; &quot;</span> &lt;&lt; v;</span><br><span class="line">            &#125;</span><br><span class="line">            cout &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">Graph <span class="title">g</span><span class="params">(<span class="number">5</span>)</span></span>;</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">0</span>, <span class="number">4</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">1</span>, <span class="number">4</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">    g.<span class="built_in">printGraph</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-邻接矩阵的实现"><a href="#2-邻接矩阵的实现" class="headerlink" title="2. 邻接矩阵的实现"></a>2. 邻接矩阵的实现</h3><p>邻接矩阵使用一个二维数组来存储顶点之间的边。每个元素表示顶点之间是否存在边。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Graph</span> &#123;</span><br><span class="line">    <span class="type">int</span> V; <span class="comment">// 顶点数量</span></span><br><span class="line">    vector&lt;vector&lt;<span class="type">int</span>&gt;&gt; adjMatrix; <span class="comment">// 邻接矩阵</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Graph</span>(<span class="type">int</span> V) &#123;</span><br><span class="line">        <span class="keyword">this</span>-&gt;V = V;</span><br><span class="line">        adjMatrix.<span class="built_in">resize</span>(V, <span class="built_in">vector</span>&lt;<span class="type">int</span>&gt;(V, <span class="number">0</span>));</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">addEdge</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> v)</span> </span>&#123;</span><br><span class="line">        adjMatrix[u][v] = <span class="number">1</span>;</span><br><span class="line">        <span class="comment">// 如果是无向图，也要添加下面这一行</span></span><br><span class="line">        <span class="comment">// adjMatrix[v][u] = 1;</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">printGraph</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; V; i++) &#123;</span><br><span class="line">            <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; V; j++) &#123;</span><br><span class="line">                cout &lt;&lt; adjMatrix[i][j] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            cout &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">Graph <span class="title">g</span><span class="params">(<span class="number">5</span>)</span></span>;</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">0</span>, <span class="number">4</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">1</span>, <span class="number">4</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">    g.<span class="built_in">printGraph</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<h3 id="3-十字链表的实现"><a href="#3-十字链表的实现" class="headerlink" title="3. 十字链表的实现"></a>3. 十字链表的实现</h3><p>十字链表是一种复杂的数据结构，特别适用于有向图。它包含每个顶点的出边和入边链表。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">EdgeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> tail;  <span class="comment">// 边的起点</span></span><br><span class="line">    <span class="type">int</span> head;  <span class="comment">// 边的终点</span></span><br><span class="line">    EdgeNode *nextOut; <span class="comment">// 下一条出边</span></span><br><span class="line">    EdgeNode *nextIn;  <span class="comment">// 下一条入边</span></span><br><span class="line">    <span class="built_in">EdgeNode</span>(<span class="type">int</span> t, <span class="type">int</span> h) : <span class="built_in">tail</span>(t), <span class="built_in">head</span>(h), <span class="built_in">nextOut</span>(<span class="literal">nullptr</span>), <span class="built_in">nextIn</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">VertexNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> data; <span class="comment">// 顶点的数据</span></span><br><span class="line">    EdgeNode *firstOut; <span class="comment">// 出边链表头节点</span></span><br><span class="line">    EdgeNode *firstIn;  <span class="comment">// 入边链表头节点</span></span><br><span class="line">    <span class="built_in">VertexNode</span>(<span class="type">int</span> d) : <span class="built_in">data</span>(d), <span class="built_in">firstOut</span>(<span class="literal">nullptr</span>), <span class="built_in">firstIn</span>(<span class="literal">nullptr</span>) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">OrthogonalList</span> &#123;</span><br><span class="line">    vector&lt;VertexNode*&gt; vertices;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">OrthogonalList</span>(<span class="type">int</span> V) &#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; V; ++i) &#123;</span><br><span class="line">            vertices.<span class="built_in">push_back</span>(<span class="keyword">new</span> <span class="built_in">VertexNode</span>(i));</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">addEdge</span><span class="params">(<span class="type">int</span> u, <span class="type">int</span> v)</span> </span>&#123;</span><br><span class="line">        EdgeNode* edge = <span class="keyword">new</span> <span class="built_in">EdgeNode</span>(u, v);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 添加到出边链表</span></span><br><span class="line">        edge-&gt;nextOut = vertices[u]-&gt;firstOut;</span><br><span class="line">        vertices[u]-&gt;firstOut = edge;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 添加到入边链表</span></span><br><span class="line">        edge-&gt;nextIn = vertices[v]-&gt;firstIn;</span><br><span class="line">        vertices[v]-&gt;firstIn = edge;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">printGraph</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; vertices.<span class="built_in">size</span>(); ++i) &#123;</span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;Vertex &quot;</span> &lt;&lt; i &lt;&lt; <span class="string">&quot;:&quot;</span> &lt;&lt; endl;</span><br><span class="line">            </span><br><span class="line">            <span class="comment">// 打印出边链表</span></span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;  Out-edges:&quot;</span>;</span><br><span class="line">            <span class="keyword">for</span> (EdgeNode* e = vertices[i]-&gt;firstOut; e != <span class="literal">nullptr</span>; e = e-&gt;nextOut) &#123;</span><br><span class="line">                cout &lt;&lt; <span class="string">&quot; -&gt; &quot;</span> &lt;&lt; e-&gt;head;</span><br><span class="line">            &#125;</span><br><span class="line">            cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">            <span class="comment">// 打印入边链表</span></span><br><span class="line">            cout &lt;&lt; <span class="string">&quot;  In-edges:&quot;</span>;</span><br><span class="line">            <span class="keyword">for</span> (EdgeNode* e = vertices[i]-&gt;firstIn; e != <span class="literal">nullptr</span>; e = e-&gt;nextIn) &#123;</span><br><span class="line">                cout &lt;&lt; <span class="string">&quot; &lt;- &quot;</span> &lt;&lt; e-&gt;tail;</span><br><span class="line">            &#125;</span><br><span class="line">            cout &lt;&lt; endl;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">OrthogonalList <span class="title">g</span><span class="params">(<span class="number">5</span>)</span></span>;</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">0</span>, <span class="number">1</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">0</span>, <span class="number">4</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">1</span>, <span class="number">2</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">1</span>, <span class="number">3</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">1</span>, <span class="number">4</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">2</span>, <span class="number">3</span>);</span><br><span class="line">    g.<span class="built_in">addEdge</span>(<span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line"></span><br><span class="line">    g.<span class="built_in">printGraph</span>();</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>十字链表</strong>（Orthogonal List）是一种用于表示<strong>有向图</strong>的链式存储结构，它同时包含了每个顶点的<strong>入边</strong>和<strong>出边</strong>信息。十字链表是一种扩展的邻接表，能够方便地访问有向图中的边和顶点的入度、出度关系。该结构特别适合处理复杂的有向图问题。</p>
+<h3 id="十字链表的定义"><a href="#十字链表的定义" class="headerlink" title="十字链表的定义"></a>十字链表的定义</h3><p>在十字链表中，每个顶点既有一个<strong>出边链表</strong>，也有一个<strong>入边链表</strong>，分别存储从该顶点出发和指向该顶点的边。具体来说：</p>
+<ul>
+<li>每条边由两个链表节点表示：<strong>出边节点</strong>（表示从某顶点出发的边）和<strong>入边节点</strong>（表示指向某顶点的边）。</li>
+<li>顶点包含两个指针：一个指向该顶点的出边链表的头节点，另一个指向该顶点的入边链表的头节点。</li>
+</ul>
+<h3 id="结构描述"><a href="#结构描述" class="headerlink" title="结构描述"></a>结构描述</h3><ul>
+<li><strong>顶点结构（Vertex Node）</strong>：每个顶点有两个指针，一个指向该顶点的出边链表（out-edge list），另一个指向该顶点的入边链表（in-edge list）。</li>
+<li><strong>边结构（Edge Node）</strong>：每条边有两个指针，一个指向下一个出边（out-edge），另一个指向下一个入边（in-edge）。此外，边节点会记录边的起点和终点信息（通常是用来标识的起点和终点索引）。</li>
+</ul>
+<h3 id="十字链表的节点结构"><a href="#十字链表的节点结构" class="headerlink" title="十字链表的节点结构"></a>十字链表的节点结构</h3><p>假设有向图有 ( V ) 个顶点， ( E ) 条边，十字链表的基本节点可以定义为以下形式：</p>
+<ol>
+<li><p><strong>顶点节点（Vertex Node）</strong>：</p>
+<ul>
+<li><strong>data</strong>：顶点的值或标识。</li>
+<li><strong>firstOut</strong>：指向该顶点的<strong>出边链表</strong>的头节点。</li>
+<li><strong>firstIn</strong>：指向该顶点的<strong>入边链表</strong>的头节点。</li>
+</ul>
+</li>
+<li><p><strong>边节点（Edge Node）</strong>：</p>
+<ul>
+<li><strong>tail</strong>：起点（边的出发顶点）。</li>
+<li><strong>head</strong>：终点（边的目标顶点）。</li>
+<li><strong>nextOut</strong>：指向<strong>出边链表</strong>中的下一条边（从相同顶点出发的下一条边）。</li>
+<li><strong>nextIn</strong>：指向<strong>入边链表</strong>中的下一条边（指向相同顶点的下一条边）。</li>
+<li><strong>weight</strong>（可选）：如果是加权图，则可以包含边的权重信息。</li>
+</ul>
+</li>
+</ol>
+<h3 id="十字链表的示例"><a href="#十字链表的示例" class="headerlink" title="十字链表的示例"></a>十字链表的示例</h3><p>我们通过一个简单的有向图来说明十字链表的结构。假设有如下有向图：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">顶点：A, B, C, D</span><br><span class="line">边：A → B, A → C, B → C, C → D</span><br></pre></td></tr></table></figure>
+
+<h4 id="1-顶点的出边链表和入边链表"><a href="#1-顶点的出边链表和入边链表" class="headerlink" title="1. 顶点的出边链表和入边链表"></a>1. 顶点的出边链表和入边链表</h4><ul>
+<li>顶点 A 的<strong>出边链表</strong>：A → B, A → C</li>
+<li>顶点 A 的<strong>入边链表</strong>：无</li>
+<li>顶点 B 的<strong>出边链表</strong>：B → C</li>
+<li>顶点 B 的<strong>入边链表</strong>：A → B</li>
+<li>顶点 C 的<strong>出边链表</strong>：C → D</li>
+<li>顶点 C 的<strong>入边链表</strong>：A → C, B → C</li>
+<li>顶点 D 的<strong>入边链表</strong>：C → D</li>
+</ul>
+<h4 id="2-十字链表表示"><a href="#2-十字链表表示" class="headerlink" title="2. 十字链表表示"></a>2. 十字链表表示</h4><p>顶点节点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">A: firstOut -&gt; (A → B), firstIn -&gt; null</span><br><span class="line">B: firstOut -&gt; (B → C), firstIn -&gt; (A → B)</span><br><span class="line">C: firstOut -&gt; (C → D), firstIn -&gt; (A → C)</span><br><span class="line">D: firstOut -&gt; null,      firstIn -&gt; (C → D)</span><br></pre></td></tr></table></figure>
+
+<p>边节点：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(A → B): nextOut -&gt; (A → C), nextIn -&gt; null</span><br><span class="line">(A → C): nextOut -&gt; null,      nextIn -&gt; null</span><br><span class="line">(B → C): nextOut -&gt; null,      nextIn -&gt; (A → C)</span><br><span class="line">(C → D): nextOut -&gt; null,      nextIn -&gt; null</span><br></pre></td></tr></table></figure>
+
+<p>在这个结构中，顶点 A 通过 <code>firstOut</code> 链接了出边 <code>(A → B)</code>，并通过 <code>nextOut</code> 指向下一条出边 <code>(A → C)</code>，而 <code>firstIn</code> 为 <code>null</code>，因为没有指向 A 的边。同样，边 <code>(A → B)</code> 的 <code>nextIn</code> 为空，因为没有指向 B 的其他边。</p>
+<h3 id="十字链表的优缺点"><a href="#十字链表的优缺点" class="headerlink" title="十字链表的优缺点"></a>十字链表的优缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
+<li><strong>方便处理有向图</strong>：十字链表同时存储了<strong>出边</strong>和<strong>入边</strong>信息，因此可以方便地遍历从顶点出发的边以及指向该顶点的边。这使得在处理有向图的算法中（如拓扑排序、求解强连通分量等）非常高效。</li>
+<li><strong>高效的边操作</strong>：可以快速获取某个顶点的所有出边和入边，适合需要频繁查询边信息的场景。</li>
+<li><strong>适合稀疏图</strong>：十字链表只存储实际存在的边，因此在边数较少的稀疏图中节省空间。</li>
+</ol>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li><strong>复杂性高</strong>：相比于普通的邻接表或邻接矩阵，十字链表的数据结构较为复杂，构建和维护成本较高。每条边需要维护两个链表，代码实现上较为复杂。</li>
+<li><strong>空间占用较大</strong>：由于每条边需要存储两个链表指针（<code>nextOut</code> 和 <code>nextIn</code>），十字链表比简单的邻接表占用更多的空间。</li>
+</ol>
+<h3 id="十字链表的时间复杂度"><a href="#十字链表的时间复杂度" class="headerlink" title="十字链表的时间复杂度"></a>十字链表的时间复杂度</h3><ul>
+<li><strong>空间复杂度</strong>：由于每条边都需要额外维护两个指针，十字链表的空间复杂度为 ( O(V + 2E) )，即每个顶点存储两个指针，每条边也存储两个指针。</li>
+<li><strong>遍历所有出边&#x2F;入边</strong>：从某个顶点出发，遍历所有出边或入边的时间复杂度是 ( O(d) )，其中 ( d ) 是该顶点的度数。</li>
+<li><strong>查找特定边</strong>：查找某个顶点的所有出边或入边仍然需要遍历整个链表，时间复杂度为 ( O(d) )。</li>
+</ul>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><ul>
+<li><p><strong>有向图的遍历</strong>：十字链表适合处理需要同时遍历出边和入边的有向图算法，例如：</p>
+<ul>
+<li><strong>拓扑排序</strong>：需要同时考虑入度和出度，十字链表方便在 O(1) 时间内访问这些信息。</li>
+<li><strong>强连通分量</strong>算法：在求解强连通分量时，需要遍历有向图的逆图，十字链表能够高效支持这种操作。</li>
+</ul>
+</li>
+<li><p><strong>网络流</strong>：在最大流或最小费用流等问题中，十字链表能够高效表示网络中的有向边及其流量信息。</p>
+</li>
+</ul>
+<p><strong>十字链表</strong>是一种用于表示<strong>有向图</strong>的链式结构，通过同时维护顶点的出边和入边链表，能够高效处理有向图的遍历和操作，尤其适用于那些需要频繁查询边信息和入度、出度关系的应用场景。虽然其空间开销较大，结构复杂，但在有向图的高级算法中，十字链表提供了很高的效率。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong>邻接表</strong>适用于稀疏图，空间效率高，但查询特定边的时间复杂度较高。</li>
+<li><strong>邻接矩阵</strong>适用于稠密图，查询特定边的时间复杂度为 $O(1)$，但空间效率较低。</li>
+<li><strong>十字链表</strong>适用于有向图，能够高效地处理出边和入边的操作，适合复杂的有向图算法。</li>
+</ul>
+<p>通过这些实现，我们可以根据具体问题的需求选择合适的数据结构来表示图。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2024/10/16/%E9%82%BB%E6%8E%A5%E8%A1%A8%EF%BC%8C%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%E5%92%8C%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/">https://cmzcc.github.io/2024/10/16/%E9%82%BB%E6%8E%A5%E8%A1%A8%EF%BC%8C%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%E5%92%8C%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a><a class="post-meta__tags" href="/tags/%E5%9B%BE/">图</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover4.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2024/10/16/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Prim-%E7%AE%97%E6%B3%95%E5%92%8CKruskal-%E7%AE%97%E6%B3%95/" title="最小生成树:Prim 算法和Kruskal 算法"><img class="cover" src="/img/text-cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">最小生成树:Prim 算法和Kruskal 算法</div></div></a><a class="next-post pull-right" href="/2024/10/16/DFS%E9%81%8D%E5%8E%86%E9%9D%9E%E8%81%94%E9%80%9A%E5%9B%BE/" title="DFS，BFS遍历非联通图"><img class="cover" src="/img/text-cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">DFS，BFS遍历非联通图</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a href="/2024/10/16/DFS%E9%81%8D%E5%8E%86%E9%9D%9E%E8%81%94%E9%80%9A%E5%9B%BE/" title="DFS，BFS遍历非联通图"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-16</div><div class="title">DFS，BFS遍历非联通图</div></div></a><a href="/2024/10/21/kahn%E7%AE%97%E6%B3%95%E5%AE%9E%E7%8E%B0%E6%8B%93%E6%89%91%E6%8E%92%E5%BA%8F/" title="kahn算法实现拓扑排序"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-21</div><div class="title">kahn算法实现拓扑排序</div></div></a><a href="/2024/09/25/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86%E8%AE%BF%E9%97%AE/" title="二叉树的遍历访问的实现"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-25</div><div class="title">二叉树的遍历访问的实现</div></div></a><a href="/2024/11/02/%E5%89%8D%E7%BC%80%E8%A1%A8%E4%B8%8EKMP%E7%AE%97%E6%B3%95/" title="前缀表与KMP算法"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-02</div><div class="title">前缀表与KMP算法</div></div></a><a href="/2024/11/12/%E5%87%A0%E7%A7%8D%E6%8E%92%E5%BA%8F/" title="几种排序"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-12</div><div class="title">几种排序</div></div></a><a href="/2024/10/23/%E5%8D%95%E6%BA%90%E6%9C%80%E7%9F%AD%E8%B7%AF%E5%BE%84%E9%97%AE%E9%A2%98%E4%B8%8EDijkstra%E7%AE%97%E6%B3%95/" title="单源最短路径问题与Dijkstra算法"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-23</div><div class="title">单源最短路径问题与Dijkstra算法</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">尾生期于梁下，水至不去，终抱梁柱而死</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%82%BB%E6%8E%A5%E8%A1%A8%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">1.</span> <span class="toc-text">1. 邻接表的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E9%82%BB%E6%8E%A5%E7%9F%A9%E9%98%B5%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.</span> <span class="toc-text">2. 邻接矩阵的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%E7%9A%84%E5%AE%9E%E7%8E%B0"><span class="toc-number">3.</span> <span class="toc-text">3. 十字链表的实现</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">4.</span> <span class="toc-text">十字链表的定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%BB%93%E6%9E%84%E6%8F%8F%E8%BF%B0"><span class="toc-number">5.</span> <span class="toc-text">结构描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%E7%9A%84%E8%8A%82%E7%82%B9%E7%BB%93%E6%9E%84"><span class="toc-number">6.</span> <span class="toc-text">十字链表的节点结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%E7%9A%84%E7%A4%BA%E4%BE%8B"><span class="toc-number">7.</span> <span class="toc-text">十字链表的示例</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E9%A1%B6%E7%82%B9%E7%9A%84%E5%87%BA%E8%BE%B9%E9%93%BE%E8%A1%A8%E5%92%8C%E5%85%A5%E8%BE%B9%E9%93%BE%E8%A1%A8"><span class="toc-number">7.1.</span> <span class="toc-text">1. 顶点的出边链表和入边链表</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%E8%A1%A8%E7%A4%BA"><span class="toc-number">7.2.</span> <span class="toc-text">2. 十字链表表示</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%E7%9A%84%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">8.</span> <span class="toc-text">十字链表的优缺点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BC%98%E7%82%B9"><span class="toc-number">8.1.</span> <span class="toc-text">优点</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%BA%E7%82%B9"><span class="toc-number">8.2.</span> <span class="toc-text">缺点</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8D%81%E5%AD%97%E9%93%BE%E8%A1%A8%E7%9A%84%E6%97%B6%E9%97%B4%E5%A4%8D%E6%9D%82%E5%BA%A6"><span class="toc-number">9.</span> <span class="toc-text">十字链表的时间复杂度</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">10.</span> <span class="toc-text">应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">11.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/11/17/%E6%8C%87%E5%90%91%E5%B8%B8%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E4%B8%8E%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88/" title="指向常量的指针与常量指针"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="指向常量的指针与常量指针"/></a><div class="content"><a class="title" href="/2024/11/17/%E6%8C%87%E5%90%91%E5%B8%B8%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E4%B8%8E%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88/" title="指向常量的指针与常量指针">指向常量的指针与常量指针</a><time datetime="2024-11-17T12:54:25.000Z" title="Created 2024-11-17 20:54:25">2024-11-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/12/%E5%87%A0%E7%A7%8D%E6%8E%92%E5%BA%8F/" title="几种排序"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="几种排序"/></a><div class="content"><a class="title" href="/2024/11/12/%E5%87%A0%E7%A7%8D%E6%8E%92%E5%BA%8F/" title="几种排序">几种排序</a><time datetime="2024-11-12T10:34:44.000Z" title="Created 2024-11-12 18:34:44">2024-11-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/02/%E5%89%8D%E7%BC%80%E8%A1%A8%E4%B8%8EKMP%E7%AE%97%E6%B3%95/" title="前缀表与KMP算法"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前缀表与KMP算法"/></a><div class="content"><a class="title" href="/2024/11/02/%E5%89%8D%E7%BC%80%E8%A1%A8%E4%B8%8EKMP%E7%AE%97%E6%B3%95/" title="前缀表与KMP算法">前缀表与KMP算法</a><time datetime="2024-11-02T11:54:25.000Z" title="Created 2024-11-02 19:54:25">2024-11-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/02/leetcode%E5%BF%83%E5%BE%97/" title="leetcode心得"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode心得"/></a><div class="content"><a class="title" href="/2024/11/02/leetcode%E5%BF%83%E5%BE%97/" title="leetcode心得">leetcode心得</a><time datetime="2024-11-02T03:26:54.000Z" title="Created 2024-11-02 11:26:54">2024-11-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/30/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E8%B0%83%E6%95%B4-%E5%B7%A6%E6%97%8B%E4%B8%8E%E5%8F%B3%E6%97%8B/" title="平衡二叉树的调整(左旋与右旋)"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="平衡二叉树的调整(左旋与右旋)"/></a><div class="content"><a class="title" href="/2024/10/30/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E8%B0%83%E6%95%B4-%E5%B7%A6%E6%97%8B%E4%B8%8E%E5%8F%B3%E6%97%8B/" title="平衡二叉树的调整(左旋与右旋)">平衡二叉树的调整(左旋与右旋)</a><time datetime="2024-10-30T14:21:58.000Z" title="Created 2024-10-30 22:21:58">2024-10-30</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

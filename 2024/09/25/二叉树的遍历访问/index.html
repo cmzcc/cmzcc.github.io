@@ -1,0 +1,377 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>二叉树的遍历访问的实现 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="引入我们从小学二年级开始，就学过二叉树了（bushi） 那么，如何用编程实现二叉树的遍历呢？ （这里使用c艹） 1234567struct TreeNode &#123;    int val;    TreeNode* left;    TreeNode* right;    TreeNode(int x) : val(x), left(nullptr), right(nullptr) &amp;#12">
+<meta property="og:type" content="article">
+<meta property="og:title" content="二叉树的遍历访问的实现">
+<meta property="og:url" content="https://cmzcc.github.io/2024/09/25/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86%E8%AE%BF%E9%97%AE/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="引入我们从小学二年级开始，就学过二叉树了（bushi） 那么，如何用编程实现二叉树的遍历呢？ （这里使用c艹） 1234567struct TreeNode &#123;    int val;    TreeNode* left;    TreeNode* right;    TreeNode(int x) : val(x), left(nullptr), right(nullptr) &amp;#12">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover5.jpg">
+<meta property="article:published_time" content="2024-09-25T05:51:25.000Z">
+<meta property="article:modified_time" content="2024-09-25T10:05:06.923Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="数据结构与算法">
+<meta property="article:tag" content="二叉树">
+<meta property="article:tag" content="递归">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover5.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2024/09/25/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86%E8%AE%BF%E9%97%AE/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '二叉树的遍历访问的实现',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2024-09-25 18:05:06'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover5.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">二叉树的遍历访问的实现</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">二叉树的遍历访问的实现</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2024-09-25T05:51:25.000Z" title="Created 2024-09-25 13:51:25">2024-09-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2024-09-25T10:05:06.923Z" title="Updated 2024-09-25 18:05:06">2024-09-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BB%8F%E9%AA%8C/">经验</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h1><p>我们从小学二年级开始，就学过二叉树了（bushi）</p>
+<p>那么，如何用编程实现二叉树的遍历呢？</p>
+<p>（这里使用c艹）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">struct TreeNode &#123;</span><br><span class="line">    int val;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>二叉树的每个结点都是如此定义的</p>
+<h1 id="遍历方法"><a href="#遍历方法" class="headerlink" title="遍历方法"></a>遍历方法</h1><h5 id="分为前序，中序，后序三种遍历方法。"><a href="#分为前序，中序，后序三种遍历方法。" class="headerlink" title="分为前序，中序，后序三种遍历方法。"></a>分为前序，中序，后序三种遍历方法。</h5><p>前序是从根结点开始，访问到最左侧第一个叶子结点后，访问右侧叶子，然后返回上一级（不访问），访问同级右侧结点，然后往下按照先左后右的顺序访问，等左子树访问完毕后，访问右子树。</p>
+<p>中序是从左侧第一个叶子结点开始，返回上一级（访问），下一级右侧，返回上上级，右侧最下方左侧结点，然后返回上一级（访问），以此类推。</p>
+<p>后序是按从左到右的顺序，左侧第一个叶子结点开始，访问完上一级结点左侧后，去右侧，然后返回上一级。</p>
+<h5 id="每种遍历方法又分为递归和非递归两种"><a href="#每种遍历方法又分为递归和非递归两种" class="headerlink" title="每种遍历方法又分为递归和非递归两种"></a>每种遍历方法又分为递归和非递归两种</h5><h2 id="非递归方法"><a href="#非递归方法" class="headerlink" title="非递归方法"></a>非递归方法</h2><h3 id="1-前序遍历（非递归）"><a href="#1-前序遍历（非递归）" class="headerlink" title="1. 前序遍历（非递归）"></a>1. 前序遍历（非递归）</h3><p>前序遍历的顺序是：根节点 -&gt; 左子树 -&gt; 右子树。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">vector&lt;int&gt; preorderTraversal(TreeNode* root) &#123;</span><br><span class="line">    vector&lt;int&gt; result; // 存储遍历结果</span><br><span class="line">    if (!root) return result;</span><br><span class="line"></span><br><span class="line">    stack&lt;TreeNode*&gt; stk; // 辅助栈</span><br><span class="line">    stk.push(root);       // 首先将根节点入栈</span><br><span class="line"></span><br><span class="line">    while (!stk.empty()) &#123;</span><br><span class="line">        TreeNode* node = stk.top();  // 获取栈顶元素</span><br><span class="line">        stk.pop();                   // 弹出栈顶元素</span><br><span class="line">        result.push_back(node-&gt;val); // 访问节点（加入结果）</span><br><span class="line"></span><br><span class="line">        // 先压右子节点，再压左子节点，保证左子节点先处理</span><br><span class="line">        if (node-&gt;right) stk.push(node-&gt;right);</span><br><span class="line">        if (node-&gt;left) stk.push(node-&gt;left);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-中序遍历（非递归）"><a href="#2-中序遍历（非递归）" class="headerlink" title="2. 中序遍历（非递归）"></a>2. 中序遍历（非递归）</h3><p>中序遍历的顺序是：左子树 -&gt; 根节点 -&gt; 右子树。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">inorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    std::stack&lt;TreeNode*&gt; stack;</span><br><span class="line">    TreeNode* current = root;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (current != <span class="literal">NULL</span> || !stack.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="comment">// 遍历到最左节点</span></span><br><span class="line">        <span class="keyword">while</span> (current != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            stack.<span class="built_in">push</span>(current);</span><br><span class="line">            current = current-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 处理节点</span></span><br><span class="line">        current = stack.<span class="built_in">top</span>();</span><br><span class="line">        stack.<span class="built_in">pop</span>();</span><br><span class="line">        std::cout &lt;&lt; current-&gt;val &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">        <span class="comment">// 转向右子树</span></span><br><span class="line">        current = current-&gt;right;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>初始化</strong>：创建一个栈来存储节点，并将当前节点指向根节点。</p>
+<p><strong>遍历左子树</strong>：使用一个 <code>while</code> 循环，持续将当前节点的左子节点压入栈中，直到当前节点为 <code>NULL</code>。这一步实际上是在找到最左侧的节点。</p>
+<p><strong>处理节点</strong>：当当前节点为 <code>NULL</code> 且栈不为空时，弹出栈顶节点，输出该节点的值。这就是中序遍历的核心步骤。</p>
+<p><strong>转向右子树</strong>：将当前节点更新为弹出的节点的右子节点，继续上述过程。</p>
+<p><strong>结束条件</strong>：当当前节点为 <code>NULL</code> 且栈为空时，遍历结束。</p>
+<h3 id="3-后序遍历（非递归）"><a href="#3-后序遍历（非递归）" class="headerlink" title="3. 后序遍历（非递归）"></a>3. 后序遍历（非递归）</h3><p>后序遍历的顺序是：左子树 -&gt; 右子树 -&gt; 根节点。</p>
+<p>后序遍历的非递归实现较复杂，可以使用两个栈来实现。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">postorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span> result;</span><br><span class="line"></span><br><span class="line">    stack&lt;TreeNode*&gt; stk1, stk2;</span><br><span class="line">    stk<span class="number">1.</span><span class="built_in">push</span>(root);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用两个栈，stk1用于遍历，stk2用于存储结果</span></span><br><span class="line">    <span class="keyword">while</span> (!stk<span class="number">1.</span><span class="built_in">empty</span>()) &#123;</span><br><span class="line">        TreeNode* node = stk<span class="number">1.</span><span class="built_in">top</span>();</span><br><span class="line">        stk<span class="number">1.</span><span class="built_in">pop</span>();</span><br><span class="line">        stk<span class="number">2.</span><span class="built_in">push</span>(node);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 左子节点和右子节点按顺序压入stk1</span></span><br><span class="line">        <span class="keyword">if</span> (node-&gt;left) stk<span class="number">1.</span><span class="built_in">push</span>(node-&gt;left);</span><br><span class="line">        <span class="keyword">if</span> (node-&gt;right) stk<span class="number">1.</span><span class="built_in">push</span>(node-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将stk2中的节点依次弹出到结果中</span></span><br><span class="line">    <span class="keyword">while</span> (!stk<span class="number">2.</span><span class="built_in">empty</span>()) &#123;</span><br><span class="line">        result.<span class="built_in">push_back</span>(stk<span class="number">2.</span><span class="built_in">top</span>()-&gt;val);</span><br><span class="line">        stk<span class="number">2.</span><span class="built_in">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这三种非递归遍历方法使用栈来模拟递归调用的过程，顺序不同是由于每种遍历访问节点的顺序不同。</p>
+<h2 id="递归方法"><a href="#递归方法" class="headerlink" title="递归方法"></a>递归方法</h2><p>递归算法是一种非常常见且简单的二叉树遍历实现方式，它依赖函数调用栈的隐式机制来完成节点的访问。在二叉树的递归遍历中，递归函数会按照特定的顺序调用自身来遍历树的各个节点。</p>
+<h3 id="1-前序遍历（递归）"><a href="#1-前序遍历（递归）" class="headerlink" title="1. 前序遍历（递归）"></a>1. 前序遍历（递归）</h3><h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>前序遍历的顺序是：<strong>先访问根节点</strong>，再访问左子树，最后访问右子树。</p>
+<p>前序遍历顺序：</p>
+<ul>
+<li>根节点 -&gt; 左子树 -&gt; 右子树。</li>
+</ul>
+<h4 id="递归算法步骤"><a href="#递归算法步骤" class="headerlink" title="递归算法步骤"></a>递归算法步骤</h4><ol>
+<li>先访问当前节点（根节点）。</li>
+<li>递归访问左子树。</li>
+<li>递归访问右子树。</li>
+</ol>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">preorderTraversal</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span>;                  <span class="comment">// 递归终止条件：节点为空</span></span><br><span class="line"></span><br><span class="line">    result.<span class="built_in">push_back</span>(root-&gt;val);         <span class="comment">// 访问根节点</span></span><br><span class="line">    <span class="built_in">preorderTraversal</span>(root-&gt;left, result); <span class="comment">// 递归遍历左子树</span></span><br><span class="line">    <span class="built_in">preorderTraversal</span>(root-&gt;right, result); <span class="comment">// 递归遍历右子树</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="过程说明"><a href="#过程说明" class="headerlink" title="过程说明"></a>过程说明</h4><p>假设二叉树结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line"> \</span><br><span class="line">  2</span><br><span class="line"> /</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先访问根节点 <code>1</code>，然后递归访问它的右子节点 <code>2</code>。</li>
+<li>访问 <code>2</code> 后，递归访问 <code>2</code> 的左子节点 <code>3</code>。</li>
+<li>访问 <code>3</code> 后，没有更多节点，递归结束。</li>
+</ul>
+<p>最终前序遍历的结果为 <code>[1, 2, 3]</code>。</p>
+<hr>
+<h3 id="2-中序遍历（递归）"><a href="#2-中序遍历（递归）" class="headerlink" title="2. 中序遍历（递归）"></a>2. 中序遍历（递归）</h3><h4 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h4><p>中序遍历的顺序是：<strong>先访问左子树</strong>，然后访问根节点，最后访问右子树。</p>
+<p>中序遍历顺序：</p>
+<ul>
+<li>左子树 -&gt; 根节点 -&gt; 右子树。</li>
+</ul>
+<h4 id="递归算法步骤-1"><a href="#递归算法步骤-1" class="headerlink" title="递归算法步骤"></a>递归算法步骤</h4><ol>
+<li>递归访问左子树。</li>
+<li>访问当前节点（根节点）。</li>
+<li>递归访问右子树。</li>
+</ol>
+<h4 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">inorderTraversal</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span>;                    <span class="comment">// 递归终止条件：节点为空</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">inorderTraversal</span>(root-&gt;left, result);   <span class="comment">// 递归遍历左子树</span></span><br><span class="line">    result.<span class="built_in">push_back</span>(root-&gt;val);            <span class="comment">// 访问根节点</span></span><br><span class="line">    <span class="built_in">inorderTraversal</span>(root-&gt;right, result);  <span class="comment">// 递归遍历右子树</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="过程说明-1"><a href="#过程说明-1" class="headerlink" title="过程说明"></a>过程说明</h4><p>假设二叉树结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line"> \</span><br><span class="line">  2</span><br><span class="line"> /</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先递归访问 <code>1</code> 的左子树，但为空，直接访问根节点 <code>1</code>。</li>
+<li>然后递归访问右子树，从 <code>2</code> 开始，递归访问 <code>2</code> 的左子节点 <code>3</code>。</li>
+<li>访问完 <code>3</code>，回到 <code>2</code>，访问 <code>2</code>。</li>
+</ul>
+<p>最终中序遍历的结果为 <code>[1, 3, 2]</code>。</p>
+<hr>
+<h3 id="3-后序遍历（递归）"><a href="#3-后序遍历（递归）" class="headerlink" title="3. 后序遍历（递归）"></a>3. 后序遍历（递归）</h3><h4 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h4><p>后序遍历的顺序是：<strong>先访问左子树</strong>，再访问右子树，最后访问根节点。</p>
+<p>后序遍历顺序：</p>
+<ul>
+<li>左子树 -&gt; 右子树 -&gt; 根节点。</li>
+</ul>
+<h4 id="递归算法步骤-2"><a href="#递归算法步骤-2" class="headerlink" title="递归算法步骤"></a>递归算法步骤</h4><ol>
+<li>递归访问左子树。</li>
+<li>递归访问右子树。</li>
+<li>访问当前节点（根节点）。</li>
+</ol>
+<h4 id="代码实现-2"><a href="#代码实现-2" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">postorderTraversal</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span>;                    <span class="comment">// 递归终止条件：节点为空</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">postorderTraversal</span>(root-&gt;left, result);  <span class="comment">// 递归遍历左子树</span></span><br><span class="line">    <span class="built_in">postorderTraversal</span>(root-&gt;right, result); <span class="comment">// 递归遍历右子树</span></span><br><span class="line">    result.<span class="built_in">push_back</span>(root-&gt;val);             <span class="comment">// 访问根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="过程说明-2"><a href="#过程说明-2" class="headerlink" title="过程说明"></a>过程说明</h4><p>假设二叉树结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1</span><br><span class="line"> \</span><br><span class="line">  2</span><br><span class="line"> /</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先递归访问 <code>1</code> 的左子树，空节点返回。</li>
+<li>然后递归访问 <code>1</code> 的右子节点 <code>2</code>，继续递归访问 <code>2</code> 的左子节点 <code>3</code>。</li>
+<li>访问 <code>3</code> 后返回，访问 <code>2</code> 后返回，最后访问根节点 <code>1</code>。</li>
+</ul>
+<p>最终后序遍历的结果为 <code>[3, 2, 1]</code>。</p>
+<hr>
+<h3 id="递归遍历的工作原理"><a href="#递归遍历的工作原理" class="headerlink" title="递归遍历的工作原理"></a>递归遍历的工作原理</h3><p>递归遍历的核心思想是利用系统调用栈隐式地保存当前节点的状态，并通过函数的自我调用完成对二叉树各个节点的遍历。在每一次递归调用时，栈帧会记录当前函数的上下文（包括参数和本地变量），当递归返回时，栈帧会恢复之前的状态。因此，递归算法中不需要显式地使用栈结构来保存节点状态，递归的函数调用本身就是栈的模拟。</p>
+<h1 id="通过遍历确定二叉树"><a href="#通过遍历确定二叉树" class="headerlink" title="通过遍历确定二叉树"></a>通过遍历确定二叉树</h1><p>首先，一种遍历是肯定不能的</p>
+<p>前序遍历＋后序也不能</p>
+<p>但中序＋任意就可以</p>
+<p>下面是后序和中序的一个例子</p>
+<p>给定二叉树的<strong>后序遍历</strong>和<strong>中序遍历</strong>，可以确定这棵二叉树的结构。</p>
+<ul>
+<li><strong>后序遍历</strong>：<code>dabec</code></li>
+<li><strong>中序遍历</strong>：<code>debac</code></li>
+</ul>
+<h3 id="重建二叉树的步骤"><a href="#重建二叉树的步骤" class="headerlink" title="重建二叉树的步骤"></a>重建二叉树的步骤</h3><ol>
+<li><p><strong>后序遍历的特点</strong>：后序遍历的最后一个节点是根节点。因此，通过后序遍历可以找到二叉树的根节点。</p>
+<ul>
+<li>在后序遍历 <code>dabec</code> 中，最后一个元素 <code>c</code> 是二叉树的根节点。</li>
+</ul>
+</li>
+<li><p><strong>在中序遍历中找到根节点</strong>：通过中序遍历，可以将二叉树分为左子树和右子树。</p>
+<ul>
+<li>中序遍历是 <code>debac</code>，根节点 <code>c</code> 在中序遍历中的位置是最后一位，因此 <code>deba</code> 是左子树，右子树为空。</li>
+</ul>
+</li>
+<li><p><strong>递归构建左子树</strong>：</p>
+<ul>
+<li>左子树的中序遍历是 <code>deba</code>，左子树的后序遍历是 <code>dabe</code>（从后序遍历中取去掉根节点的部分）。</li>
+<li>继续对 <code>dabe</code> 和 <code>deba</code> 递归构建。</li>
+</ul>
+</li>
+<li><p><strong>对左子树进行递归构建</strong>：</p>
+<ul>
+<li>在后序遍历 <code>dabe</code> 中，最后一个元素 <code>e</code> 是左子树的根节点。</li>
+<li>在中序遍历 <code>deba</code> 中，根节点 <code>e</code> 的位置将 <code>d</code> 和 <code>ba</code> 分为左右子树，左子树为 <code>d</code>，右子树为 <code>ba</code>。</li>
+</ul>
+</li>
+<li><p><strong>递归构建左子树和右子树</strong>：</p>
+<ul>
+<li>对左子树 <code>d</code>，中序遍历和后序遍历均为 <code>d</code>，因此它是叶子节点。</li>
+<li>对右子树 <code>ba</code>：<ul>
+<li>在后序遍历 <code>ba</code> 中，根节点是 <code>a</code>，剩下的 <code>b</code> 是它的左子树。</li>
+<li>对左子树 <code>b</code>，中序遍历和后序遍历均为 <code>b</code>，因此它是叶子节点。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="最终二叉树的结构"><a href="#最终二叉树的结构" class="headerlink" title="最终二叉树的结构"></a>最终二叉树的结构</h3><p>将上述步骤的结果组合在一起，二叉树的形状如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">    c</span><br><span class="line">   /</span><br><span class="line">  e</span><br><span class="line"> / \</span><br><span class="line">d   a</span><br><span class="line">   /</span><br><span class="line">  b</span><br></pre></td></tr></table></figure>
+
+<h3 id="详细解释"><a href="#详细解释" class="headerlink" title="详细解释"></a>详细解释</h3><ul>
+<li>根节点是 <code>c</code>，它的左子树是 <code>e</code>。</li>
+<li>节点 <code>e</code> 的左子树是 <code>d</code>，右子树是 <code>a</code>。</li>
+<li>节点 <code>a</code> 有一个左子树 <code>b</code>，而 <code>b</code> 和 <code>d</code> 都是叶子节点。</li>
+</ul>
+<p>通过后序遍历和中序遍历，我们成功地重建了这棵二叉树。</p>
+<hr>
+<h1 id="递归-vs-非递归"><a href="#递归-vs-非递归" class="headerlink" title="递归 vs. 非递归"></a>递归 vs. 非递归</h1><ol>
+<li><p><strong>递归遍历</strong>：</p>
+<ul>
+<li>简洁且符合思维逻辑。</li>
+<li>利用系统调用栈来管理递归状态，不需要手动维护栈。</li>
+<li>如果树的深度较深，递归深度过大会导致栈溢出。</li>
+</ul>
+</li>
+<li><p><strong>非递归遍历</strong>：</p>
+<ul>
+<li>使用显式栈来模拟递归，避免了函数调用的开销。</li>
+<li>更加适合处理非常深的树，避免了递归栈溢出的问题。</li>
+<li>实现较为复杂，尤其是后序遍历，需要用到两个栈。</li>
+</ul>
+</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>递归遍历是通过系统调用栈隐式地实现节点状态的保存与恢复，而非递归遍历则通过显式的栈来模拟递归过程。选择递归或非递归方法通常取决于具体应用场景以及对性能和栈深度的要求。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2024/09/25/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86%E8%AE%BF%E9%97%AE/">https://cmzcc.github.io/2024/09/25/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86%E8%AE%BF%E9%97%AE/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E7%BB%93%E6%9E%84%E4%B8%8E%E7%AE%97%E6%B3%95/">数据结构与算法</a><a class="post-meta__tags" href="/tags/%E4%BA%8C%E5%8F%89%E6%A0%91/">二叉树</a><a class="post-meta__tags" href="/tags/%E9%80%92%E5%BD%92/">递归</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover5.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2024/09/25/%E7%BA%BF%E7%B4%A2%E5%8C%96%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E5%85%B6%E9%81%8D%E5%8E%86/" title="线索化二叉树及其遍历"><img class="cover" src="/img/text-cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">线索化二叉树及其遍历</div></div></a><a class="next-post pull-right" href="/2024/09/24/%E5%8F%8C%E6%8C%87%E9%92%88%E4%B8%8E%E6%BB%91%E5%8A%A8%E7%AA%97%E5%8F%A3/" title="双指针与滑动窗口"><img class="cover" src="/img/text-cover1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">双指针与滑动窗口</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a href="/2024/11/12/%E5%87%A0%E7%A7%8D%E6%8E%92%E5%BA%8F/" title="几种排序"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-12</div><div class="title">几种排序</div></div></a><a href="/2024/10/30/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E8%B0%83%E6%95%B4-%E5%B7%A6%E6%97%8B%E4%B8%8E%E5%8F%B3%E6%97%8B/" title="平衡二叉树的调整(左旋与右旋)"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-30</div><div class="title">平衡二叉树的调整(左旋与右旋)</div></div></a><a href="/2024/10/16/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Prim-%E7%AE%97%E6%B3%95%E5%92%8CKruskal-%E7%AE%97%E6%B3%95/" title="最小生成树:Prim 算法和Kruskal 算法"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-16</div><div class="title">最小生成树:Prim 算法和Kruskal 算法</div></div></a><a href="/2024/10/09/%E6%A0%91%E4%B8%8E%E4%BA%8C%E5%8F%89%E6%A0%91/" title="树与二叉树"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-09</div><div class="title">树与二叉树</div></div></a><a href="/2024/09/25/%E7%BA%BF%E7%B4%A2%E5%8C%96%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E5%85%B6%E9%81%8D%E5%8E%86/" title="线索化二叉树及其遍历"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-25</div><div class="title">线索化二叉树及其遍历</div></div></a><a href="/2024/10/09/%E8%B5%AB%E5%A4%AB%E6%9B%BC%E6%A0%91%E4%B8%8E%E8%B5%AB%E5%A4%AB%E6%9B%BC%E7%BC%96%E7%A0%81/" title="赫夫曼树与赫夫曼编码"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-10-09</div><div class="title">赫夫曼树与赫夫曼编码</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">19</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">35</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">尾生期于梁下，水至不去，终抱梁柱而死</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%BC%95%E5%85%A5"><span class="toc-number">1.</span> <span class="toc-text">引入</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95"><span class="toc-number">2.</span> <span class="toc-text">遍历方法</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#%E5%88%86%E4%B8%BA%E5%89%8D%E5%BA%8F%EF%BC%8C%E4%B8%AD%E5%BA%8F%EF%BC%8C%E5%90%8E%E5%BA%8F%E4%B8%89%E7%A7%8D%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95%E3%80%82"><span class="toc-number">2.0.0.0.1.</span> <span class="toc-text">分为前序，中序，后序三种遍历方法。</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#%E6%AF%8F%E7%A7%8D%E9%81%8D%E5%8E%86%E6%96%B9%E6%B3%95%E5%8F%88%E5%88%86%E4%B8%BA%E9%80%92%E5%BD%92%E5%92%8C%E9%9D%9E%E9%80%92%E5%BD%92%E4%B8%A4%E7%A7%8D"><span class="toc-number">2.0.0.0.2.</span> <span class="toc-text">每种遍历方法又分为递归和非递归两种</span></a></li></ol></li></ol></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%9D%9E%E9%80%92%E5%BD%92%E6%96%B9%E6%B3%95"><span class="toc-number">2.1.</span> <span class="toc-text">非递归方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%89%8D%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88%E9%9D%9E%E9%80%92%E5%BD%92%EF%BC%89"><span class="toc-number">2.1.1.</span> <span class="toc-text">1. 前序遍历（非递归）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88%E9%9D%9E%E9%80%92%E5%BD%92%EF%BC%89"><span class="toc-number">2.1.2.</span> <span class="toc-text">2. 中序遍历（非递归）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88%E9%9D%9E%E9%80%92%E5%BD%92%EF%BC%89"><span class="toc-number">2.1.3.</span> <span class="toc-text">3. 后序遍历（非递归）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E6%96%B9%E6%B3%95"><span class="toc-number">2.2.</span> <span class="toc-text">递归方法</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%89%8D%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88%E9%80%92%E5%BD%92%EF%BC%89"><span class="toc-number">2.2.1.</span> <span class="toc-text">1. 前序遍历（递归）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">2.2.1.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4"><span class="toc-number">2.2.1.2.</span> <span class="toc-text">递归算法步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0"><span class="toc-number">2.2.1.3.</span> <span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E8%AF%B4%E6%98%8E"><span class="toc-number">2.2.1.4.</span> <span class="toc-text">过程说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%AD%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88%E9%80%92%E5%BD%92%EF%BC%89"><span class="toc-number">2.2.2.</span> <span class="toc-text">2. 中序遍历（递归）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="toc-number">2.2.2.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4-1"><span class="toc-number">2.2.2.2.</span> <span class="toc-text">递归算法步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-1"><span class="toc-number">2.2.2.3.</span> <span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E8%AF%B4%E6%98%8E-1"><span class="toc-number">2.2.2.4.</span> <span class="toc-text">过程说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%90%8E%E5%BA%8F%E9%81%8D%E5%8E%86%EF%BC%88%E9%80%92%E5%BD%92%EF%BC%89"><span class="toc-number">2.2.3.</span> <span class="toc-text">3. 后序遍历（递归）</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-2"><span class="toc-number">2.2.3.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E7%AE%97%E6%B3%95%E6%AD%A5%E9%AA%A4-2"><span class="toc-number">2.2.3.2.</span> <span class="toc-text">递归算法步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E5%AE%9E%E7%8E%B0-2"><span class="toc-number">2.2.3.3.</span> <span class="toc-text">代码实现</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E8%BF%87%E7%A8%8B%E8%AF%B4%E6%98%8E-2"><span class="toc-number">2.2.3.4.</span> <span class="toc-text">过程说明</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%92%E5%BD%92%E9%81%8D%E5%8E%86%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">2.2.4.</span> <span class="toc-text">递归遍历的工作原理</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%9A%E8%BF%87%E9%81%8D%E5%8E%86%E7%A1%AE%E5%AE%9A%E4%BA%8C%E5%8F%89%E6%A0%91"><span class="toc-number">3.</span> <span class="toc-text">通过遍历确定二叉树</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%87%8D%E5%BB%BA%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.0.1.</span> <span class="toc-text">重建二叉树的步骤</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%9C%80%E7%BB%88%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E7%BB%93%E6%9E%84"><span class="toc-number">3.0.2.</span> <span class="toc-text">最终二叉树的结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E8%A7%A3%E9%87%8A"><span class="toc-number">3.0.3.</span> <span class="toc-text">详细解释</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E9%80%92%E5%BD%92-vs-%E9%9D%9E%E9%80%92%E5%BD%92"><span class="toc-number">4.</span> <span class="toc-text">递归 vs. 非递归</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2024/11/17/%E6%8C%87%E5%90%91%E5%B8%B8%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E4%B8%8E%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88/" title="指向常量的指针与常量指针"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="指向常量的指针与常量指针"/></a><div class="content"><a class="title" href="/2024/11/17/%E6%8C%87%E5%90%91%E5%B8%B8%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E4%B8%8E%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88/" title="指向常量的指针与常量指针">指向常量的指针与常量指针</a><time datetime="2024-11-17T12:54:25.000Z" title="Created 2024-11-17 20:54:25">2024-11-17</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/12/%E5%87%A0%E7%A7%8D%E6%8E%92%E5%BA%8F/" title="几种排序"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="几种排序"/></a><div class="content"><a class="title" href="/2024/11/12/%E5%87%A0%E7%A7%8D%E6%8E%92%E5%BA%8F/" title="几种排序">几种排序</a><time datetime="2024-11-12T10:34:44.000Z" title="Created 2024-11-12 18:34:44">2024-11-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/02/%E5%89%8D%E7%BC%80%E8%A1%A8%E4%B8%8EKMP%E7%AE%97%E6%B3%95/" title="前缀表与KMP算法"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="前缀表与KMP算法"/></a><div class="content"><a class="title" href="/2024/11/02/%E5%89%8D%E7%BC%80%E8%A1%A8%E4%B8%8EKMP%E7%AE%97%E6%B3%95/" title="前缀表与KMP算法">前缀表与KMP算法</a><time datetime="2024-11-02T11:54:25.000Z" title="Created 2024-11-02 19:54:25">2024-11-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/11/02/leetcode%E5%BF%83%E5%BE%97/" title="leetcode心得"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="leetcode心得"/></a><div class="content"><a class="title" href="/2024/11/02/leetcode%E5%BF%83%E5%BE%97/" title="leetcode心得">leetcode心得</a><time datetime="2024-11-02T03:26:54.000Z" title="Created 2024-11-02 11:26:54">2024-11-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2024/10/30/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E8%B0%83%E6%95%B4-%E5%B7%A6%E6%97%8B%E4%B8%8E%E5%8F%B3%E6%97%8B/" title="平衡二叉树的调整(左旋与右旋)"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="平衡二叉树的调整(左旋与右旋)"/></a><div class="content"><a class="title" href="/2024/10/30/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E8%B0%83%E6%95%B4-%E5%B7%A6%E6%97%8B%E4%B8%8E%E5%8F%B3%E6%97%8B/" title="平衡二叉树的调整(左旋与右旋)">平衡二叉树的调整(左旋与右旋)</a><time datetime="2024-10-30T14:21:58.000Z" title="Created 2024-10-30 22:21:58">2024-10-30</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
