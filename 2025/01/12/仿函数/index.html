@@ -1,0 +1,334 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>仿函数 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在 C++ 中，仿函数（Function Object 或 Functor） 是一种行为类似于函数的对象。仿函数是通过重载 operator() 运算符来实现的，这样一个对象就可以像函数一样调用。 仿函数的核心思想是：对象可以具有类似函数的行为，并且可以携带状态。这为设计灵活的函数调用方式提供了可能性，尤其是在 STL（标准模板库）中，仿函数被广泛应用于算法、容器操作等场景。  1. 仿函数的基本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="仿函数">
+<meta property="og:url" content="https://cmzcc.github.io/2025/01/12/%E4%BB%BF%E5%87%BD%E6%95%B0/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="在 C++ 中，仿函数（Function Object 或 Functor） 是一种行为类似于函数的对象。仿函数是通过重载 operator() 运算符来实现的，这样一个对象就可以像函数一样调用。 仿函数的核心思想是：对象可以具有类似函数的行为，并且可以携带状态。这为设计灵活的函数调用方式提供了可能性，尤其是在 STL（标准模板库）中，仿函数被广泛应用于算法、容器操作等场景。  1. 仿函数的基本">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover3.jpg">
+<meta property="article:published_time" content="2025-01-12T15:00:13.000Z">
+<meta property="article:modified_time" content="2025-01-12T15:01:09.523Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="c++">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover3.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/01/12/%E4%BB%BF%E5%87%BD%E6%95%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '仿函数',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-01-12 23:01:09'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover3.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">仿函数</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">仿函数</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-01-12T15:00:13.000Z" title="Created 2025-01-12 23:00:13">2025-01-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-01-12T15:01:09.523Z" title="Updated 2025-01-12 23:01:09">2025-01-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%80%9D%E8%80%83/">思考</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>在 C++ 中，<strong>仿函数（Function Object 或 Functor）</strong> 是一种行为类似于函数的对象。仿函数是通过重载 <code>operator()</code> 运算符来实现的，这样一个对象就可以像函数一样调用。</p>
+<p>仿函数的核心思想是：<strong>对象可以具有类似函数的行为，并且可以携带状态</strong>。这为设计灵活的函数调用方式提供了可能性，尤其是在 STL（标准模板库）中，仿函数被广泛应用于算法、容器操作等场景。</p>
+<hr>
+<h2 id="1-仿函数的基本概念"><a href="#1-仿函数的基本概念" class="headerlink" title="1. 仿函数的基本概念"></a><strong>1. 仿函数的基本概念</strong></h2><p>仿函数是通过在一个类中重载 <code>operator()</code> 运算符来实现的。这样，类的对象就可以被调用（表现得像一个函数）。</p>
+<h3 id="仿函数的基本语法"><a href="#仿函数的基本语法" class="headerlink" title="仿函数的基本语法"></a><strong>仿函数的基本语法</strong></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">MyFunctor</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="comment">// 重载 operator()</span></span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; <span class="string">&quot;Called with: &quot;</span> &lt;&lt; x &lt;&lt; endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    MyFunctor functor; <span class="comment">// 创建仿函数对象</span></span><br><span class="line">    <span class="built_in">functor</span>(<span class="number">10</span>);       <span class="comment">// 像函数一样调用对象</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出"><a href="#输出" class="headerlink" title="输出"></a><strong>输出</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Called with: 10</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>functor(10)</code> 的调用会自动调用 <code>MyFunctor</code> 类的 <code>operator()</code> 函数。这样，<code>functor</code> 对象就表现得像一个函数。</p>
+<hr>
+<h2 id="2-仿函数的优点"><a href="#2-仿函数的优点" class="headerlink" title="2. 仿函数的优点"></a><strong>2. 仿函数的优点</strong></h2><ol>
+<li><p><strong>携带状态：</strong><br>仿函数可以包含成员变量，用于保存状态，而普通函数无法做到这一点。</p>
+</li>
+<li><p><strong>灵活性和可扩展性：</strong><br>仿函数是一个类，可以拥有额外的功能，如构造函数、成员函数等，提供比普通函数更多的功能和灵活性。</p>
+</li>
+<li><p><strong>STL 算法支持：</strong><br>仿函数与 STL 算法（如 <code>std::sort</code>、<code>std::for_each</code>）配合得非常好，用于定义自定义的行为。</p>
+</li>
+</ol>
+<hr>
+<h2 id="3-仿函数的应用"><a href="#3-仿函数的应用" class="headerlink" title="3. 仿函数的应用"></a><strong>3. 仿函数的应用</strong></h2><h3 id="3-1-仿函数与-STL-算法结合"><a href="#3-1-仿函数与-STL-算法结合" class="headerlink" title="3.1 仿函数与 STL 算法结合"></a><strong>3.1 仿函数与 STL 算法结合</strong></h3><p>仿函数可以作为参数传递给 STL 算法，例如 <code>std::sort</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个仿函数</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Compare</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">bool</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> a &gt; b; <span class="comment">// 降序排列</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; vec = &#123;<span class="number">5</span>, <span class="number">2</span>, <span class="number">8</span>, <span class="number">1</span>, <span class="number">3</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用仿函数作为自定义排序规则</span></span><br><span class="line">    <span class="built_in">sort</span>(vec.<span class="built_in">begin</span>(), vec.<span class="built_in">end</span>(), <span class="built_in">Compare</span>());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> x : vec) &#123;</span><br><span class="line">        cout &lt;&lt; x &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出-1"><a href="#输出-1" class="headerlink" title="输出"></a><strong>输出</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">8 5 3 2 1</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong></p>
+<ul>
+<li>仿函数 <code>Compare</code> 定义了一个自定义排序规则：返回 <code>true</code> 时表示 <code>a</code> 应该排在 <code>b</code> 的前面。</li>
+<li><code>std::sort</code> 接受仿函数作为第三个参数，用于对容器中的元素进行排序。</li>
+</ul>
+<hr>
+<h3 id="3-2-状态保存的仿函数"><a href="#3-2-状态保存的仿函数" class="headerlink" title="3.2 状态保存的仿函数"></a><strong>3.2 状态保存的仿函数</strong></h3><p>仿函数可以保存状态，普通函数无法做到这一点。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Adder</span> &#123;</span><br><span class="line">    <span class="type">int</span> value; <span class="comment">// 保存状态</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">Adder</span>(<span class="type">int</span> v) : <span class="built_in">value</span>(v) &#123;&#125;</span><br><span class="line"></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> x + value; <span class="comment">// 返回加上状态值后的结果</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">Adder <span class="title">add5</span><span class="params">(<span class="number">5</span>)</span></span>;   <span class="comment">// 创建一个仿函数对象，保存状态值 5</span></span><br><span class="line">    <span class="function">Adder <span class="title">add10</span><span class="params">(<span class="number">10</span>)</span></span>; <span class="comment">// 创建另一个仿函数对象，保存状态值 10</span></span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="built_in">add5</span>(<span class="number">3</span>) &lt;&lt; endl;  <span class="comment">// 输出 8（3 + 5）</span></span><br><span class="line">    cout &lt;&lt; <span class="built_in">add10</span>(<span class="number">3</span>) &lt;&lt; endl; <span class="comment">// 输出 13（3 + 10）</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出-2"><a href="#输出-2" class="headerlink" title="输出"></a><strong>输出</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">8</span><br><span class="line">13</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong></p>
+<ul>
+<li>仿函数 <code>Adder</code> 内部保存了一个状态 <code>value</code>，通过构造函数进行初始化。</li>
+<li>调用仿函数时，可以使用该状态进行计算，类似于闭包（closure）的效果。</li>
+</ul>
+<hr>
+<h3 id="3-3-使用-STL-的-std-for-each"><a href="#3-3-使用-STL-的-std-for-each" class="headerlink" title="3.3 使用 STL 的 std::for_each"></a><strong>3.3 使用 STL 的 <code>std::for_each</code></strong></h3><p>仿函数可以用于 STL 算法 <code>std::for_each</code>，实现对容器中每个元素的操作。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义一个仿函数，用于打印元素</span></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Print</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">(<span class="type">int</span> x)</span> </span>&#123;</span><br><span class="line">        cout &lt;&lt; x &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; vec = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用仿函数与 for_each</span></span><br><span class="line">    for_each(vec.<span class="built_in">begin</span>(), vec.<span class="built_in">end</span>(), <span class="built_in">Print</span>());</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出-3"><a href="#输出-3" class="headerlink" title="输出"></a><strong>输出</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 2 3 4 5</span><br></pre></td></tr></table></figure>
+
+<p><strong>说明：</strong></p>
+<ul>
+<li><code>Print</code> 仿函数定义了如何处理每个元素。</li>
+<li><code>std::for_each</code> 将容器中的每个元素依次传递给仿函数。</li>
+</ul>
+<hr>
+<h3 id="3-4-Lambda-表达式的替代"><a href="#3-4-Lambda-表达式的替代" class="headerlink" title="3.4 Lambda 表达式的替代"></a><strong>3.4 Lambda 表达式的替代</strong></h3><p>在现代 C++（C++11 及以上）中，仿函数可以被 <strong>Lambda 表达式</strong> 替代。Lambda 表达式更简洁，但仿函数在某些复杂场景下依然有优势。</p>
+<p>等价于上面的 <code>std::for_each</code> 示例：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;algorithm&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; vec = &#123;<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 Lambda 表达式替代仿函数</span></span><br><span class="line">    for_each(vec.<span class="built_in">begin</span>(), vec.<span class="built_in">end</span>(), [](<span class="type">int</span> x) &#123;</span><br><span class="line">        cout &lt;&lt; x &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出-4"><a href="#输出-4" class="headerlink" title="输出"></a><strong>输出</strong></h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">1 2 3 4 5</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-STL-中常见的仿函数"><a href="#4-STL-中常见的仿函数" class="headerlink" title="4. STL 中常见的仿函数"></a><strong>4. STL 中常见的仿函数</strong></h2><p>C++ STL 提供了一些常用的内置仿函数，主要定义在头文件 <code>&lt;functional&gt;</code> 中：</p>
+<h3 id="4-1-算术仿函数"><a href="#4-1-算术仿函数" class="headerlink" title="4.1 算术仿函数"></a><strong>4.1 算术仿函数</strong></h3><ul>
+<li><code>std::plus</code>：加法。</li>
+<li><code>std::minus</code>：减法。</li>
+<li><code>std::multiplies</code>：乘法。</li>
+<li><code>std::divides</code>：除法。</li>
+<li><code>std::modulus</code>：取模。</li>
+<li><code>std::negate</code>：取负。</li>
+</ul>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    plus&lt;<span class="type">int</span>&gt; add;           <span class="comment">// 加法仿函数</span></span><br><span class="line">    multiplies&lt;<span class="type">int</span>&gt; multiply; <span class="comment">// 乘法仿函数</span></span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="built_in">add</span>(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; endl;        <span class="comment">// 输出 8</span></span><br><span class="line">    cout &lt;&lt; <span class="built_in">multiply</span>(<span class="number">3</span>, <span class="number">5</span>) &lt;&lt; endl;  <span class="comment">// 输出 15</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-2-逻辑仿函数"><a href="#4-2-逻辑仿函数" class="headerlink" title="4.2 逻辑仿函数"></a><strong>4.2 逻辑仿函数</strong></h3><ul>
+<li><code>std::equal_to</code>：等于。</li>
+<li><code>std::not_equal_to</code>：不等于。</li>
+<li><code>std::greater</code>：大于。</li>
+<li><code>std::less</code>：小于。</li>
+<li><code>std::greater_equal</code>：大于等于。</li>
+<li><code>std::less_equal</code>：小于等于。</li>
+</ul>
+<h3 id="4-3-逻辑操作仿函数"><a href="#4-3-逻辑操作仿函数" class="headerlink" title="4.3 逻辑操作仿函数"></a><strong>4.3 逻辑操作仿函数</strong></h3><ul>
+<li><code>std::logical_and</code>：逻辑与。</li>
+<li><code>std::logical_or</code>：逻辑或。</li>
+<li><code>std::logical_not</code>：逻辑非。</li>
+</ul>
+<hr>
+<h2 id="5-仿函数与-Lambda-的对比"><a href="#5-仿函数与-Lambda-的对比" class="headerlink" title="5. 仿函数与 Lambda 的对比"></a><strong>5. 仿函数与 Lambda 的对比</strong></h2><table>
+<thead>
+<tr>
+<th><strong>特性</strong></th>
+<th><strong>仿函数</strong></th>
+<th><strong>Lambda 表达式</strong></th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>状态管理</strong></td>
+<td>通过类的成员变量保存状态</td>
+<td>捕获变量（自动或手动捕获）</td>
+</tr>
+<tr>
+<td><strong>代码长度</strong></td>
+<td>需要定义一个类，代码较长</td>
+<td>简洁（C++11 及以上）</td>
+</tr>
+<tr>
+<td><strong>扩展性</strong></td>
+<td>灵活，可定义复杂行为</td>
+<td>简单场景更适用</td>
+</tr>
+<tr>
+<td><strong>兼容性</strong></td>
+<td>C++98 开始支持</td>
+<td>C++11 及以上支持</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a><strong>总结</strong></h2><ul>
+<li>仿函数是通过重载 <code>operator()</code> 实现的对象，可以像函数一样调用。</li>
+<li>仿函数能够保存状态，并灵活应用于 STL 算法。</li>
+<li>在现代 C++ 中，仿函数仍然有其独特的作用，尤其是在复杂的场景中，而简单场景更推荐使用 Lambda 表达式。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/01/12/%E4%BB%BF%E5%87%BD%E6%95%B0/">https://cmzcc.github.io/2025/01/12/%E4%BB%BF%E5%87%BD%E6%95%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/c/">c++</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover3.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/01/12/%E5%8F%AF%E8%B0%83%E7%94%A8%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%91%E5%AE%9A%E5%99%A8%E5%92%8C%E5%8C%85%E8%A3%85%E5%99%A8/" title="可调用对象的绑定器和包装器"><img class="cover" src="/img/text-cover2.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">可调用对象的绑定器和包装器</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a href="/2025/01/12/Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="Lambda表达式"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-12</div><div class="title">Lambda表达式</div></div></a><a href="/2024/09/17/c++%E4%B8%AD%E5%85%B3%E4%BA%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E9%87%8D%E8%BD%BD%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E6%80%9D%E8%80%83/" title="c++中关于深拷贝与重载赋值运算符的思考"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-17</div><div class="title">c++中关于深拷贝与重载赋值运算符的思考</div></div></a><a href="/2024/11/25/c++%E4%B8%AD%E7%9A%84IO%E6%B5%81/" title="c++中的I&#x2F;O流"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++中的I&#x2F;O流</div></div></a><a href="/2024/11/25/c++11%E6%96%B0%E7%89%B9%E6%80%A7%E4%B9%8Bemplace/" title="c++11新特性之emplace"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++11新特性之emplace</div></div></a><a href="/2025/01/12/c++%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B/" title="c++中的线程"><img class="cover" src="/img/text-cover4.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-12</div><div class="title">c++中的线程</div></div></a><a href="/2024/11/19/c++%E4%B8%AD%E7%9A%84%E5%9B%9B%E7%A7%8D%E5%91%BD%E5%90%8D%E7%9A%84%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" title="c++中的四种命名的强制类型转换"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-19</div><div class="title">c++中的四种命名的强制类型转换</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">28</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">博主目前在向着c++游戏服务端开发工程师努力,为了养活亲亲女朋友(xixi)</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BB%BF%E5%87%BD%E6%95%B0%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">1.</span> <span class="toc-text">1. 仿函数的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%BF%E5%87%BD%E6%95%B0%E7%9A%84%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.1.</span> <span class="toc-text">仿函数的基本语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA"><span class="toc-number">1.2.</span> <span class="toc-text">输出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%BB%BF%E5%87%BD%E6%95%B0%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number">2.</span> <span class="toc-text">2. 仿函数的优点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BB%BF%E5%87%BD%E6%95%B0%E7%9A%84%E5%BA%94%E7%94%A8"><span class="toc-number">3.</span> <span class="toc-text">3. 仿函数的应用</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1-%E4%BB%BF%E5%87%BD%E6%95%B0%E4%B8%8E-STL-%E7%AE%97%E6%B3%95%E7%BB%93%E5%90%88"><span class="toc-number">3.1.</span> <span class="toc-text">3.1 仿函数与 STL 算法结合</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA-1"><span class="toc-number">3.2.</span> <span class="toc-text">输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2-%E7%8A%B6%E6%80%81%E4%BF%9D%E5%AD%98%E7%9A%84%E4%BB%BF%E5%87%BD%E6%95%B0"><span class="toc-number">3.3.</span> <span class="toc-text">3.2 状态保存的仿函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA-2"><span class="toc-number">3.4.</span> <span class="toc-text">输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3-%E4%BD%BF%E7%94%A8-STL-%E7%9A%84-std-for-each"><span class="toc-number">3.5.</span> <span class="toc-text">3.3 使用 STL 的 std::for_each</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA-3"><span class="toc-number">3.6.</span> <span class="toc-text">输出</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4-Lambda-%E8%A1%A8%E8%BE%BE%E5%BC%8F%E7%9A%84%E6%9B%BF%E4%BB%A3"><span class="toc-number">3.7.</span> <span class="toc-text">3.4 Lambda 表达式的替代</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%BE%93%E5%87%BA-4"><span class="toc-number">3.8.</span> <span class="toc-text">输出</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-STL-%E4%B8%AD%E5%B8%B8%E8%A7%81%E7%9A%84%E4%BB%BF%E5%87%BD%E6%95%B0"><span class="toc-number">4.</span> <span class="toc-text">4. STL 中常见的仿函数</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#4-1-%E7%AE%97%E6%9C%AF%E4%BB%BF%E5%87%BD%E6%95%B0"><span class="toc-number">4.1.</span> <span class="toc-text">4.1 算术仿函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-2-%E9%80%BB%E8%BE%91%E4%BB%BF%E5%87%BD%E6%95%B0"><span class="toc-number">4.2.</span> <span class="toc-text">4.2 逻辑仿函数</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-3-%E9%80%BB%E8%BE%91%E6%93%8D%E4%BD%9C%E4%BB%BF%E5%87%BD%E6%95%B0"><span class="toc-number">4.3.</span> <span class="toc-text">4.3 逻辑操作仿函数</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E4%BB%BF%E5%87%BD%E6%95%B0%E4%B8%8E-Lambda-%E7%9A%84%E5%AF%B9%E6%AF%94"><span class="toc-number">5.</span> <span class="toc-text">5. 仿函数与 Lambda 的对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">6.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/01/12/%E4%BB%BF%E5%87%BD%E6%95%B0/" title="仿函数"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="仿函数"/></a><div class="content"><a class="title" href="/2025/01/12/%E4%BB%BF%E5%87%BD%E6%95%B0/" title="仿函数">仿函数</a><time datetime="2025-01-12T15:00:13.000Z" title="Created 2025-01-12 23:00:13">2025-01-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/12/%E5%8F%AF%E8%B0%83%E7%94%A8%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%91%E5%AE%9A%E5%99%A8%E5%92%8C%E5%8C%85%E8%A3%85%E5%99%A8/" title="可调用对象的绑定器和包装器"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="可调用对象的绑定器和包装器"/></a><div class="content"><a class="title" href="/2025/01/12/%E5%8F%AF%E8%B0%83%E7%94%A8%E5%AF%B9%E8%B1%A1%E7%9A%84%E7%BB%91%E5%AE%9A%E5%99%A8%E5%92%8C%E5%8C%85%E8%A3%85%E5%99%A8/" title="可调用对象的绑定器和包装器">可调用对象的绑定器和包装器</a><time datetime="2025-01-12T14:59:03.000Z" title="Created 2025-01-12 22:59:03">2025-01-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/12/%E6%A8%A1%E6%9D%BF/" title="模板"><img src="/img/text-cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="模板"/></a><div class="content"><a class="title" href="/2025/01/12/%E6%A8%A1%E6%9D%BF/" title="模板">模板</a><time datetime="2025-01-12T14:57:56.000Z" title="Created 2025-01-12 22:57:56">2025-01-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/12/c++%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B/" title="c++中的线程"><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c++中的线程"/></a><div class="content"><a class="title" href="/2025/01/12/c++%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B/" title="c++中的线程">c++中的线程</a><time datetime="2025-01-12T10:42:29.000Z" title="Created 2025-01-12 18:42:29">2025-01-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/01/12/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" title="智能指针"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="智能指针"/></a><div class="content"><a class="title" href="/2025/01/12/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/" title="智能指针">智能指针</a><time datetime="2025-01-12T10:34:51.000Z" title="Created 2025-01-12 18:34:51">2025-01-12</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
