@@ -35,6 +35,75 @@
       </tags>
   </entry>
   <entry>
+    <title>Github拒绝push</title>
+    <url>/2024/09/19/Github%E6%8B%92%E7%BB%9Dpush/</url>
+    <content><![CDATA[<h2 id="Github-拒绝了你的push"><a href="#Github-拒绝了你的push" class="headerlink" title="Github 拒绝了你的push"></a>Github 拒绝了你的push</h2><p>你有没有出现以下问题？</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> ! [remote rejected] HEAD -&gt; main (push declined due to repository rule violations)</span><br><span class="line">error: failed to push some refs to &#x27;https://github.com/cmzcc/cmzcc.github.io.git&#x27;</span><br><span class="line">FATAL Something&#x27;s wrong. Maybe you can find the solution here: https://hexo.io/docs/troubleshooting.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h4 id="今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教"><a href="#今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教" class="headerlink" title="今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教."></a>今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教.</h4><h3 id="1-出现问题的原因"><a href="#1-出现问题的原因" class="headerlink" title="1.出现问题的原因"></a>1.出现问题的原因</h3><h4 id="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用"><a href="#出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用" class="headerlink" title="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用."></a>出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用.</h4><h4 id="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用"><a href="#我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用" class="headerlink" title="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用."></a>我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用.</h4><h3 id="2-解决方法"><a href="#2-解决方法" class="headerlink" title="2.解决方法"></a>2.解决方法</h3><h4 id="（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下"><a href="#（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下" class="headerlink" title="（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下."></a>（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下.</h4><h4 id="（2）找到你放网站的仓库，add-file看到没有"><a href="#（2）找到你放网站的仓库，add-file看到没有" class="headerlink" title="（2）找到你放网站的仓库，add file看到没有"></a>（2）找到你放网站的仓库，add file看到没有</h4><h4 id="然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去-（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"><a href="#然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去-（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）" class="headerlink" title="然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去.（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"></a>然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去.（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）</h4><h4 id="等上传完毕后，不要退出！！！"><a href="#等上传完毕后，不要退出！！！" class="headerlink" title="等上传完毕后，不要退出！！！"></a>等上传完毕后，不要退出！！！</h4><h4 id="点下面的提交即可，你的网站就水灵灵的更新啦"><a href="#点下面的提交即可，你的网站就水灵灵的更新啦" class="headerlink" title="点下面的提交即可，你的网站就水灵灵的更新啦."></a>点下面的提交即可，你的网站就水灵灵的更新啦.</h4>]]></content>
+      <categories>
+        <category>经验</category>
+      </categories>
+      <tags>
+        <tag>GitHub</tag>
+        <tag>error</tag>
+        <tag>hexo</tag>
+        <tag>网站</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>c++11新特性之emplace</title>
+    <url>/2024/11/25/c++11%E6%96%B0%E7%89%B9%E6%80%A7%E4%B9%8Bemplace/</url>
+    <content><![CDATA[<p><code>emplace</code> 是 C++ 中标准库（STL）提供的一种高效的元素插入方式，常用于容器（如 <code>std::vector</code>, <code>std::map</code>, <code>std::unordered_map</code> 等）中。<code>emplace</code> 通过直接在容器内部构造元素，避免了不必要的拷贝或移动操作，从而提高了性能。</p>
+<h3 id="emplace-和-insert-的区别"><a href="#emplace-和-insert-的区别" class="headerlink" title="emplace 和 insert 的区别"></a><code>emplace</code> 和 <code>insert</code> 的区别</h3><ul>
+<li><p>**<code>insert</code>**：将一个已构造的对象插入到容器中。通常需要通过拷贝或移动构造将元素插入容器。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line"><span class="type">int</span> x = <span class="number">5</span>;</span><br><span class="line">vec.<span class="built_in">insert</span>(vec.<span class="built_in">end</span>(), x);  <span class="comment">// 插入时会发生一次拷贝构造</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>**<code>emplace</code>**：直接在容器内部构造元素，避免了额外的拷贝或移动操作。<code>emplace</code> 接受构造元素所需的参数，然后直接在容器中构造该元素。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line">vec.<span class="built_in">emplace_back</span>(<span class="number">5</span>);  <span class="comment">// 在容器内部构造元素，避免拷贝</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="为什么使用-emplace？"><a href="#为什么使用-emplace？" class="headerlink" title="为什么使用 emplace？"></a>为什么使用 <code>emplace</code>？</h3><ol>
+<li><p><strong>避免不必要的拷贝或移动</strong>：</p>
+<ul>
+<li><code>insert</code> 必须先构造一个对象，然后将该对象插入容器，这可能涉及拷贝或移动构造。</li>
+<li><code>emplace</code> 直接在容器中构造元素，省去了额外的拷贝或移动操作。</li>
+</ul>
+</li>
+<li><p><strong>提高效率</strong>：</p>
+<ul>
+<li>特别是在容器中插入复杂对象时，使用 <code>emplace</code> 能显著提高性能，因为它直接传递构造参数，而不需要先创建一个对象。</li>
+</ul>
+</li>
+</ol>
+<h3 id="常见的-emplace-使用场景"><a href="#常见的-emplace-使用场景" class="headerlink" title="常见的 emplace 使用场景"></a>常见的 <code>emplace</code> 使用场景</h3><ul>
+<li><p>**<code>emplace_back</code>**：用于 <code>std::vector</code> 等容器，在容器的末尾构造元素。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;std::pair&lt;<span class="type">int</span>, std::string&gt;&gt; vec;</span><br><span class="line">vec.<span class="built_in">emplace_back</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);  <span class="comment">// 直接构造元素</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>**<code>emplace</code>**：对于 <code>std::map</code>、<code>std::unordered_map</code> 等关联容器，在指定位置构造元素。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::map&lt;<span class="type">int</span>, std::string&gt; m;</span><br><span class="line">m.<span class="built_in">emplace</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);  <span class="comment">// 直接在 map 中构造一个键值对</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>**<code>emplace_front</code>**：用于 <code>std::list</code> 等容器，在容器的前面构造元素。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::list&lt;<span class="type">int</span>&gt; lst;</span><br><span class="line">lst.<span class="built_in">emplace_front</span>(<span class="number">10</span>);  <span class="comment">// 在容器前面直接构造一个元素</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="emplace-示例代码"><a href="#emplace-示例代码" class="headerlink" title="emplace 示例代码"></a><code>emplace</code> 示例代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 使用 emplace_back 在 vector 中插入元素</span></span><br><span class="line">    std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line">    vec.<span class="built_in">emplace_back</span>(<span class="number">10</span>);  <span class="comment">// 直接构造元素</span></span><br><span class="line">    vec.<span class="built_in">emplace_back</span>(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; val : vec) &#123;</span><br><span class="line">        std::cout &lt;&lt; val &lt;&lt; <span class="string">&quot; &quot;</span>;  <span class="comment">// 输出: 10 20</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 emplace 在 map 中插入元素</span></span><br><span class="line">    std::map&lt;<span class="type">int</span>, std::string&gt; m;</span><br><span class="line">    m.<span class="built_in">emplace</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);</span><br><span class="line">    m.<span class="built_in">emplace</span>(<span class="number">2</span>, <span class="string">&quot;banana&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; pair : m) &#123;</span><br><span class="line">        std::cout &lt;&lt; pair.first &lt;&lt; <span class="string">&quot;: &quot;</span> &lt;&lt; pair.second &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 输出:</span></span><br><span class="line">    <span class="comment">// 1: apple</span></span><br><span class="line">    <span class="comment">// 2: banana</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><code>emplace</code> 提供了比 <code>insert</code> 更高效的方式来插入元素，因为它避免了不必要的对象构造、拷贝或移动操作。</li>
+<li><code>emplace</code> 通过传递构造元素所需的参数，直接在容器内构造元素，而不是先创建元素再插入。</li>
+<li>常见的 <code>emplace</code> 变种有 <code>emplace_back</code>（用于 <code>std::vector</code>）、<code>emplace</code>（用于 <code>std::map</code>, <code>std::unordered_map</code> 等）以及 <code>emplace_front</code>（用于 <code>std::list</code>）。</li>
+</ul>
+<p>使用 <code>emplace</code> 可以让你的程序更加高效，尤其是在需要频繁插入复杂对象时。</p>
+]]></content>
+      <categories>
+        <category>思考</category>
+      </categories>
+      <tags>
+        <tag>c++11</tag>
+        <tag>c++</tag>
+        <tag>STL</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>c++中关于深拷贝与重载赋值运算符的思考</title>
     <url>/2024/09/17/c++%E4%B8%AD%E5%85%B3%E4%BA%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E9%87%8D%E8%BD%BD%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E6%80%9D%E8%80%83/</url>
     <content><![CDATA[<h1 id="深拷贝"><a href="#深拷贝" class="headerlink" title="深拷贝"></a>深拷贝</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">class instance</span><br><span class="line">&#123;</span><br><span class="line">public:</span><br><span class="line">	int age;</span><br><span class="line">	int* height;</span><br><span class="line">instance(int a,int h)</span><br><span class="line">&#123;</span><br><span class="line">	age = a;</span><br><span class="line">	cout &lt;&lt; a &lt;&lt; endl;</span><br><span class="line">	height=new int(h);</span><br><span class="line">	cout &lt;&lt; *height &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line">~instance()</span><br><span class="line">&#123;</span><br><span class="line">	if (height != NULL)</span><br><span class="line">	&#123;</span><br><span class="line">		delete height;</span><br><span class="line">		height = NULL;</span><br><span class="line">		cout &lt;&lt; &quot;已清空&quot; &lt;&lt; endl;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line">instance(const instance&amp; p)</span><br><span class="line">&#123;</span><br><span class="line">	age = p.age;</span><br><span class="line">	//height = p.height;编译器默认实现的就是这行代码</span><br><span class="line">	//深拷贝如下</span><br><span class="line">	height = new int(*p.height); </span><br><span class="line">&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">//浅拷贝使两个height指向同一内存地址，会导致将已释放的内存再次释放，引发双重释放安全问题</span><br><span class="line">void test01()</span><br><span class="line">&#123;</span><br><span class="line">	instance p1(18,160);</span><br><span class="line">	instance p2(p1);</span><br><span class="line">	cout &lt;&lt; p2.age &lt;&lt;*p2.height&lt;&lt;endl;</span><br><span class="line">&#125;</span><br><span class="line">int main()</span><br><span class="line">&#123;</span><br><span class="line">	test01();</span><br><span class="line">	system(&quot;pause&quot;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -49,9 +118,9 @@
         <category>思考</category>
       </categories>
       <tags>
+        <tag>c++</tag>
         <tag>重载</tag>
         <tag>深拷贝</tag>
-        <tag>c++</tag>
       </tags>
   </entry>
   <entry>
@@ -121,58 +190,6 @@
         <tag>unity</tag>
         <tag>打卡</tag>
         <tag>闲得无聊所以发发</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>c++11新特性之emplace</title>
-    <url>/2024/11/25/c++11%E6%96%B0%E7%89%B9%E6%80%A7%E4%B9%8Bemplace/</url>
-    <content><![CDATA[<p><code>emplace</code> 是 C++ 中标准库（STL）提供的一种高效的元素插入方式，常用于容器（如 <code>std::vector</code>, <code>std::map</code>, <code>std::unordered_map</code> 等）中。<code>emplace</code> 通过直接在容器内部构造元素，避免了不必要的拷贝或移动操作，从而提高了性能。</p>
-<h3 id="emplace-和-insert-的区别"><a href="#emplace-和-insert-的区别" class="headerlink" title="emplace 和 insert 的区别"></a><code>emplace</code> 和 <code>insert</code> 的区别</h3><ul>
-<li><p>**<code>insert</code>**：将一个已构造的对象插入到容器中。通常需要通过拷贝或移动构造将元素插入容器。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line"><span class="type">int</span> x = <span class="number">5</span>;</span><br><span class="line">vec.<span class="built_in">insert</span>(vec.<span class="built_in">end</span>(), x);  <span class="comment">// 插入时会发生一次拷贝构造</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>**<code>emplace</code>**：直接在容器内部构造元素，避免了额外的拷贝或移动操作。<code>emplace</code> 接受构造元素所需的参数，然后直接在容器中构造该元素。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line">vec.<span class="built_in">emplace_back</span>(<span class="number">5</span>);  <span class="comment">// 在容器内部构造元素，避免拷贝</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="为什么使用-emplace？"><a href="#为什么使用-emplace？" class="headerlink" title="为什么使用 emplace？"></a>为什么使用 <code>emplace</code>？</h3><ol>
-<li><p><strong>避免不必要的拷贝或移动</strong>：</p>
-<ul>
-<li><code>insert</code> 必须先构造一个对象，然后将该对象插入容器，这可能涉及拷贝或移动构造。</li>
-<li><code>emplace</code> 直接在容器中构造元素，省去了额外的拷贝或移动操作。</li>
-</ul>
-</li>
-<li><p><strong>提高效率</strong>：</p>
-<ul>
-<li>特别是在容器中插入复杂对象时，使用 <code>emplace</code> 能显著提高性能，因为它直接传递构造参数，而不需要先创建一个对象。</li>
-</ul>
-</li>
-</ol>
-<h3 id="常见的-emplace-使用场景"><a href="#常见的-emplace-使用场景" class="headerlink" title="常见的 emplace 使用场景"></a>常见的 <code>emplace</code> 使用场景</h3><ul>
-<li><p>**<code>emplace_back</code>**：用于 <code>std::vector</code> 等容器，在容器的末尾构造元素。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;std::pair&lt;<span class="type">int</span>, std::string&gt;&gt; vec;</span><br><span class="line">vec.<span class="built_in">emplace_back</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);  <span class="comment">// 直接构造元素</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>**<code>emplace</code>**：对于 <code>std::map</code>、<code>std::unordered_map</code> 等关联容器，在指定位置构造元素。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::map&lt;<span class="type">int</span>, std::string&gt; m;</span><br><span class="line">m.<span class="built_in">emplace</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);  <span class="comment">// 直接在 map 中构造一个键值对</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>**<code>emplace_front</code>**：用于 <code>std::list</code> 等容器，在容器的前面构造元素。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::list&lt;<span class="type">int</span>&gt; lst;</span><br><span class="line">lst.<span class="built_in">emplace_front</span>(<span class="number">10</span>);  <span class="comment">// 在容器前面直接构造一个元素</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="emplace-示例代码"><a href="#emplace-示例代码" class="headerlink" title="emplace 示例代码"></a><code>emplace</code> 示例代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 使用 emplace_back 在 vector 中插入元素</span></span><br><span class="line">    std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line">    vec.<span class="built_in">emplace_back</span>(<span class="number">10</span>);  <span class="comment">// 直接构造元素</span></span><br><span class="line">    vec.<span class="built_in">emplace_back</span>(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; val : vec) &#123;</span><br><span class="line">        std::cout &lt;&lt; val &lt;&lt; <span class="string">&quot; &quot;</span>;  <span class="comment">// 输出: 10 20</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 emplace 在 map 中插入元素</span></span><br><span class="line">    std::map&lt;<span class="type">int</span>, std::string&gt; m;</span><br><span class="line">    m.<span class="built_in">emplace</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);</span><br><span class="line">    m.<span class="built_in">emplace</span>(<span class="number">2</span>, <span class="string">&quot;banana&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; pair : m) &#123;</span><br><span class="line">        std::cout &lt;&lt; pair.first &lt;&lt; <span class="string">&quot;: &quot;</span> &lt;&lt; pair.second &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 输出:</span></span><br><span class="line">    <span class="comment">// 1: apple</span></span><br><span class="line">    <span class="comment">// 2: banana</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li><code>emplace</code> 提供了比 <code>insert</code> 更高效的方式来插入元素，因为它避免了不必要的对象构造、拷贝或移动操作。</li>
-<li><code>emplace</code> 通过传递构造元素所需的参数，直接在容器内构造元素，而不是先创建元素再插入。</li>
-<li>常见的 <code>emplace</code> 变种有 <code>emplace_back</code>（用于 <code>std::vector</code>）、<code>emplace</code>（用于 <code>std::map</code>, <code>std::unordered_map</code> 等）以及 <code>emplace_front</code>（用于 <code>std::list</code>）。</li>
-</ul>
-<p>使用 <code>emplace</code> 可以让你的程序更加高效，尤其是在需要频繁插入复杂对象时。</p>
-]]></content>
-      <categories>
-        <category>思考</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-        <tag>c++11</tag>
-        <tag>STL</tag>
       </tags>
   </entry>
   <entry>
@@ -281,26 +298,9 @@
         <category>经验</category>
       </categories>
       <tags>
-        <tag>c++</tag>
         <tag>c++11</tag>
+        <tag>c++</tag>
         <tag>强制类型转换操作符</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Github拒绝push</title>
-    <url>/2024/09/19/Github%E6%8B%92%E7%BB%9Dpush/</url>
-    <content><![CDATA[<h2 id="Github-拒绝了你的push"><a href="#Github-拒绝了你的push" class="headerlink" title="Github 拒绝了你的push"></a>Github 拒绝了你的push</h2><p>你有没有出现以下问题？</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> ! [remote rejected] HEAD -&gt; main (push declined due to repository rule violations)</span><br><span class="line">error: failed to push some refs to &#x27;https://github.com/cmzcc/cmzcc.github.io.git&#x27;</span><br><span class="line">FATAL Something&#x27;s wrong. Maybe you can find the solution here: https://hexo.io/docs/troubleshooting.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h4 id="今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教"><a href="#今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教" class="headerlink" title="今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教."></a>今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教.</h4><h3 id="1-出现问题的原因"><a href="#1-出现问题的原因" class="headerlink" title="1.出现问题的原因"></a>1.出现问题的原因</h3><h4 id="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用"><a href="#出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用" class="headerlink" title="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用."></a>出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用.</h4><h4 id="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用"><a href="#我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用" class="headerlink" title="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用."></a>我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用.</h4><h3 id="2-解决方法"><a href="#2-解决方法" class="headerlink" title="2.解决方法"></a>2.解决方法</h3><h4 id="（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下"><a href="#（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下" class="headerlink" title="（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下."></a>（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下.</h4><h4 id="（2）找到你放网站的仓库，add-file看到没有"><a href="#（2）找到你放网站的仓库，add-file看到没有" class="headerlink" title="（2）找到你放网站的仓库，add file看到没有"></a>（2）找到你放网站的仓库，add file看到没有</h4><h4 id="然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去-（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"><a href="#然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去-（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）" class="headerlink" title="然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去.（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"></a>然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去.（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）</h4><h4 id="等上传完毕后，不要退出！！！"><a href="#等上传完毕后，不要退出！！！" class="headerlink" title="等上传完毕后，不要退出！！！"></a>等上传完毕后，不要退出！！！</h4><h4 id="点下面的提交即可，你的网站就水灵灵的更新啦"><a href="#点下面的提交即可，你的网站就水灵灵的更新啦" class="headerlink" title="点下面的提交即可，你的网站就水灵灵的更新啦."></a>点下面的提交即可，你的网站就水灵灵的更新啦.</h4>]]></content>
-      <categories>
-        <category>经验</category>
-      </categories>
-      <tags>
-        <tag>GitHub</tag>
-        <tag>error</tag>
-        <tag>hexo</tag>
-        <tag>网站</tag>
       </tags>
   </entry>
   <entry>
@@ -375,8 +375,8 @@
         <category>经验</category>
       </categories>
       <tags>
-        <tag>c++</tag>
         <tag>c++11</tag>
+        <tag>c++</tag>
         <tag>I/O流</tag>
       </tags>
   </entry>
@@ -480,179 +480,6 @@
       </categories>
       <tags>
         <tag>leetcode</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>二叉树的遍历访问的实现</title>
-    <url>/2024/09/25/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86%E8%AE%BF%E9%97%AE/</url>
-    <content><![CDATA[<h1 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h1><p>我们从小学二年级开始，就学过二叉树了（bushi）</p>
-<p>那么，如何用编程实现二叉树的遍历呢？</p>
-<p>（这里使用c艹）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">struct TreeNode &#123;</span><br><span class="line">    int val;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>二叉树的每个结点都是如此定义的</p>
-<h1 id="遍历方法"><a href="#遍历方法" class="headerlink" title="遍历方法"></a>遍历方法</h1><h5 id="分为前序，中序，后序三种遍历方法。"><a href="#分为前序，中序，后序三种遍历方法。" class="headerlink" title="分为前序，中序，后序三种遍历方法。"></a>分为前序，中序，后序三种遍历方法。</h5><p>前序是从根结点开始，访问到最左侧第一个叶子结点后，访问右侧叶子，然后返回上一级（不访问），访问同级右侧结点，然后往下按照先左后右的顺序访问，等左子树访问完毕后，访问右子树。</p>
-<p>中序是从左侧第一个叶子结点开始，返回上一级（访问），下一级右侧，返回上上级，右侧最下方左侧结点，然后返回上一级（访问），以此类推。</p>
-<p>后序是按从左到右的顺序，左侧第一个叶子结点开始，访问完上一级结点左侧后，去右侧，然后返回上一级。</p>
-<h5 id="每种遍历方法又分为递归和非递归两种"><a href="#每种遍历方法又分为递归和非递归两种" class="headerlink" title="每种遍历方法又分为递归和非递归两种"></a>每种遍历方法又分为递归和非递归两种</h5><h2 id="非递归方法"><a href="#非递归方法" class="headerlink" title="非递归方法"></a>非递归方法</h2><h3 id="1-前序遍历（非递归）"><a href="#1-前序遍历（非递归）" class="headerlink" title="1. 前序遍历（非递归）"></a>1. 前序遍历（非递归）</h3><p>前序遍历的顺序是：根节点 -&gt; 左子树 -&gt; 右子树。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vector&lt;int&gt; preorderTraversal(TreeNode* root) &#123;</span><br><span class="line">    vector&lt;int&gt; result; // 存储遍历结果</span><br><span class="line">    if (!root) return result;</span><br><span class="line"></span><br><span class="line">    stack&lt;TreeNode*&gt; stk; // 辅助栈</span><br><span class="line">    stk.push(root);       // 首先将根节点入栈</span><br><span class="line"></span><br><span class="line">    while (!stk.empty()) &#123;</span><br><span class="line">        TreeNode* node = stk.top();  // 获取栈顶元素</span><br><span class="line">        stk.pop();                   // 弹出栈顶元素</span><br><span class="line">        result.push_back(node-&gt;val); // 访问节点（加入结果）</span><br><span class="line"></span><br><span class="line">        // 先压右子节点，再压左子节点，保证左子节点先处理</span><br><span class="line">        if (node-&gt;right) stk.push(node-&gt;right);</span><br><span class="line">        if (node-&gt;left) stk.push(node-&gt;left);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-中序遍历（非递归）"><a href="#2-中序遍历（非递归）" class="headerlink" title="2. 中序遍历（非递归）"></a>2. 中序遍历（非递归）</h3><p>中序遍历的顺序是：左子树 -&gt; 根节点 -&gt; 右子树。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">inorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    std::stack&lt;TreeNode*&gt; stack;</span><br><span class="line">    TreeNode* current = root;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (current != <span class="literal">NULL</span> || !stack.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="comment">// 遍历到最左节点</span></span><br><span class="line">        <span class="keyword">while</span> (current != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            stack.<span class="built_in">push</span>(current);</span><br><span class="line">            current = current-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 处理节点</span></span><br><span class="line">        current = stack.<span class="built_in">top</span>();</span><br><span class="line">        stack.<span class="built_in">pop</span>();</span><br><span class="line">        std::cout &lt;&lt; current-&gt;val &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">        <span class="comment">// 转向右子树</span></span><br><span class="line">        current = current-&gt;right;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>初始化</strong>：创建一个栈来存储节点，并将当前节点指向根节点。</p>
-<p><strong>遍历左子树</strong>：使用一个 <code>while</code> 循环，持续将当前节点的左子节点压入栈中，直到当前节点为 <code>NULL</code>。这一步实际上是在找到最左侧的节点。</p>
-<p><strong>处理节点</strong>：当当前节点为 <code>NULL</code> 且栈不为空时，弹出栈顶节点，输出该节点的值。这就是中序遍历的核心步骤。</p>
-<p><strong>转向右子树</strong>：将当前节点更新为弹出的节点的右子节点，继续上述过程。</p>
-<p><strong>结束条件</strong>：当当前节点为 <code>NULL</code> 且栈为空时，遍历结束。</p>
-<h3 id="3-后序遍历（非递归）"><a href="#3-后序遍历（非递归）" class="headerlink" title="3. 后序遍历（非递归）"></a>3. 后序遍历（非递归）</h3><p>后序遍历的顺序是：左子树 -&gt; 右子树 -&gt; 根节点。</p>
-<p>后序遍历的非递归实现较复杂，可以使用两个栈来实现。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">postorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span> result;</span><br><span class="line"></span><br><span class="line">    stack&lt;TreeNode*&gt; stk1, stk2;</span><br><span class="line">    stk<span class="number">1.</span><span class="built_in">push</span>(root);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用两个栈，stk1用于遍历，stk2用于存储结果</span></span><br><span class="line">    <span class="keyword">while</span> (!stk<span class="number">1.</span><span class="built_in">empty</span>()) &#123;</span><br><span class="line">        TreeNode* node = stk<span class="number">1.</span><span class="built_in">top</span>();</span><br><span class="line">        stk<span class="number">1.</span><span class="built_in">pop</span>();</span><br><span class="line">        stk<span class="number">2.</span><span class="built_in">push</span>(node);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 左子节点和右子节点按顺序压入stk1</span></span><br><span class="line">        <span class="keyword">if</span> (node-&gt;left) stk<span class="number">1.</span><span class="built_in">push</span>(node-&gt;left);</span><br><span class="line">        <span class="keyword">if</span> (node-&gt;right) stk<span class="number">1.</span><span class="built_in">push</span>(node-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将stk2中的节点依次弹出到结果中</span></span><br><span class="line">    <span class="keyword">while</span> (!stk<span class="number">2.</span><span class="built_in">empty</span>()) &#123;</span><br><span class="line">        result.<span class="built_in">push_back</span>(stk<span class="number">2.</span><span class="built_in">top</span>()-&gt;val);</span><br><span class="line">        stk<span class="number">2.</span><span class="built_in">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>这三种非递归遍历方法使用栈来模拟递归调用的过程，顺序不同是由于每种遍历访问节点的顺序不同。</p>
-<h2 id="递归方法"><a href="#递归方法" class="headerlink" title="递归方法"></a>递归方法</h2><p>递归算法是一种非常常见且简单的二叉树遍历实现方式，它依赖函数调用栈的隐式机制来完成节点的访问。在二叉树的递归遍历中，递归函数会按照特定的顺序调用自身来遍历树的各个节点。</p>
-<h3 id="1-前序遍历（递归）"><a href="#1-前序遍历（递归）" class="headerlink" title="1. 前序遍历（递归）"></a>1. 前序遍历（递归）</h3><h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>前序遍历的顺序是：<strong>先访问根节点</strong>，再访问左子树，最后访问右子树。</p>
-<p>前序遍历顺序：</p>
-<ul>
-<li>根节点 -&gt; 左子树 -&gt; 右子树。</li>
-</ul>
-<h4 id="递归算法步骤"><a href="#递归算法步骤" class="headerlink" title="递归算法步骤"></a>递归算法步骤</h4><ol>
-<li>先访问当前节点（根节点）。</li>
-<li>递归访问左子树。</li>
-<li>递归访问右子树。</li>
-</ol>
-<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">preorderTraversal</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span>;                  <span class="comment">// 递归终止条件：节点为空</span></span><br><span class="line"></span><br><span class="line">    result.<span class="built_in">push_back</span>(root-&gt;val);         <span class="comment">// 访问根节点</span></span><br><span class="line">    <span class="built_in">preorderTraversal</span>(root-&gt;left, result); <span class="comment">// 递归遍历左子树</span></span><br><span class="line">    <span class="built_in">preorderTraversal</span>(root-&gt;right, result); <span class="comment">// 递归遍历右子树</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="过程说明"><a href="#过程说明" class="headerlink" title="过程说明"></a>过程说明</h4><p>假设二叉树结构如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1</span><br><span class="line"> \</span><br><span class="line">  2</span><br><span class="line"> /</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
-<ul>
-<li>首先访问根节点 <code>1</code>，然后递归访问它的右子节点 <code>2</code>。</li>
-<li>访问 <code>2</code> 后，递归访问 <code>2</code> 的左子节点 <code>3</code>。</li>
-<li>访问 <code>3</code> 后，没有更多节点，递归结束。</li>
-</ul>
-<p>最终前序遍历的结果为 <code>[1, 2, 3]</code>。</p>
-<hr>
-<h3 id="2-中序遍历（递归）"><a href="#2-中序遍历（递归）" class="headerlink" title="2. 中序遍历（递归）"></a>2. 中序遍历（递归）</h3><h4 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h4><p>中序遍历的顺序是：<strong>先访问左子树</strong>，然后访问根节点，最后访问右子树。</p>
-<p>中序遍历顺序：</p>
-<ul>
-<li>左子树 -&gt; 根节点 -&gt; 右子树。</li>
-</ul>
-<h4 id="递归算法步骤-1"><a href="#递归算法步骤-1" class="headerlink" title="递归算法步骤"></a>递归算法步骤</h4><ol>
-<li>递归访问左子树。</li>
-<li>访问当前节点（根节点）。</li>
-<li>递归访问右子树。</li>
-</ol>
-<h4 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">inorderTraversal</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span>;                    <span class="comment">// 递归终止条件：节点为空</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">inorderTraversal</span>(root-&gt;left, result);   <span class="comment">// 递归遍历左子树</span></span><br><span class="line">    result.<span class="built_in">push_back</span>(root-&gt;val);            <span class="comment">// 访问根节点</span></span><br><span class="line">    <span class="built_in">inorderTraversal</span>(root-&gt;right, result);  <span class="comment">// 递归遍历右子树</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="过程说明-1"><a href="#过程说明-1" class="headerlink" title="过程说明"></a>过程说明</h4><p>假设二叉树结构如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1</span><br><span class="line"> \</span><br><span class="line">  2</span><br><span class="line"> /</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
-<ul>
-<li>首先递归访问 <code>1</code> 的左子树，但为空，直接访问根节点 <code>1</code>。</li>
-<li>然后递归访问右子树，从 <code>2</code> 开始，递归访问 <code>2</code> 的左子节点 <code>3</code>。</li>
-<li>访问完 <code>3</code>，回到 <code>2</code>，访问 <code>2</code>。</li>
-</ul>
-<p>最终中序遍历的结果为 <code>[1, 3, 2]</code>。</p>
-<hr>
-<h3 id="3-后序遍历（递归）"><a href="#3-后序遍历（递归）" class="headerlink" title="3. 后序遍历（递归）"></a>3. 后序遍历（递归）</h3><h4 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h4><p>后序遍历的顺序是：<strong>先访问左子树</strong>，再访问右子树，最后访问根节点。</p>
-<p>后序遍历顺序：</p>
-<ul>
-<li>左子树 -&gt; 右子树 -&gt; 根节点。</li>
-</ul>
-<h4 id="递归算法步骤-2"><a href="#递归算法步骤-2" class="headerlink" title="递归算法步骤"></a>递归算法步骤</h4><ol>
-<li>递归访问左子树。</li>
-<li>递归访问右子树。</li>
-<li>访问当前节点（根节点）。</li>
-</ol>
-<h4 id="代码实现-2"><a href="#代码实现-2" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">postorderTraversal</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span>;                    <span class="comment">// 递归终止条件：节点为空</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">postorderTraversal</span>(root-&gt;left, result);  <span class="comment">// 递归遍历左子树</span></span><br><span class="line">    <span class="built_in">postorderTraversal</span>(root-&gt;right, result); <span class="comment">// 递归遍历右子树</span></span><br><span class="line">    result.<span class="built_in">push_back</span>(root-&gt;val);             <span class="comment">// 访问根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h4 id="过程说明-2"><a href="#过程说明-2" class="headerlink" title="过程说明"></a>过程说明</h4><p>假设二叉树结构如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1</span><br><span class="line"> \</span><br><span class="line">  2</span><br><span class="line"> /</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
-<ul>
-<li>首先递归访问 <code>1</code> 的左子树，空节点返回。</li>
-<li>然后递归访问 <code>1</code> 的右子节点 <code>2</code>，继续递归访问 <code>2</code> 的左子节点 <code>3</code>。</li>
-<li>访问 <code>3</code> 后返回，访问 <code>2</code> 后返回，最后访问根节点 <code>1</code>。</li>
-</ul>
-<p>最终后序遍历的结果为 <code>[3, 2, 1]</code>。</p>
-<hr>
-<h3 id="递归遍历的工作原理"><a href="#递归遍历的工作原理" class="headerlink" title="递归遍历的工作原理"></a>递归遍历的工作原理</h3><p>递归遍历的核心思想是利用系统调用栈隐式地保存当前节点的状态，并通过函数的自我调用完成对二叉树各个节点的遍历。在每一次递归调用时，栈帧会记录当前函数的上下文（包括参数和本地变量），当递归返回时，栈帧会恢复之前的状态。因此，递归算法中不需要显式地使用栈结构来保存节点状态，递归的函数调用本身就是栈的模拟。</p>
-<h1 id="通过遍历确定二叉树"><a href="#通过遍历确定二叉树" class="headerlink" title="通过遍历确定二叉树"></a>通过遍历确定二叉树</h1><p>首先，一种遍历是肯定不能的</p>
-<p>前序遍历＋后序也不能</p>
-<p>但中序＋任意就可以</p>
-<p>下面是后序和中序的一个例子</p>
-<p>给定二叉树的<strong>后序遍历</strong>和<strong>中序遍历</strong>，可以确定这棵二叉树的结构。</p>
-<ul>
-<li><strong>后序遍历</strong>：<code>dabec</code></li>
-<li><strong>中序遍历</strong>：<code>debac</code></li>
-</ul>
-<h3 id="重建二叉树的步骤"><a href="#重建二叉树的步骤" class="headerlink" title="重建二叉树的步骤"></a>重建二叉树的步骤</h3><ol>
-<li><p><strong>后序遍历的特点</strong>：后序遍历的最后一个节点是根节点。因此，通过后序遍历可以找到二叉树的根节点。</p>
-<ul>
-<li>在后序遍历 <code>dabec</code> 中，最后一个元素 <code>c</code> 是二叉树的根节点。</li>
-</ul>
-</li>
-<li><p><strong>在中序遍历中找到根节点</strong>：通过中序遍历，可以将二叉树分为左子树和右子树。</p>
-<ul>
-<li>中序遍历是 <code>debac</code>，根节点 <code>c</code> 在中序遍历中的位置是最后一位，因此 <code>deba</code> 是左子树，右子树为空。</li>
-</ul>
-</li>
-<li><p><strong>递归构建左子树</strong>：</p>
-<ul>
-<li>左子树的中序遍历是 <code>deba</code>，左子树的后序遍历是 <code>dabe</code>（从后序遍历中取去掉根节点的部分）。</li>
-<li>继续对 <code>dabe</code> 和 <code>deba</code> 递归构建。</li>
-</ul>
-</li>
-<li><p><strong>对左子树进行递归构建</strong>：</p>
-<ul>
-<li>在后序遍历 <code>dabe</code> 中，最后一个元素 <code>e</code> 是左子树的根节点。</li>
-<li>在中序遍历 <code>deba</code> 中，根节点 <code>e</code> 的位置将 <code>d</code> 和 <code>ba</code> 分为左右子树，左子树为 <code>d</code>，右子树为 <code>ba</code>。</li>
-</ul>
-</li>
-<li><p><strong>递归构建左子树和右子树</strong>：</p>
-<ul>
-<li>对左子树 <code>d</code>，中序遍历和后序遍历均为 <code>d</code>，因此它是叶子节点。</li>
-<li>对右子树 <code>ba</code>：<ul>
-<li>在后序遍历 <code>ba</code> 中，根节点是 <code>a</code>，剩下的 <code>b</code> 是它的左子树。</li>
-<li>对左子树 <code>b</code>，中序遍历和后序遍历均为 <code>b</code>，因此它是叶子节点。</li>
-</ul>
-</li>
-</ul>
-</li>
-</ol>
-<h3 id="最终二叉树的结构"><a href="#最终二叉树的结构" class="headerlink" title="最终二叉树的结构"></a>最终二叉树的结构</h3><p>将上述步骤的结果组合在一起，二叉树的形状如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    c</span><br><span class="line">   /</span><br><span class="line">  e</span><br><span class="line"> / \</span><br><span class="line">d   a</span><br><span class="line">   /</span><br><span class="line">  b</span><br></pre></td></tr></table></figure>
-
-<h3 id="详细解释"><a href="#详细解释" class="headerlink" title="详细解释"></a>详细解释</h3><ul>
-<li>根节点是 <code>c</code>，它的左子树是 <code>e</code>。</li>
-<li>节点 <code>e</code> 的左子树是 <code>d</code>，右子树是 <code>a</code>。</li>
-<li>节点 <code>a</code> 有一个左子树 <code>b</code>，而 <code>b</code> 和 <code>d</code> 都是叶子节点。</li>
-</ul>
-<p>通过后序遍历和中序遍历，我们成功地重建了这棵二叉树。</p>
-<hr>
-<h1 id="递归-vs-非递归"><a href="#递归-vs-非递归" class="headerlink" title="递归 vs. 非递归"></a>递归 vs. 非递归</h1><ol>
-<li><p><strong>递归遍历</strong>：</p>
-<ul>
-<li>简洁且符合思维逻辑。</li>
-<li>利用系统调用栈来管理递归状态，不需要手动维护栈。</li>
-<li>如果树的深度较深，递归深度过大会导致栈溢出。</li>
-</ul>
-</li>
-<li><p><strong>非递归遍历</strong>：</p>
-<ul>
-<li>使用显式栈来模拟递归，避免了函数调用的开销。</li>
-<li>更加适合处理非常深的树，避免了递归栈溢出的问题。</li>
-<li>实现较为复杂，尤其是后序遍历，需要用到两个栈。</li>
-</ul>
-</li>
-</ol>
-<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>递归遍历是通过系统调用栈隐式地实现节点状态的保存与恢复，而非递归遍历则通过显式的栈来模拟递归过程。选择递归或非递归方法通常取决于具体应用场景以及对性能和栈深度的要求。</p>
-]]></content>
-      <categories>
-        <category>经验</category>
-      </categories>
-      <tags>
-        <tag>数据结构与算法</tag>
-        <tag>二叉树</tag>
-        <tag>递归</tag>
       </tags>
   </entry>
   <entry>
@@ -1184,55 +1011,257 @@
       </tags>
   </entry>
   <entry>
+    <title>二叉树的遍历访问的实现</title>
+    <url>/2024/09/25/%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E9%81%8D%E5%8E%86%E8%AE%BF%E9%97%AE/</url>
+    <content><![CDATA[<h1 id="引入"><a href="#引入" class="headerlink" title="引入"></a>引入</h1><p>我们从小学二年级开始，就学过二叉树了（bushi）</p>
+<p>那么，如何用编程实现二叉树的遍历呢？</p>
+<p>（这里使用c艹）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"></span><br><span class="line">struct TreeNode &#123;</span><br><span class="line">    int val;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    TreeNode(int x) : val(x), left(nullptr), right(nullptr) &#123;&#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>二叉树的每个结点都是如此定义的</p>
+<h1 id="遍历方法"><a href="#遍历方法" class="headerlink" title="遍历方法"></a>遍历方法</h1><h5 id="分为前序，中序，后序三种遍历方法。"><a href="#分为前序，中序，后序三种遍历方法。" class="headerlink" title="分为前序，中序，后序三种遍历方法。"></a>分为前序，中序，后序三种遍历方法。</h5><p>前序是从根结点开始，访问到最左侧第一个叶子结点后，访问右侧叶子，然后返回上一级（不访问），访问同级右侧结点，然后往下按照先左后右的顺序访问，等左子树访问完毕后，访问右子树。</p>
+<p>中序是从左侧第一个叶子结点开始，返回上一级（访问），下一级右侧，返回上上级，右侧最下方左侧结点，然后返回上一级（访问），以此类推。</p>
+<p>后序是按从左到右的顺序，左侧第一个叶子结点开始，访问完上一级结点左侧后，去右侧，然后返回上一级。</p>
+<h5 id="每种遍历方法又分为递归和非递归两种"><a href="#每种遍历方法又分为递归和非递归两种" class="headerlink" title="每种遍历方法又分为递归和非递归两种"></a>每种遍历方法又分为递归和非递归两种</h5><h2 id="非递归方法"><a href="#非递归方法" class="headerlink" title="非递归方法"></a>非递归方法</h2><h3 id="1-前序遍历（非递归）"><a href="#1-前序遍历（非递归）" class="headerlink" title="1. 前序遍历（非递归）"></a>1. 前序遍历（非递归）</h3><p>前序遍历的顺序是：根节点 -&gt; 左子树 -&gt; 右子树。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">vector&lt;int&gt; preorderTraversal(TreeNode* root) &#123;</span><br><span class="line">    vector&lt;int&gt; result; // 存储遍历结果</span><br><span class="line">    if (!root) return result;</span><br><span class="line"></span><br><span class="line">    stack&lt;TreeNode*&gt; stk; // 辅助栈</span><br><span class="line">    stk.push(root);       // 首先将根节点入栈</span><br><span class="line"></span><br><span class="line">    while (!stk.empty()) &#123;</span><br><span class="line">        TreeNode* node = stk.top();  // 获取栈顶元素</span><br><span class="line">        stk.pop();                   // 弹出栈顶元素</span><br><span class="line">        result.push_back(node-&gt;val); // 访问节点（加入结果）</span><br><span class="line"></span><br><span class="line">        // 先压右子节点，再压左子节点，保证左子节点先处理</span><br><span class="line">        if (node-&gt;right) stk.push(node-&gt;right);</span><br><span class="line">        if (node-&gt;left) stk.push(node-&gt;left);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    return result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-中序遍历（非递归）"><a href="#2-中序遍历（非递归）" class="headerlink" title="2. 中序遍历（非递归）"></a>2. 中序遍历（非递归）</h3><p>中序遍历的顺序是：左子树 -&gt; 根节点 -&gt; 右子树。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">inorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    std::stack&lt;TreeNode*&gt; stack;</span><br><span class="line">    TreeNode* current = root;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (current != <span class="literal">NULL</span> || !stack.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="comment">// 遍历到最左节点</span></span><br><span class="line">        <span class="keyword">while</span> (current != <span class="literal">NULL</span>) &#123;</span><br><span class="line">            stack.<span class="built_in">push</span>(current);</span><br><span class="line">            current = current-&gt;left;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 处理节点</span></span><br><span class="line">        current = stack.<span class="built_in">top</span>();</span><br><span class="line">        stack.<span class="built_in">pop</span>();</span><br><span class="line">        std::cout &lt;&lt; current-&gt;val &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">        <span class="comment">// 转向右子树</span></span><br><span class="line">        current = current-&gt;right;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>初始化</strong>：创建一个栈来存储节点，并将当前节点指向根节点。</p>
+<p><strong>遍历左子树</strong>：使用一个 <code>while</code> 循环，持续将当前节点的左子节点压入栈中，直到当前节点为 <code>NULL</code>。这一步实际上是在找到最左侧的节点。</p>
+<p><strong>处理节点</strong>：当当前节点为 <code>NULL</code> 且栈不为空时，弹出栈顶节点，输出该节点的值。这就是中序遍历的核心步骤。</p>
+<p><strong>转向右子树</strong>：将当前节点更新为弹出的节点的右子节点，继续上述过程。</p>
+<p><strong>结束条件</strong>：当当前节点为 <code>NULL</code> 且栈为空时，遍历结束。</p>
+<h3 id="3-后序遍历（非递归）"><a href="#3-后序遍历（非递归）" class="headerlink" title="3. 后序遍历（非递归）"></a>3. 后序遍历（非递归）</h3><p>后序遍历的顺序是：左子树 -&gt; 右子树 -&gt; 根节点。</p>
+<p>后序遍历的非递归实现较复杂，可以使用两个栈来实现。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function">vector&lt;<span class="type">int</span>&gt; <span class="title">postorderTraversal</span><span class="params">(TreeNode* root)</span> </span>&#123;</span><br><span class="line">    vector&lt;<span class="type">int</span>&gt; result;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span> result;</span><br><span class="line"></span><br><span class="line">    stack&lt;TreeNode*&gt; stk1, stk2;</span><br><span class="line">    stk<span class="number">1.</span><span class="built_in">push</span>(root);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用两个栈，stk1用于遍历，stk2用于存储结果</span></span><br><span class="line">    <span class="keyword">while</span> (!stk<span class="number">1.</span><span class="built_in">empty</span>()) &#123;</span><br><span class="line">        TreeNode* node = stk<span class="number">1.</span><span class="built_in">top</span>();</span><br><span class="line">        stk<span class="number">1.</span><span class="built_in">pop</span>();</span><br><span class="line">        stk<span class="number">2.</span><span class="built_in">push</span>(node);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 左子节点和右子节点按顺序压入stk1</span></span><br><span class="line">        <span class="keyword">if</span> (node-&gt;left) stk<span class="number">1.</span><span class="built_in">push</span>(node-&gt;left);</span><br><span class="line">        <span class="keyword">if</span> (node-&gt;right) stk<span class="number">1.</span><span class="built_in">push</span>(node-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将stk2中的节点依次弹出到结果中</span></span><br><span class="line">    <span class="keyword">while</span> (!stk<span class="number">2.</span><span class="built_in">empty</span>()) &#123;</span><br><span class="line">        result.<span class="built_in">push_back</span>(stk<span class="number">2.</span><span class="built_in">top</span>()-&gt;val);</span><br><span class="line">        stk<span class="number">2.</span><span class="built_in">pop</span>();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> result;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这三种非递归遍历方法使用栈来模拟递归调用的过程，顺序不同是由于每种遍历访问节点的顺序不同。</p>
+<h2 id="递归方法"><a href="#递归方法" class="headerlink" title="递归方法"></a>递归方法</h2><p>递归算法是一种非常常见且简单的二叉树遍历实现方式，它依赖函数调用栈的隐式机制来完成节点的访问。在二叉树的递归遍历中，递归函数会按照特定的顺序调用自身来遍历树的各个节点。</p>
+<h3 id="1-前序遍历（递归）"><a href="#1-前序遍历（递归）" class="headerlink" title="1. 前序遍历（递归）"></a>1. 前序遍历（递归）</h3><h4 id="定义"><a href="#定义" class="headerlink" title="定义"></a>定义</h4><p>前序遍历的顺序是：<strong>先访问根节点</strong>，再访问左子树，最后访问右子树。</p>
+<p>前序遍历顺序：</p>
+<ul>
+<li>根节点 -&gt; 左子树 -&gt; 右子树。</li>
+</ul>
+<h4 id="递归算法步骤"><a href="#递归算法步骤" class="headerlink" title="递归算法步骤"></a>递归算法步骤</h4><ol>
+<li>先访问当前节点（根节点）。</li>
+<li>递归访问左子树。</li>
+<li>递归访问右子树。</li>
+</ol>
+<h4 id="代码实现"><a href="#代码实现" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">preorderTraversal</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span>;                  <span class="comment">// 递归终止条件：节点为空</span></span><br><span class="line"></span><br><span class="line">    result.<span class="built_in">push_back</span>(root-&gt;val);         <span class="comment">// 访问根节点</span></span><br><span class="line">    <span class="built_in">preorderTraversal</span>(root-&gt;left, result); <span class="comment">// 递归遍历左子树</span></span><br><span class="line">    <span class="built_in">preorderTraversal</span>(root-&gt;right, result); <span class="comment">// 递归遍历右子树</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="过程说明"><a href="#过程说明" class="headerlink" title="过程说明"></a>过程说明</h4><p>假设二叉树结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1</span><br><span class="line"> \</span><br><span class="line">  2</span><br><span class="line"> /</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先访问根节点 <code>1</code>，然后递归访问它的右子节点 <code>2</code>。</li>
+<li>访问 <code>2</code> 后，递归访问 <code>2</code> 的左子节点 <code>3</code>。</li>
+<li>访问 <code>3</code> 后，没有更多节点，递归结束。</li>
+</ul>
+<p>最终前序遍历的结果为 <code>[1, 2, 3]</code>。</p>
+<hr>
+<h3 id="2-中序遍历（递归）"><a href="#2-中序遍历（递归）" class="headerlink" title="2. 中序遍历（递归）"></a>2. 中序遍历（递归）</h3><h4 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a>定义</h4><p>中序遍历的顺序是：<strong>先访问左子树</strong>，然后访问根节点，最后访问右子树。</p>
+<p>中序遍历顺序：</p>
+<ul>
+<li>左子树 -&gt; 根节点 -&gt; 右子树。</li>
+</ul>
+<h4 id="递归算法步骤-1"><a href="#递归算法步骤-1" class="headerlink" title="递归算法步骤"></a>递归算法步骤</h4><ol>
+<li>递归访问左子树。</li>
+<li>访问当前节点（根节点）。</li>
+<li>递归访问右子树。</li>
+</ol>
+<h4 id="代码实现-1"><a href="#代码实现-1" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">inorderTraversal</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span>;                    <span class="comment">// 递归终止条件：节点为空</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">inorderTraversal</span>(root-&gt;left, result);   <span class="comment">// 递归遍历左子树</span></span><br><span class="line">    result.<span class="built_in">push_back</span>(root-&gt;val);            <span class="comment">// 访问根节点</span></span><br><span class="line">    <span class="built_in">inorderTraversal</span>(root-&gt;right, result);  <span class="comment">// 递归遍历右子树</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="过程说明-1"><a href="#过程说明-1" class="headerlink" title="过程说明"></a>过程说明</h4><p>假设二叉树结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1</span><br><span class="line"> \</span><br><span class="line">  2</span><br><span class="line"> /</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先递归访问 <code>1</code> 的左子树，但为空，直接访问根节点 <code>1</code>。</li>
+<li>然后递归访问右子树，从 <code>2</code> 开始，递归访问 <code>2</code> 的左子节点 <code>3</code>。</li>
+<li>访问完 <code>3</code>，回到 <code>2</code>，访问 <code>2</code>。</li>
+</ul>
+<p>最终中序遍历的结果为 <code>[1, 3, 2]</code>。</p>
+<hr>
+<h3 id="3-后序遍历（递归）"><a href="#3-后序遍历（递归）" class="headerlink" title="3. 后序遍历（递归）"></a>3. 后序遍历（递归）</h3><h4 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a>定义</h4><p>后序遍历的顺序是：<strong>先访问左子树</strong>，再访问右子树，最后访问根节点。</p>
+<p>后序遍历顺序：</p>
+<ul>
+<li>左子树 -&gt; 右子树 -&gt; 根节点。</li>
+</ul>
+<h4 id="递归算法步骤-2"><a href="#递归算法步骤-2" class="headerlink" title="递归算法步骤"></a>递归算法步骤</h4><ol>
+<li>递归访问左子树。</li>
+<li>递归访问右子树。</li>
+<li>访问当前节点（根节点）。</li>
+</ol>
+<h4 id="代码实现-2"><a href="#代码实现-2" class="headerlink" title="代码实现"></a>代码实现</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">postorderTraversal</span><span class="params">(TreeNode* root, vector&lt;<span class="type">int</span>&gt;&amp; result)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!root) <span class="keyword">return</span>;                    <span class="comment">// 递归终止条件：节点为空</span></span><br><span class="line"></span><br><span class="line">    <span class="built_in">postorderTraversal</span>(root-&gt;left, result);  <span class="comment">// 递归遍历左子树</span></span><br><span class="line">    <span class="built_in">postorderTraversal</span>(root-&gt;right, result); <span class="comment">// 递归遍历右子树</span></span><br><span class="line">    result.<span class="built_in">push_back</span>(root-&gt;val);             <span class="comment">// 访问根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="过程说明-2"><a href="#过程说明-2" class="headerlink" title="过程说明"></a>过程说明</h4><p>假设二叉树结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">1</span><br><span class="line"> \</span><br><span class="line">  2</span><br><span class="line"> /</span><br><span class="line">3</span><br></pre></td></tr></table></figure>
+<ul>
+<li>首先递归访问 <code>1</code> 的左子树，空节点返回。</li>
+<li>然后递归访问 <code>1</code> 的右子节点 <code>2</code>，继续递归访问 <code>2</code> 的左子节点 <code>3</code>。</li>
+<li>访问 <code>3</code> 后返回，访问 <code>2</code> 后返回，最后访问根节点 <code>1</code>。</li>
+</ul>
+<p>最终后序遍历的结果为 <code>[3, 2, 1]</code>。</p>
+<hr>
+<h3 id="递归遍历的工作原理"><a href="#递归遍历的工作原理" class="headerlink" title="递归遍历的工作原理"></a>递归遍历的工作原理</h3><p>递归遍历的核心思想是利用系统调用栈隐式地保存当前节点的状态，并通过函数的自我调用完成对二叉树各个节点的遍历。在每一次递归调用时，栈帧会记录当前函数的上下文（包括参数和本地变量），当递归返回时，栈帧会恢复之前的状态。因此，递归算法中不需要显式地使用栈结构来保存节点状态，递归的函数调用本身就是栈的模拟。</p>
+<h1 id="通过遍历确定二叉树"><a href="#通过遍历确定二叉树" class="headerlink" title="通过遍历确定二叉树"></a>通过遍历确定二叉树</h1><p>首先，一种遍历是肯定不能的</p>
+<p>前序遍历＋后序也不能</p>
+<p>但中序＋任意就可以</p>
+<p>下面是后序和中序的一个例子</p>
+<p>给定二叉树的<strong>后序遍历</strong>和<strong>中序遍历</strong>，可以确定这棵二叉树的结构。</p>
+<ul>
+<li><strong>后序遍历</strong>：<code>dabec</code></li>
+<li><strong>中序遍历</strong>：<code>debac</code></li>
+</ul>
+<h3 id="重建二叉树的步骤"><a href="#重建二叉树的步骤" class="headerlink" title="重建二叉树的步骤"></a>重建二叉树的步骤</h3><ol>
+<li><p><strong>后序遍历的特点</strong>：后序遍历的最后一个节点是根节点。因此，通过后序遍历可以找到二叉树的根节点。</p>
+<ul>
+<li>在后序遍历 <code>dabec</code> 中，最后一个元素 <code>c</code> 是二叉树的根节点。</li>
+</ul>
+</li>
+<li><p><strong>在中序遍历中找到根节点</strong>：通过中序遍历，可以将二叉树分为左子树和右子树。</p>
+<ul>
+<li>中序遍历是 <code>debac</code>，根节点 <code>c</code> 在中序遍历中的位置是最后一位，因此 <code>deba</code> 是左子树，右子树为空。</li>
+</ul>
+</li>
+<li><p><strong>递归构建左子树</strong>：</p>
+<ul>
+<li>左子树的中序遍历是 <code>deba</code>，左子树的后序遍历是 <code>dabe</code>（从后序遍历中取去掉根节点的部分）。</li>
+<li>继续对 <code>dabe</code> 和 <code>deba</code> 递归构建。</li>
+</ul>
+</li>
+<li><p><strong>对左子树进行递归构建</strong>：</p>
+<ul>
+<li>在后序遍历 <code>dabe</code> 中，最后一个元素 <code>e</code> 是左子树的根节点。</li>
+<li>在中序遍历 <code>deba</code> 中，根节点 <code>e</code> 的位置将 <code>d</code> 和 <code>ba</code> 分为左右子树，左子树为 <code>d</code>，右子树为 <code>ba</code>。</li>
+</ul>
+</li>
+<li><p><strong>递归构建左子树和右子树</strong>：</p>
+<ul>
+<li>对左子树 <code>d</code>，中序遍历和后序遍历均为 <code>d</code>，因此它是叶子节点。</li>
+<li>对右子树 <code>ba</code>：<ul>
+<li>在后序遍历 <code>ba</code> 中，根节点是 <code>a</code>，剩下的 <code>b</code> 是它的左子树。</li>
+<li>对左子树 <code>b</code>，中序遍历和后序遍历均为 <code>b</code>，因此它是叶子节点。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ol>
+<h3 id="最终二叉树的结构"><a href="#最终二叉树的结构" class="headerlink" title="最终二叉树的结构"></a>最终二叉树的结构</h3><p>将上述步骤的结果组合在一起，二叉树的形状如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    c</span><br><span class="line">   /</span><br><span class="line">  e</span><br><span class="line"> / \</span><br><span class="line">d   a</span><br><span class="line">   /</span><br><span class="line">  b</span><br></pre></td></tr></table></figure>
+
+<h3 id="详细解释"><a href="#详细解释" class="headerlink" title="详细解释"></a>详细解释</h3><ul>
+<li>根节点是 <code>c</code>，它的左子树是 <code>e</code>。</li>
+<li>节点 <code>e</code> 的左子树是 <code>d</code>，右子树是 <code>a</code>。</li>
+<li>节点 <code>a</code> 有一个左子树 <code>b</code>，而 <code>b</code> 和 <code>d</code> 都是叶子节点。</li>
+</ul>
+<p>通过后序遍历和中序遍历，我们成功地重建了这棵二叉树。</p>
+<hr>
+<h1 id="递归-vs-非递归"><a href="#递归-vs-非递归" class="headerlink" title="递归 vs. 非递归"></a>递归 vs. 非递归</h1><ol>
+<li><p><strong>递归遍历</strong>：</p>
+<ul>
+<li>简洁且符合思维逻辑。</li>
+<li>利用系统调用栈来管理递归状态，不需要手动维护栈。</li>
+<li>如果树的深度较深，递归深度过大会导致栈溢出。</li>
+</ul>
+</li>
+<li><p><strong>非递归遍历</strong>：</p>
+<ul>
+<li>使用显式栈来模拟递归，避免了函数调用的开销。</li>
+<li>更加适合处理非常深的树，避免了递归栈溢出的问题。</li>
+<li>实现较为复杂，尤其是后序遍历，需要用到两个栈。</li>
+</ul>
+</li>
+</ol>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>递归遍历是通过系统调用栈隐式地实现节点状态的保存与恢复，而非递归遍历则通过显式的栈来模拟递归过程。选择递归或非递归方法通常取决于具体应用场景以及对性能和栈深度的要求。</p>
+]]></content>
+      <categories>
+        <category>经验</category>
+      </categories>
+      <tags>
+        <tag>数据结构与算法</tag>
+        <tag>二叉树</tag>
+        <tag>递归</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>平衡二叉树的调整(左旋与右旋)</title>
+    <url>/2024/10/30/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E8%B0%83%E6%95%B4-%E5%B7%A6%E6%97%8B%E4%B8%8E%E5%8F%B3%E6%97%8B/</url>
+    <content><![CDATA[<h1 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h1><p>平衡二叉树（Balanced Binary Tree）是一种特殊的二叉树，它在结构上保持一定的平衡，以确保在最坏情况下依然具有较好的查找、插入和删除性能。</p>
+<h3 id="平衡二叉树的定义"><a href="#平衡二叉树的定义" class="headerlink" title="平衡二叉树的定义"></a>平衡二叉树的定义</h3><p><strong>平衡</strong>的具体定义可以根据不同类型的平衡树略有不同。一般来说，一个二叉树是平衡的，当其任意节点的左右子树高度差的绝对值不超过某个特定值（通常是1）时。</p>
+<h3 id="常见类型的平衡二叉树"><a href="#常见类型的平衡二叉树" class="headerlink" title="常见类型的平衡二叉树"></a>常见类型的平衡二叉树</h3><ol>
+<li><p><strong>AVL树</strong>：</p>
+<ul>
+<li><p>每个节点的左右子树高度差（平衡因子）只允许为 -1、0 或 1。</p>
+</li>
+<li><p>在插入或删除节点后，如果导致不平衡，会通过旋转操作来恢复平衡。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;algorithm&gt; // 用于 std::max</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 节点结构</span><br><span class="line">struct Node &#123;</span><br><span class="line">    int key;       // 节点值</span><br><span class="line">    Node* left;    // 左子节点</span><br><span class="line">    Node* right;   // 右子节点</span><br><span class="line">    int height;    // 节点高度</span><br><span class="line"></span><br><span class="line">    Node(int k) : key(k), left(nullptr), right(nullptr), height(1) &#123;&#125; // 初始化节点</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 获取节点的高度</span><br><span class="line">int getHeight(Node* node) &#123;</span><br><span class="line">    return node ? node-&gt;height : 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 获取平衡因子</span><br><span class="line">int getBalanceFactor(Node* node) &#123;</span><br><span class="line">    return node ? getHeight(node-&gt;left) - getHeight(node-&gt;right) : 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 更新节点的高度</span><br><span class="line">void updateHeight(Node* node) &#123;</span><br><span class="line">    node-&gt;height = max(getHeight(node-&gt;left), getHeight(node-&gt;right)) + 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 右旋操作</span><br><span class="line">Node* rightRotate(Node* y) &#123;</span><br><span class="line">    Node* x = y-&gt;left;</span><br><span class="line">    Node* T2 = x-&gt;right;</span><br><span class="line"></span><br><span class="line">    // 右旋转</span><br><span class="line">    x-&gt;right = y;</span><br><span class="line">    y-&gt;left = T2;</span><br><span class="line"></span><br><span class="line">    // 更新高度</span><br><span class="line">    updateHeight(y);</span><br><span class="line">    updateHeight(x);</span><br><span class="line"></span><br><span class="line">    // 返回新的根节点</span><br><span class="line">    return x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 左旋操作</span><br><span class="line">Node* leftRotate(Node* x) &#123;</span><br><span class="line">    Node* y = x-&gt;right;</span><br><span class="line">    Node* T2 = y-&gt;left;</span><br><span class="line"></span><br><span class="line">    // 左旋转</span><br><span class="line">    y-&gt;left = x;</span><br><span class="line">    x-&gt;right = T2;</span><br><span class="line"></span><br><span class="line">    // 更新高度</span><br><span class="line">    updateHeight(x);</span><br><span class="line">    updateHeight(y);</span><br><span class="line"></span><br><span class="line">    // 返回新的根节点</span><br><span class="line">    return y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 插入节点并保持平衡</span><br><span class="line">Node* insert(Node* node, int key) &#123;</span><br><span class="line">    // 1. 标准的二叉搜索树插入</span><br><span class="line">    if (!node) return new Node(key);</span><br><span class="line"></span><br><span class="line">    if (key &lt; node-&gt;key) &#123;</span><br><span class="line">        node-&gt;left = insert(node-&gt;left, key);</span><br><span class="line">    &#125; else if (key &gt; node-&gt;key) &#123;</span><br><span class="line">        node-&gt;right = insert(node-&gt;right, key);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 不允许插入重复值</span><br><span class="line">        return node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 2. 更新当前节点的高度</span><br><span class="line">    updateHeight(node);</span><br><span class="line"></span><br><span class="line">    // 3. 计算平衡因子</span><br><span class="line">    int balanceFactor = getBalanceFactor(node);</span><br><span class="line"></span><br><span class="line">    // 4. 根据平衡因子进行相应的旋转操作</span><br><span class="line">    // 左左情况</span><br><span class="line">    if (balanceFactor &gt; 1 &amp;&amp; key &lt; node-&gt;left-&gt;key) &#123;</span><br><span class="line">        return rightRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 右右情况</span><br><span class="line">    if (balanceFactor &lt; -1 &amp;&amp; key &gt; node-&gt;right-&gt;key) &#123;</span><br><span class="line">        return leftRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 左右情况</span><br><span class="line">    if (balanceFactor &gt; 1 &amp;&amp; key &gt; node-&gt;left-&gt;key) &#123;</span><br><span class="line">        node-&gt;left = leftRotate(node-&gt;left);</span><br><span class="line">        return rightRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 右左情况</span><br><span class="line">    if (balanceFactor &lt; -1 &amp;&amp; key &lt; node-&gt;right-&gt;key) &#123;</span><br><span class="line">        node-&gt;right = rightRotate(node-&gt;right);</span><br><span class="line">        return leftRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 返回不变的节点指针</span><br><span class="line">    return node;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 中序遍历树以显示结果</span><br><span class="line">void inOrder(Node* root) &#123;</span><br><span class="line">    if (root) &#123;</span><br><span class="line">        inOrder(root-&gt;left);</span><br><span class="line">        cout &lt;&lt; root-&gt;key &lt;&lt; &quot; &quot;;</span><br><span class="line">        inOrder(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 主函数测试AVL树</span><br><span class="line">int main() &#123;</span><br><span class="line">    Node* root = nullptr;</span><br><span class="line"></span><br><span class="line">    // 插入一些节点</span><br><span class="line">    root = insert(root, 10);</span><br><span class="line">    root = insert(root, 20);</span><br><span class="line">    root = insert(root, 30);</span><br><span class="line">    root = insert(root, 40);</span><br><span class="line">    root = insert(root, 50);</span><br><span class="line">    root = insert(root, 25);</span><br><span class="line"></span><br><span class="line">    // 中序遍历 AVL 树</span><br><span class="line">    cout &lt;&lt; &quot;中序遍历 AVL 树: &quot;;</span><br><span class="line">    inOrder(root);</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>红黑树</strong>：</p>
+<ul>
+<li>是一种自平衡的二叉搜索树，每个节点都有一个颜色属性（红色或黑色），并遵循特定的颜色规则。</li>
+<li>保证从根到叶的路径上的黑色节点数量相同，从而保持树的平衡性。</li>
+</ul>
+</li>
+</ol>
+<h3 id="平衡二叉树的特点"><a href="#平衡二叉树的特点" class="headerlink" title="平衡二叉树的特点"></a>平衡二叉树的特点</h3><ul>
+<li><p><strong>时间复杂度</strong>：</p>
+<ul>
+<li>查找、插入和删除操作的时间复杂度通常为 O(\log n)，这使得平衡二叉树非常高效，特别是在大量数据的情况下。</li>
+</ul>
+</li>
+<li><p><strong>空间复杂度</strong>：</p>
+<ul>
+<li>平衡二叉树的空间复杂度为 O(n)，与普通的二叉树相同。</li>
+</ul>
+</li>
+<li><p><strong>自我平衡</strong>：</p>
+<ul>
+<li>在插入或删除节点时，通过旋转和调整树的结构，保持树的平衡，从而避免退化成链表。</li>
+</ul>
+</li>
+</ul>
+<p> 旋转操作是平衡二叉树（如 AVL 树和红黑树）中的重要技术，用于在插入或删除节点后恢复树的平衡。旋转操作可以分为两种类型：左旋（Left Rotation）和右旋（Right Rotation）。以下是这两种旋转的详细介绍及其实现。</p>
+<h1 id="平衡二叉树的调整"><a href="#平衡二叉树的调整" class="headerlink" title="平衡二叉树的调整"></a>平衡二叉树的调整</h1><p>首先注意，右旋（L）实际上是将树向左旋转，左旋则是将树向右旋转</p>
+<h3 id="1-右旋（Right-Rotation）"><a href="#1-右旋（Right-Rotation）" class="headerlink" title="1. 右旋（Right Rotation）"></a>1. 右旋（Right Rotation）</h3><p>右旋操作是将某个节点（称为“失衡节点”）的左子节点提升为新的根节点，同时将失衡节点降为新根节点的右子节点。</p>
+<h4 id="右旋的步骤"><a href="#右旋的步骤" class="headerlink" title="右旋的步骤"></a>右旋的步骤</h4><ol>
+<li>设失衡节点为 <code>y</code>，其左子节点为 <code>x</code>。</li>
+<li>将 <code>x</code> 的右子节点（如果存在）连接到 <code>y</code> 的左子节点。</li>
+<li>将 <code>x</code> 提升为新的根节点。</li>
+<li>将 <code>y</code> 设为 <code>x</code> 的右子节点。</li>
+</ol>
+<h4 id="右旋的伪代码"><a href="#右旋的伪代码" class="headerlink" title="右旋的伪代码"></a>右旋的伪代码</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> key;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    <span class="type">int</span> height; <span class="comment">// 用于 AVL 树的高度</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 右旋操作</span></span><br><span class="line"><span class="function">TreeNode* <span class="title">rightRotate</span><span class="params">(TreeNode* y)</span> </span>&#123;</span><br><span class="line">    TreeNode* x = y-&gt;left;           <span class="comment">// 让 x 指向 y 的左子节点</span></span><br><span class="line">    TreeNode* T2 = x-&gt;right;         <span class="comment">// 保存 x 的右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 进行旋转</span></span><br><span class="line">    x-&gt;right = y;                    <span class="comment">// 将 y 设置为 x 的右子节点</span></span><br><span class="line">    y-&gt;left = T2;                    <span class="comment">// 将 T2 设置为 y 的左子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新高度（如果需要）</span></span><br><span class="line">    y-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(y-&gt;left), <span class="built_in">height</span>(y-&gt;right)) + <span class="number">1</span>;</span><br><span class="line">    x-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(x-&gt;left), <span class="built_in">height</span>(x-&gt;right)) + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x; <span class="comment">// 返回新的根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-左旋（Left-Rotation）"><a href="#2-左旋（Left-Rotation）" class="headerlink" title="2. 左旋（Left Rotation）"></a>2. 左旋（Left Rotation）</h3><p>左旋操作是将某个节点的右子节点提升为新的根节点，同时将失衡节点降为新根节点的左子节点。</p>
+<h4 id="左旋的步骤"><a href="#左旋的步骤" class="headerlink" title="左旋的步骤"></a>左旋的步骤</h4><ol>
+<li>设失衡节点为 <code>x</code>，其右子节点为 <code>y</code>。</li>
+<li>将 <code>y</code> 的左子节点（如果存在）连接到 <code>x</code> 的右子节点。</li>
+<li>将 <code>y</code> 提升为新的根节点。</li>
+<li>将 <code>x</code> 设为 <code>y</code> 的左子节点。</li>
+</ol>
+<h4 id="左旋的伪代码"><a href="#左旋的伪代码" class="headerlink" title="左旋的伪代码"></a>左旋的伪代码</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 左旋操作</span></span><br><span class="line"><span class="function">TreeNode* <span class="title">leftRotate</span><span class="params">(TreeNode* x)</span> </span>&#123;</span><br><span class="line">    TreeNode* y = x-&gt;right;         <span class="comment">// 让 y 指向 x 的右子节点</span></span><br><span class="line">    TreeNode* T2 = y-&gt;left;         <span class="comment">// 保存 y 的左子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 进行旋转</span></span><br><span class="line">    y-&gt;left = x;                    <span class="comment">// 将 x 设置为 y 的左子节点</span></span><br><span class="line">    x-&gt;right = T2;                  <span class="comment">// 将 T2 设置为 x 的右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新高度（如果需要）</span></span><br><span class="line">    x-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(x-&gt;left), <span class="built_in">height</span>(x-&gt;right)) + <span class="number">1</span>;</span><br><span class="line">    y-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(y-&gt;left), <span class="built_in">height</span>(y-&gt;right)) + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> y; <span class="comment">// 返回新的根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-组合旋转"><a href="#3-组合旋转" class="headerlink" title="3. 组合旋转"></a>3. 组合旋转</h3><h4 id="AVL有且只有的四种情况（LL-LR-RL-RR）"><a href="#AVL有且只有的四种情况（LL-LR-RL-RR）" class="headerlink" title="AVL有且只有的四种情况（LL,LR,RL,RR）"></a>AVL有且只有的四种情况（LL,LR,RL,RR）</h4><p>图片来自<a href="https://blog.csdn.net/a6892255/article/details/117001282?ops_request_misc=%7B%22request_id%22:%22EBCFF1FE-F5C1-4776-B879-A508C09E98D5%22,%22scm%22:%2220140713.130102334..%22%7D&request_id=EBCFF1FE-F5C1-4776-B879-A508C09E98D5&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-117001282-null-null.142%5Ev100%5Epc_search_result_base8&utm_term=%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B7%A6%E6%97%8B%E5%8F%B3%E6%97%8B&spm=1018.2226.3001.4187">数据结构之AVL树(平衡二叉树)的理解_avl左右旋-CSDN博客</a></p>
+<h4 id="1-LL"><a href="#1-LL" class="headerlink" title="1.LL"></a>1.LL</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/edea4edc378247e01a490437e164a51f.png" alt="LL"></p>
+<h4 id="2-LR"><a href="#2-LR" class="headerlink" title="2.LR"></a>2.LR</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/dc372fd873d281a3bb0b8a92eaae54fa.png" alt="LR(1)"></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/30204ce4046bd0a9c2316159496d1886.png" alt="LR(2)"></p>
+<h4 id="3-RL"><a href="#3-RL" class="headerlink" title="3.RL"></a>3.RL</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/d60980e235068364f15691ef822690de.png" alt="RL(1)"></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/084bc177d55d0797ab75c3caf6963405.png" alt="RL(2)"></p>
+<h4 id="4-RR"><a href="#4-RR" class="headerlink" title="4.RR"></a>4.RR</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/60bb25e94471951b5602f0507a5b232c.png" alt="RR2"></p>
+]]></content>
+      <categories>
+        <category>经验</category>
+      </categories>
+      <tags>
+        <tag>数据结构与算法</tag>
+        <tag>二叉树</tag>
+        <tag>平衡二叉树</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>四种强制类型转换操作符</title>
     <url>/2024/11/25/%E5%9B%9B%E7%A7%8D%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E6%93%8D%E4%BD%9C%E7%AC%A6/</url>
     <content><![CDATA[]]></content>
-  </entry>
-  <entry>
-    <title>指向常量的指针与常量指针</title>
-    <url>/2024/11/17/%E6%8C%87%E5%90%91%E5%B8%B8%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E4%B8%8E%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88/</url>
-    <content><![CDATA[<p>好久没有更新博客了，与最近考试多有关，也与个人怠惰有关</p>
-<p>今天的内容是指向常量的指针（pointer to const）与指针常量（const pointer），这是昨天在阅读《c++ primer》中重新理解的内容，有了些许新的感悟，趁热打铁，发在博客上</p>
-<h3 id="在讲那两个之前，先说一下const与对常量的引用（reference-to-const）"><a href="#在讲那两个之前，先说一下const与对常量的引用（reference-to-const）" class="headerlink" title="在讲那两个之前，先说一下const与对常量的引用（reference to const）"></a>在讲那两个之前，先说一下const与对常量的引用（reference to const）</h3><h4 id="const修饰词"><a href="#const修饰词" class="headerlink" title="const修饰词"></a>const修饰词</h4><p>使用const修饰词修饰的变量，即常量，是必须初始化的，且初始化后不能修改其值</p>
-<p>初始化时除了用如下方法</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const int a=1;</span><br></pre></td></tr></table></figure>
-
-<p>同样可以用非常量但同类型的值进行赋值（拷贝）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a=1;</span><br><span class="line">const int b=a;</span><br><span class="line">a=b;</span><br></pre></td></tr></table></figure>
-
-<p>const修饰的对象在编译时直接替换，类似define，即提前将所有出现其的位置替换成对应的数值，不申请额外空间</p>
-<p>以下场景除外(都要等具体的值才能初始化)</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const int a =fun();</span><br><span class="line">const int &amp;b=c;</span><br></pre></td></tr></table></figure>
-
-<p>同时const对象仅在文件内部有效，要实现在一个文件中定义，在多个文件中声明并使用，要用extern 关键字修饰所有const对象</p>
-<h4 id="对const的引用（常量引用）"><a href="#对const的引用（常量引用）" class="headerlink" title="对const的引用（常量引用）"></a>对const的引用（常量引用）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">常量引用本身是常量，无法修改引用的对象</span><br><span class="line">const int a=1;</span><br><span class="line">const int b=2;</span><br><span class="line">const int &amp;r =a;</span><br><span class="line">r=b;//错误，不可修改</span><br><span class="line">r=2;//错误，不可修改</span><br></pre></td></tr></table></figure>
-
-<p>常量引用不能改变引用的值（毕竟常量的值无法改变）</p>
-<p>要对常量使用引用，也只能使用常量引用</p>
-<h2 id="但是，常量引用可以引用非常量的同类型变量"><a href="#但是，常量引用可以引用非常量的同类型变量" class="headerlink" title="但是，常量引用可以引用非常量的同类型变量"></a>但是，常量引用可以引用非常量的同类型变量</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int i=0;</span><br><span class="line">const int &amp;r =i;//正确</span><br><span class="line"></span><br><span class="line">const int &amp;r2=r1*2;//正确</span><br><span class="line"></span><br><span class="line">i=4;//i不是常量，可以修改，同样会导致r的值变动</span><br></pre></td></tr></table></figure>
-
-<p>这种场景经常出现，甚至比引用常量更多，主要应用场景在函数参数传递时，传递参数的常量引用，可以确保参数不被修改，同时避免拷贝的花销。</p>
-<p>在接口等地方非常常见，可以参考《effective c++》中的建议</p>
-<p>可以理解为常量引用引用的是一个临时常量，变量的值赋给了临时变量。</p>
-<p>ok.到此为止，下面是指向常量的指针与常量指针</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a = 1;</span><br><span class="line">int b = 2;</span><br><span class="line"></span><br><span class="line">常量指针</span><br><span class="line">int* const p1 = &amp;a;</span><br><span class="line">*p1 = 6;</span><br><span class="line">// const pointer,本身是个常量，不能改变指向的对象</span><br><span class="line">//只能指向变量，无法指向常量</span><br><span class="line">//如果指向的对象并非是常量，指向对象的值还是可以修改的</span><br><span class="line"></span><br><span class="line">指向常量的指针</span><br><span class="line">const int* p2 = &amp;a;</span><br><span class="line">p2 = &amp;b;//正确，pointer to const,本身不是常量，可以改变指向的对象</span><br><span class="line">*p2=3;//错误，无法通过这种方式修改指向的变量的值</span><br><span class="line">//类似常量引用，可以指向常量，也可以指向变量</span><br><span class="line"></span><br><span class="line">const int* const p3 = &amp;a;//指向常量的常量指针</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="顶层const与底层const"><a href="#顶层const与底层const" class="headerlink" title="顶层const与底层const"></a>顶层const与底层const</h3><p>顶层const表示其本身是常量，即常量和常量指针，无法修改其值（常量指针无法修改指向的对象，即地址，也就是其值）</p>
-<p>底层const表示指向（引用）的对象是一个“常量”（常量或变量），无法修改指向（引用）对象的值，即常量引用和指向常量的指针等</p>
-<p>拷贝时，两者区别非常明显</p>
-<p>顶层const，可以随意赋给变量做值</p>
-<p>底层const,不可以赋给变量做值</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a=1;</span><br><span class="line">const int *r1=a;</span><br><span class="line">int *const r2=a;</span><br><span class="line"></span><br><span class="line">int *p=r1;//错误，底层const无法赋值</span><br><span class="line">int *p=r2;//正确</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>思考</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-        <tag>指针</tag>
-        <tag>const</tag>
-      </tags>
   </entry>
   <entry>
     <title>最小生成树:Prim 算法和Kruskal 算法</title>
@@ -1280,92 +1309,6 @@
         <tag>数据结构与算法</tag>
         <tag>二叉树</tag>
         <tag>最小生成树，贪心算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>线索化二叉树及其遍历</title>
-    <url>/2024/09/25/%E7%BA%BF%E7%B4%A2%E5%8C%96%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E5%85%B6%E9%81%8D%E5%8E%86/</url>
-    <content><![CDATA[<h1 id="线索化二叉树"><a href="#线索化二叉树" class="headerlink" title="线索化二叉树"></a>线索化二叉树</h1><h3 id="以下是实现该结构并进行中序遍历的代码："><a href="#以下是实现该结构并进行中序遍历的代码：" class="headerlink" title="以下是实现该结构并进行中序遍历的代码："></a>以下是实现该结构并进行中序遍历的代码：</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义线索二叉树节点的结构</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ThreadedNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> value;                      <span class="comment">// 节点的值</span></span><br><span class="line">    ThreadedNode* left;             <span class="comment">// 指向左子节点</span></span><br><span class="line">    ThreadedNode* right;            <span class="comment">// 指向右子节点</span></span><br><span class="line">    <span class="type">bool</span> lThread;                   <span class="comment">// 左指针是否为线索</span></span><br><span class="line">    <span class="type">bool</span> rThread;                   <span class="comment">// 右指针是否为线索</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造函数初始化节点值，并将左右指针初始化为空，线索标志初始化为 false</span></span><br><span class="line">    <span class="built_in">ThreadedNode</span>(<span class="type">int</span> val) : <span class="built_in">value</span>(val), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>), <span class="built_in">lThread</span>(<span class="literal">false</span>), <span class="built_in">rThread</span>(<span class="literal">false</span>) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入节点并构建线索二叉树的函数</span></span><br><span class="line"><span class="function">ThreadedNode* <span class="title">insert</span><span class="params">(ThreadedNode* root, <span class="type">int</span> key)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 创建一个新节点</span></span><br><span class="line">    ThreadedNode* newNode = <span class="keyword">new</span> <span class="built_in">ThreadedNode</span>(key);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果树为空，直接返回新节点作为根节点</span></span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">nullptr</span>) <span class="keyword">return</span> newNode;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// `current` 用于跟踪当前节点，`parent` 用于跟踪当前节点的父节点</span></span><br><span class="line">    ThreadedNode* current = root;</span><br><span class="line">    ThreadedNode* parent = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 找到要插入的位置</span></span><br><span class="line">    <span class="keyword">while</span> (current != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        parent = current;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 插入左子树</span></span><br><span class="line">        <span class="keyword">if</span> (key &lt; current-&gt;value) &#123;</span><br><span class="line">            <span class="comment">// 如果左指针不是线索，继续向左子树移动</span></span><br><span class="line">            <span class="keyword">if</span> (!current-&gt;lThread)</span><br><span class="line">                current = current-&gt;left;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">break</span>; <span class="comment">// 遇到线索停止</span></span><br><span class="line">        &#125; </span><br><span class="line">        <span class="comment">// 插入右子树</span></span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 如果右指针不是线索，继续向右子树移动</span></span><br><span class="line">            <span class="keyword">if</span> (!current-&gt;rThread)</span><br><span class="line">                current = current-&gt;right;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">break</span>; <span class="comment">// 遇到线索停止</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据值的大小决定插入到左子树还是右子树</span></span><br><span class="line">    <span class="keyword">if</span> (key &lt; parent-&gt;value) &#123;</span><br><span class="line">        <span class="comment">// 左子树插入</span></span><br><span class="line">        newNode-&gt;left = parent-&gt;left;  <span class="comment">// 新节点的左指针指向父节点的左指针</span></span><br><span class="line">        newNode-&gt;right = parent;       <span class="comment">// 新节点的右指针指向父节点</span></span><br><span class="line">        parent-&gt;lThread = <span class="literal">false</span>;       <span class="comment">// 插入后，父节点的左指针不再是线索</span></span><br><span class="line">        parent-&gt;left = newNode;        <span class="comment">// 父节点的左子树变为新节点</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 右子树插入</span></span><br><span class="line">        newNode-&gt;right = parent-&gt;right; <span class="comment">// 新节点的右指针指向父节点的右指针</span></span><br><span class="line">        newNode-&gt;left = parent;         <span class="comment">// 新节点的左指针指向父节点</span></span><br><span class="line">        parent-&gt;rThread = <span class="literal">false</span>;        <span class="comment">// 插入后，父节点的右指针不再是线索</span></span><br><span class="line">        parent-&gt;right = newNode;        <span class="comment">// 父节点的右子树变为新节点</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回根节点</span></span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 找到中序遍历的起点（即最左边的节点）</span></span><br><span class="line"><span class="function">ThreadedNode* <span class="title">leftmost</span><span class="params">(ThreadedNode* node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (node == <span class="literal">nullptr</span>) <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// 一直移动到没有左子节点的节点</span></span><br><span class="line">    <span class="keyword">while</span> (!node-&gt;lThread) </span><br><span class="line">        node = node-&gt;left;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线索化二叉树的中序遍历</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">inOrderTraversal</span><span class="params">(ThreadedNode* root)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 从最左边的节点开始</span></span><br><span class="line">    ThreadedNode* current = <span class="built_in">leftmost</span>(root);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 遍历整个树</span></span><br><span class="line">    <span class="keyword">while</span> (current != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="comment">// 输出当前节点的值</span></span><br><span class="line">        cout &lt;&lt; current-&gt;value &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果当前节点的右指针是线索，直接跳到下一个中序节点</span></span><br><span class="line">        <span class="keyword">if</span> (current-&gt;rThread)</span><br><span class="line">            current = current-&gt;right;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="comment">// 否则找到当前节点右子树中的最左节点</span></span><br><span class="line">            current = <span class="built_in">leftmost</span>(current-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ThreadedNode* root = <span class="literal">nullptr</span>;  <span class="comment">// 创建一个空的线索二叉树</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 插入节点，构建线索二叉树</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">5</span>);  <span class="comment">// 插入根节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">3</span>);  <span class="comment">// 插入左子节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">8</span>);  <span class="comment">// 插入右子节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">2</span>);  <span class="comment">// 插入左子树中的左子节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">4</span>);  <span class="comment">// 插入左子树中的右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 线索化后的中序遍历</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;中序遍历: &quot;</span>;</span><br><span class="line">    <span class="built_in">inOrderTraversal</span>(root);</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="代码说明："><a href="#代码说明：" class="headerlink" title="代码说明："></a>代码说明：</h3><ol>
-<li><p><strong>树的结构</strong>：</p>
-<ul>
-<li>我们插入节点顺序为 <code>5, 3, 8, 2, 4</code>，构造如下的树：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   4</span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p><strong>中序遍历顺序</strong>：</p>
-<ul>
-<li>中序遍历的顺序是：<strong>先访问左子树，再访问根节点，最后访问右子树</strong>.</li>
-<li>对于这棵树的中序遍历顺序是：<code>2 3 4 5 8</code>.</li>
-</ul>
-</li>
-<li><p><strong>关键函数</strong>：</p>
-<ul>
-<li><code>insert</code>：在二叉树中插入节点，同时维护线索化指针.</li>
-<li><code>leftmost</code>：寻找中序遍历中最左边的节点，作为遍历起点.</li>
-<li><code>inOrderTraversal</code>：通过线索化指针进行中序遍历.</li>
-</ul>
-</li>
-</ol>
-<h3 id="输出结果："><a href="#输出结果：" class="headerlink" title="输出结果："></a>输出结果：</h3><p>运行此代码，输出将会是：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">中序遍历: 2 3 4 5 8</span><br></pre></td></tr></table></figure>
-
-<h1 id="线索化二叉树解释："><a href="#线索化二叉树解释：" class="headerlink" title="线索化二叉树解释："></a>线索化二叉树解释：</h1><h3 id="1-初始状态："><a href="#1-初始状态：" class="headerlink" title="1. 初始状态："></a>1. <strong>初始状态</strong>：</h3><p>我们创建了一个空的线索二叉树 <code>root</code>，即 <code>root = nullptr</code>.</p>
-<h3 id="2-插入节点-5："><a href="#2-插入节点-5：" class="headerlink" title="2. 插入节点 5："></a>2. <strong>插入节点 5</strong>：</h3><ul>
-<li>调用 <code>insert(root, 5)</code>.</li>
-<li>因为 <code>root</code> 是 <code>nullptr</code>，直接返回新节点 <code>5</code> 作为根节点.此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">5</span><br></pre></td></tr></table></figure></li>
-<li><code>5</code> 没有子节点，也没有线索.</li>
-</ul>
-<h3 id="3-插入节点-3："><a href="#3-插入节点-3：" class="headerlink" title="3. 插入节点 3："></a>3. <strong>插入节点 3</strong>：</h3><ul>
-<li>调用 <code>insert(root, 3)</code>，即在节点 <code>5</code> 的基础上插入.</li>
-<li><code>3 &lt; 5</code>，因此我们将其插入到 <code>5</code> 的左子树中.</li>
-<li>节点 <code>3</code> 的右指针作为线索指向节点 <code>5</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  5</span><br><span class="line"> /</span><br><span class="line">3</span><br><span class="line"> \</span><br><span class="line">  5 (线索)</span><br></pre></td></tr></table></figure></li>
-<li><code>5</code> 的左指针不再是线索，它现在有一个真正的左子树（节点 <code>3</code>）.</li>
-</ul>
-<h3 id="4-插入节点-8："><a href="#4-插入节点-8：" class="headerlink" title="4. 插入节点 8："></a>4. <strong>插入节点 8</strong>：</h3><ul>
-<li>调用 <code>insert(root, 8)</code>，即在当前树结构上插入.</li>
-<li><code>8 &gt; 5</code>，因此我们将其插入到节点 <code>5</code> 的右子树中.</li>
-<li>节点 <code>8</code> 的左指针作为线索指向节点 <code>5</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  5</span><br><span class="line"> / \</span><br><span class="line">3   8</span><br><span class="line"> \</span><br><span class="line">  5 (线索)</span><br><span class="line">  8 (线索)</span><br></pre></td></tr></table></figure></li>
-<li>节点 <code>5</code> 的右指针现在指向真正的右子树（节点 <code>8</code>）.</li>
-</ul>
-<h3 id="5-插入节点-2："><a href="#5-插入节点-2：" class="headerlink" title="5. 插入节点 2："></a>5. <strong>插入节点 2</strong>：</h3><ul>
-<li>调用 <code>insert(root, 2)</code>，即在当前树结构上插入.</li>
-<li><code>2 &lt; 5</code>，继续向左走，<code>2 &lt; 3</code>，因此我们将其插入到节点 <code>3</code> 的左子树中.</li>
-<li>节点 <code>2</code> 的右指针作为线索指向节点 <code>3</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   5 (线索)</span><br><span class="line"> \</span><br><span class="line">  3 (线索)</span><br></pre></td></tr></table></figure></li>
-<li>节点 <code>3</code> 的左指针不再是线索，它现在有一个真正的左子树（节点 <code>2</code>）.</li>
-</ul>
-<h3 id="6-插入节点-4："><a href="#6-插入节点-4：" class="headerlink" title="6. 插入节点 4："></a>6. <strong>插入节点 4</strong>：</h3><ul>
-<li>调用 <code>insert(root, 4)</code>，即在当前树结构上插入.</li>
-<li><code>4 &lt; 5</code>，继续向左走，<code>4 &gt; 3</code>，因此我们将其插入到节点 <code>3</code> 的右子树中.</li>
-<li>节点 <code>4</code> 的右指针作为线索指向节点 <code>5</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   4</span><br><span class="line">\	 \</span><br><span class="line">3(线) 5 (线索)</span><br><span class="line">    </span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="7-树的最终结构："><a href="#7-树的最终结构：" class="headerlink" title="7. 树的最终结构："></a>7. <strong>树的最终结构</strong>：</h3><p>经过上述插入操作，最终树的结构如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   4</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>左子树是：<code>3 -&gt; 2, 3 -&gt; 4</code>，并且线索指向相应的节点.</li>
-</ul>
-<h3 id="8-中序遍历过程："><a href="#8-中序遍历过程：" class="headerlink" title="8. 中序遍历过程："></a>8. <strong>中序遍历过程</strong>：</h3><h4 id="步骤-1：找到最左边的节点"><a href="#步骤-1：找到最左边的节点" class="headerlink" title="步骤 1：找到最左边的节点"></a>步骤 1：找到最左边的节点</h4><ul>
-<li>调用 <code>leftmost(root)</code>，找到树中最左边的节点，即 <code>2</code>.</li>
-</ul>
-<h4 id="步骤-2：遍历中序节点"><a href="#步骤-2：遍历中序节点" class="headerlink" title="步骤 2：遍历中序节点"></a>步骤 2：遍历中序节点</h4><ul>
-<li>当前节点是 <code>2</code>，输出 <code>2</code>，然后查看 <code>2</code> 的右指针，发现它是线索指向节点 <code>3</code>，因此移动到节点 <code>3</code>.</li>
-<li>当前节点是 <code>3</code>，输出 <code>3</code>，然后查看 <code>3</code> 的右指针，发现它指向节点 <code>4</code>，移动到节点 <code>4</code>.</li>
-<li>当前节点是 <code>4</code>，输出 <code>4</code>，然后查看 <code>4</code> 的右指针，发现它是线索，指向节点 <code>5</code>，移动到节点 <code>5</code>.</li>
-<li>当前节点是 <code>5</code>，输出 <code>5</code>，然后查看 <code>5</code> 的右指针，指向真正的右子树，找到最左边的节点 <code>8</code>.</li>
-<li>当前节点是 <code>8</code>，输出 <code>8</code>，然后它没有右子树或线索，遍历结束.</li>
-</ul>
-<h3 id="9-中序遍历输出："><a href="#9-中序遍历输出：" class="headerlink" title="9. 中序遍历输出："></a>9. <strong>中序遍历输出</strong>：</h3><p>最终中序遍历输出是：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">2 3 4 5 8</span><br></pre></td></tr></table></figure>
-
-<p>这就是整个代码的运行过程和中序遍历结果.</p>
-]]></content>
-      <categories>
-        <category>经验</category>
-      </categories>
-      <tags>
-        <tag>数据结构与算法</tag>
-        <tag>二叉树</tag>
       </tags>
   </entry>
   <entry>
@@ -1480,70 +1423,128 @@
       </tags>
   </entry>
   <entry>
-    <title>平衡二叉树的调整(左旋与右旋)</title>
-    <url>/2024/10/30/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E8%B0%83%E6%95%B4-%E5%B7%A6%E6%97%8B%E4%B8%8E%E5%8F%B3%E6%97%8B/</url>
-    <content><![CDATA[<h1 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h1><p>平衡二叉树（Balanced Binary Tree）是一种特殊的二叉树，它在结构上保持一定的平衡，以确保在最坏情况下依然具有较好的查找、插入和删除性能。</p>
-<h3 id="平衡二叉树的定义"><a href="#平衡二叉树的定义" class="headerlink" title="平衡二叉树的定义"></a>平衡二叉树的定义</h3><p><strong>平衡</strong>的具体定义可以根据不同类型的平衡树略有不同。一般来说，一个二叉树是平衡的，当其任意节点的左右子树高度差的绝对值不超过某个特定值（通常是1）时。</p>
-<h3 id="常见类型的平衡二叉树"><a href="#常见类型的平衡二叉树" class="headerlink" title="常见类型的平衡二叉树"></a>常见类型的平衡二叉树</h3><ol>
-<li><p><strong>AVL树</strong>：</p>
-<ul>
-<li><p>每个节点的左右子树高度差（平衡因子）只允许为 -1、0 或 1。</p>
-</li>
-<li><p>在插入或删除节点后，如果导致不平衡，会通过旋转操作来恢复平衡。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;algorithm&gt; // 用于 std::max</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 节点结构</span><br><span class="line">struct Node &#123;</span><br><span class="line">    int key;       // 节点值</span><br><span class="line">    Node* left;    // 左子节点</span><br><span class="line">    Node* right;   // 右子节点</span><br><span class="line">    int height;    // 节点高度</span><br><span class="line"></span><br><span class="line">    Node(int k) : key(k), left(nullptr), right(nullptr), height(1) &#123;&#125; // 初始化节点</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 获取节点的高度</span><br><span class="line">int getHeight(Node* node) &#123;</span><br><span class="line">    return node ? node-&gt;height : 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 获取平衡因子</span><br><span class="line">int getBalanceFactor(Node* node) &#123;</span><br><span class="line">    return node ? getHeight(node-&gt;left) - getHeight(node-&gt;right) : 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 更新节点的高度</span><br><span class="line">void updateHeight(Node* node) &#123;</span><br><span class="line">    node-&gt;height = max(getHeight(node-&gt;left), getHeight(node-&gt;right)) + 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 右旋操作</span><br><span class="line">Node* rightRotate(Node* y) &#123;</span><br><span class="line">    Node* x = y-&gt;left;</span><br><span class="line">    Node* T2 = x-&gt;right;</span><br><span class="line"></span><br><span class="line">    // 右旋转</span><br><span class="line">    x-&gt;right = y;</span><br><span class="line">    y-&gt;left = T2;</span><br><span class="line"></span><br><span class="line">    // 更新高度</span><br><span class="line">    updateHeight(y);</span><br><span class="line">    updateHeight(x);</span><br><span class="line"></span><br><span class="line">    // 返回新的根节点</span><br><span class="line">    return x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 左旋操作</span><br><span class="line">Node* leftRotate(Node* x) &#123;</span><br><span class="line">    Node* y = x-&gt;right;</span><br><span class="line">    Node* T2 = y-&gt;left;</span><br><span class="line"></span><br><span class="line">    // 左旋转</span><br><span class="line">    y-&gt;left = x;</span><br><span class="line">    x-&gt;right = T2;</span><br><span class="line"></span><br><span class="line">    // 更新高度</span><br><span class="line">    updateHeight(x);</span><br><span class="line">    updateHeight(y);</span><br><span class="line"></span><br><span class="line">    // 返回新的根节点</span><br><span class="line">    return y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 插入节点并保持平衡</span><br><span class="line">Node* insert(Node* node, int key) &#123;</span><br><span class="line">    // 1. 标准的二叉搜索树插入</span><br><span class="line">    if (!node) return new Node(key);</span><br><span class="line"></span><br><span class="line">    if (key &lt; node-&gt;key) &#123;</span><br><span class="line">        node-&gt;left = insert(node-&gt;left, key);</span><br><span class="line">    &#125; else if (key &gt; node-&gt;key) &#123;</span><br><span class="line">        node-&gt;right = insert(node-&gt;right, key);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 不允许插入重复值</span><br><span class="line">        return node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 2. 更新当前节点的高度</span><br><span class="line">    updateHeight(node);</span><br><span class="line"></span><br><span class="line">    // 3. 计算平衡因子</span><br><span class="line">    int balanceFactor = getBalanceFactor(node);</span><br><span class="line"></span><br><span class="line">    // 4. 根据平衡因子进行相应的旋转操作</span><br><span class="line">    // 左左情况</span><br><span class="line">    if (balanceFactor &gt; 1 &amp;&amp; key &lt; node-&gt;left-&gt;key) &#123;</span><br><span class="line">        return rightRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 右右情况</span><br><span class="line">    if (balanceFactor &lt; -1 &amp;&amp; key &gt; node-&gt;right-&gt;key) &#123;</span><br><span class="line">        return leftRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 左右情况</span><br><span class="line">    if (balanceFactor &gt; 1 &amp;&amp; key &gt; node-&gt;left-&gt;key) &#123;</span><br><span class="line">        node-&gt;left = leftRotate(node-&gt;left);</span><br><span class="line">        return rightRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 右左情况</span><br><span class="line">    if (balanceFactor &lt; -1 &amp;&amp; key &lt; node-&gt;right-&gt;key) &#123;</span><br><span class="line">        node-&gt;right = rightRotate(node-&gt;right);</span><br><span class="line">        return leftRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 返回不变的节点指针</span><br><span class="line">    return node;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 中序遍历树以显示结果</span><br><span class="line">void inOrder(Node* root) &#123;</span><br><span class="line">    if (root) &#123;</span><br><span class="line">        inOrder(root-&gt;left);</span><br><span class="line">        cout &lt;&lt; root-&gt;key &lt;&lt; &quot; &quot;;</span><br><span class="line">        inOrder(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 主函数测试AVL树</span><br><span class="line">int main() &#123;</span><br><span class="line">    Node* root = nullptr;</span><br><span class="line"></span><br><span class="line">    // 插入一些节点</span><br><span class="line">    root = insert(root, 10);</span><br><span class="line">    root = insert(root, 20);</span><br><span class="line">    root = insert(root, 30);</span><br><span class="line">    root = insert(root, 40);</span><br><span class="line">    root = insert(root, 50);</span><br><span class="line">    root = insert(root, 25);</span><br><span class="line"></span><br><span class="line">    // 中序遍历 AVL 树</span><br><span class="line">    cout &lt;&lt; &quot;中序遍历 AVL 树: &quot;;</span><br><span class="line">    inOrder(root);</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p><strong>红黑树</strong>：</p>
-<ul>
-<li>是一种自平衡的二叉搜索树，每个节点都有一个颜色属性（红色或黑色），并遵循特定的颜色规则。</li>
-<li>保证从根到叶的路径上的黑色节点数量相同，从而保持树的平衡性。</li>
-</ul>
-</li>
-</ol>
-<h3 id="平衡二叉树的特点"><a href="#平衡二叉树的特点" class="headerlink" title="平衡二叉树的特点"></a>平衡二叉树的特点</h3><ul>
-<li><p><strong>时间复杂度</strong>：</p>
-<ul>
-<li>查找、插入和删除操作的时间复杂度通常为 O(\log n)，这使得平衡二叉树非常高效，特别是在大量数据的情况下。</li>
-</ul>
-</li>
-<li><p><strong>空间复杂度</strong>：</p>
-<ul>
-<li>平衡二叉树的空间复杂度为 O(n)，与普通的二叉树相同。</li>
-</ul>
-</li>
-<li><p><strong>自我平衡</strong>：</p>
-<ul>
-<li>在插入或删除节点时，通过旋转和调整树的结构，保持树的平衡，从而避免退化成链表。</li>
-</ul>
-</li>
-</ul>
-<p> 旋转操作是平衡二叉树（如 AVL 树和红黑树）中的重要技术，用于在插入或删除节点后恢复树的平衡。旋转操作可以分为两种类型：左旋（Left Rotation）和右旋（Right Rotation）。以下是这两种旋转的详细介绍及其实现。</p>
-<h1 id="平衡二叉树的调整"><a href="#平衡二叉树的调整" class="headerlink" title="平衡二叉树的调整"></a>平衡二叉树的调整</h1><p>首先注意，右旋（L）实际上是将树向左旋转，左旋则是将树向右旋转</p>
-<h3 id="1-右旋（Right-Rotation）"><a href="#1-右旋（Right-Rotation）" class="headerlink" title="1. 右旋（Right Rotation）"></a>1. 右旋（Right Rotation）</h3><p>右旋操作是将某个节点（称为“失衡节点”）的左子节点提升为新的根节点，同时将失衡节点降为新根节点的右子节点。</p>
-<h4 id="右旋的步骤"><a href="#右旋的步骤" class="headerlink" title="右旋的步骤"></a>右旋的步骤</h4><ol>
-<li>设失衡节点为 <code>y</code>，其左子节点为 <code>x</code>。</li>
-<li>将 <code>x</code> 的右子节点（如果存在）连接到 <code>y</code> 的左子节点。</li>
-<li>将 <code>x</code> 提升为新的根节点。</li>
-<li>将 <code>y</code> 设为 <code>x</code> 的右子节点。</li>
-</ol>
-<h4 id="右旋的伪代码"><a href="#右旋的伪代码" class="headerlink" title="右旋的伪代码"></a>右旋的伪代码</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> key;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    <span class="type">int</span> height; <span class="comment">// 用于 AVL 树的高度</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 右旋操作</span></span><br><span class="line"><span class="function">TreeNode* <span class="title">rightRotate</span><span class="params">(TreeNode* y)</span> </span>&#123;</span><br><span class="line">    TreeNode* x = y-&gt;left;           <span class="comment">// 让 x 指向 y 的左子节点</span></span><br><span class="line">    TreeNode* T2 = x-&gt;right;         <span class="comment">// 保存 x 的右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 进行旋转</span></span><br><span class="line">    x-&gt;right = y;                    <span class="comment">// 将 y 设置为 x 的右子节点</span></span><br><span class="line">    y-&gt;left = T2;                    <span class="comment">// 将 T2 设置为 y 的左子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新高度（如果需要）</span></span><br><span class="line">    y-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(y-&gt;left), <span class="built_in">height</span>(y-&gt;right)) + <span class="number">1</span>;</span><br><span class="line">    x-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(x-&gt;left), <span class="built_in">height</span>(x-&gt;right)) + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x; <span class="comment">// 返回新的根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+    <title>指向常量的指针与常量指针</title>
+    <url>/2024/11/17/%E6%8C%87%E5%90%91%E5%B8%B8%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E4%B8%8E%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88/</url>
+    <content><![CDATA[<p>好久没有更新博客了，与最近考试多有关，也与个人怠惰有关</p>
+<p>今天的内容是指向常量的指针（pointer to const）与指针常量（const pointer），这是昨天在阅读《c++ primer》中重新理解的内容，有了些许新的感悟，趁热打铁，发在博客上</p>
+<h3 id="在讲那两个之前，先说一下const与对常量的引用（reference-to-const）"><a href="#在讲那两个之前，先说一下const与对常量的引用（reference-to-const）" class="headerlink" title="在讲那两个之前，先说一下const与对常量的引用（reference to const）"></a>在讲那两个之前，先说一下const与对常量的引用（reference to const）</h3><h4 id="const修饰词"><a href="#const修饰词" class="headerlink" title="const修饰词"></a>const修饰词</h4><p>使用const修饰词修饰的变量，即常量，是必须初始化的，且初始化后不能修改其值</p>
+<p>初始化时除了用如下方法</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const int a=1;</span><br></pre></td></tr></table></figure>
 
-<h3 id="2-左旋（Left-Rotation）"><a href="#2-左旋（Left-Rotation）" class="headerlink" title="2. 左旋（Left Rotation）"></a>2. 左旋（Left Rotation）</h3><p>左旋操作是将某个节点的右子节点提升为新的根节点，同时将失衡节点降为新根节点的左子节点。</p>
-<h4 id="左旋的步骤"><a href="#左旋的步骤" class="headerlink" title="左旋的步骤"></a>左旋的步骤</h4><ol>
-<li>设失衡节点为 <code>x</code>，其右子节点为 <code>y</code>。</li>
-<li>将 <code>y</code> 的左子节点（如果存在）连接到 <code>x</code> 的右子节点。</li>
-<li>将 <code>y</code> 提升为新的根节点。</li>
-<li>将 <code>x</code> 设为 <code>y</code> 的左子节点。</li>
-</ol>
-<h4 id="左旋的伪代码"><a href="#左旋的伪代码" class="headerlink" title="左旋的伪代码"></a>左旋的伪代码</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 左旋操作</span></span><br><span class="line"><span class="function">TreeNode* <span class="title">leftRotate</span><span class="params">(TreeNode* x)</span> </span>&#123;</span><br><span class="line">    TreeNode* y = x-&gt;right;         <span class="comment">// 让 y 指向 x 的右子节点</span></span><br><span class="line">    TreeNode* T2 = y-&gt;left;         <span class="comment">// 保存 y 的左子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 进行旋转</span></span><br><span class="line">    y-&gt;left = x;                    <span class="comment">// 将 x 设置为 y 的左子节点</span></span><br><span class="line">    x-&gt;right = T2;                  <span class="comment">// 将 T2 设置为 x 的右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新高度（如果需要）</span></span><br><span class="line">    x-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(x-&gt;left), <span class="built_in">height</span>(x-&gt;right)) + <span class="number">1</span>;</span><br><span class="line">    y-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(y-&gt;left), <span class="built_in">height</span>(y-&gt;right)) + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> y; <span class="comment">// 返回新的根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>同样可以用非常量但同类型的值进行赋值（拷贝）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a=1;</span><br><span class="line">const int b=a;</span><br><span class="line">a=b;</span><br></pre></td></tr></table></figure>
 
-<h3 id="3-组合旋转"><a href="#3-组合旋转" class="headerlink" title="3. 组合旋转"></a>3. 组合旋转</h3><h4 id="AVL有且只有的四种情况（LL-LR-RL-RR）"><a href="#AVL有且只有的四种情况（LL-LR-RL-RR）" class="headerlink" title="AVL有且只有的四种情况（LL,LR,RL,RR）"></a>AVL有且只有的四种情况（LL,LR,RL,RR）</h4><p>图片来自<a href="https://blog.csdn.net/a6892255/article/details/117001282?ops_request_misc=%7B%22request_id%22:%22EBCFF1FE-F5C1-4776-B879-A508C09E98D5%22,%22scm%22:%2220140713.130102334..%22%7D&request_id=EBCFF1FE-F5C1-4776-B879-A508C09E98D5&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-117001282-null-null.142%5Ev100%5Epc_search_result_base8&utm_term=%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B7%A6%E6%97%8B%E5%8F%B3%E6%97%8B&spm=1018.2226.3001.4187">数据结构之AVL树(平衡二叉树)的理解_avl左右旋-CSDN博客</a></p>
-<h4 id="1-LL"><a href="#1-LL" class="headerlink" title="1.LL"></a>1.LL</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/edea4edc378247e01a490437e164a51f.png" alt="LL"></p>
-<h4 id="2-LR"><a href="#2-LR" class="headerlink" title="2.LR"></a>2.LR</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/dc372fd873d281a3bb0b8a92eaae54fa.png" alt="LR(1)"></p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/30204ce4046bd0a9c2316159496d1886.png" alt="LR(2)"></p>
-<h4 id="3-RL"><a href="#3-RL" class="headerlink" title="3.RL"></a>3.RL</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/d60980e235068364f15691ef822690de.png" alt="RL(1)"></p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/084bc177d55d0797ab75c3caf6963405.png" alt="RL(2)"></p>
-<h4 id="4-RR"><a href="#4-RR" class="headerlink" title="4.RR"></a>4.RR</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/60bb25e94471951b5602f0507a5b232c.png" alt="RR2"></p>
+<p>const修饰的对象在编译时直接替换，类似define，即提前将所有出现其的位置替换成对应的数值，不申请额外空间</p>
+<p>以下场景除外(都要等具体的值才能初始化)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const int a =fun();</span><br><span class="line">const int &amp;b=c;</span><br></pre></td></tr></table></figure>
+
+<p>同时const对象仅在文件内部有效，要实现在一个文件中定义，在多个文件中声明并使用，要用extern 关键字修饰所有const对象</p>
+<h4 id="对const的引用（常量引用）"><a href="#对const的引用（常量引用）" class="headerlink" title="对const的引用（常量引用）"></a>对const的引用（常量引用）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">常量引用本身是常量，无法修改引用的对象</span><br><span class="line">const int a=1;</span><br><span class="line">const int b=2;</span><br><span class="line">const int &amp;r =a;</span><br><span class="line">r=b;//错误，不可修改</span><br><span class="line">r=2;//错误，不可修改</span><br></pre></td></tr></table></figure>
+
+<p>常量引用不能改变引用的值（毕竟常量的值无法改变）</p>
+<p>要对常量使用引用，也只能使用常量引用</p>
+<h2 id="但是，常量引用可以引用非常量的同类型变量"><a href="#但是，常量引用可以引用非常量的同类型变量" class="headerlink" title="但是，常量引用可以引用非常量的同类型变量"></a>但是，常量引用可以引用非常量的同类型变量</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int i=0;</span><br><span class="line">const int &amp;r =i;//正确</span><br><span class="line"></span><br><span class="line">const int &amp;r2=r1*2;//正确</span><br><span class="line"></span><br><span class="line">i=4;//i不是常量，可以修改，同样会导致r的值变动</span><br></pre></td></tr></table></figure>
+
+<p>这种场景经常出现，甚至比引用常量更多，主要应用场景在函数参数传递时，传递参数的常量引用，可以确保参数不被修改，同时避免拷贝的花销。</p>
+<p>在接口等地方非常常见，可以参考《effective c++》中的建议</p>
+<p>可以理解为常量引用引用的是一个临时常量，变量的值赋给了临时变量。</p>
+<p>ok.到此为止，下面是指向常量的指针与常量指针</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a = 1;</span><br><span class="line">int b = 2;</span><br><span class="line"></span><br><span class="line">常量指针</span><br><span class="line">int* const p1 = &amp;a;</span><br><span class="line">*p1 = 6;</span><br><span class="line">// const pointer,本身是个常量，不能改变指向的对象</span><br><span class="line">//只能指向变量，无法指向常量</span><br><span class="line">//如果指向的对象并非是常量，指向对象的值还是可以修改的</span><br><span class="line"></span><br><span class="line">指向常量的指针</span><br><span class="line">const int* p2 = &amp;a;</span><br><span class="line">p2 = &amp;b;//正确，pointer to const,本身不是常量，可以改变指向的对象</span><br><span class="line">*p2=3;//错误，无法通过这种方式修改指向的变量的值</span><br><span class="line">//类似常量引用，可以指向常量，也可以指向变量</span><br><span class="line"></span><br><span class="line">const int* const p3 = &amp;a;//指向常量的常量指针</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="顶层const与底层const"><a href="#顶层const与底层const" class="headerlink" title="顶层const与底层const"></a>顶层const与底层const</h3><p>顶层const表示其本身是常量，即常量和常量指针，无法修改其值（常量指针无法修改指向的对象，即地址，也就是其值）</p>
+<p>底层const表示指向（引用）的对象是一个“常量”（常量或变量），无法修改指向（引用）对象的值，即常量引用和指向常量的指针等</p>
+<p>拷贝时，两者区别非常明显</p>
+<p>顶层const，可以随意赋给变量做值</p>
+<p>底层const,不可以赋给变量做值</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a=1;</span><br><span class="line">const int *r1=a;</span><br><span class="line">int *const r2=a;</span><br><span class="line"></span><br><span class="line">int *p=r1;//错误，底层const无法赋值</span><br><span class="line">int *p=r2;//正确</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>思考</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+        <tag>指针</tag>
+        <tag>const</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>线索化二叉树及其遍历</title>
+    <url>/2024/09/25/%E7%BA%BF%E7%B4%A2%E5%8C%96%E4%BA%8C%E5%8F%89%E6%A0%91%E5%8F%8A%E5%85%B6%E9%81%8D%E5%8E%86/</url>
+    <content><![CDATA[<h1 id="线索化二叉树"><a href="#线索化二叉树" class="headerlink" title="线索化二叉树"></a>线索化二叉树</h1><h3 id="以下是实现该结构并进行中序遍历的代码："><a href="#以下是实现该结构并进行中序遍历的代码：" class="headerlink" title="以下是实现该结构并进行中序遍历的代码："></a>以下是实现该结构并进行中序遍历的代码：</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义线索二叉树节点的结构</span></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">ThreadedNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> value;                      <span class="comment">// 节点的值</span></span><br><span class="line">    ThreadedNode* left;             <span class="comment">// 指向左子节点</span></span><br><span class="line">    ThreadedNode* right;            <span class="comment">// 指向右子节点</span></span><br><span class="line">    <span class="type">bool</span> lThread;                   <span class="comment">// 左指针是否为线索</span></span><br><span class="line">    <span class="type">bool</span> rThread;                   <span class="comment">// 右指针是否为线索</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 构造函数初始化节点值，并将左右指针初始化为空，线索标志初始化为 false</span></span><br><span class="line">    <span class="built_in">ThreadedNode</span>(<span class="type">int</span> val) : <span class="built_in">value</span>(val), <span class="built_in">left</span>(<span class="literal">nullptr</span>), <span class="built_in">right</span>(<span class="literal">nullptr</span>), <span class="built_in">lThread</span>(<span class="literal">false</span>), <span class="built_in">rThread</span>(<span class="literal">false</span>) &#123;&#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 插入节点并构建线索二叉树的函数</span></span><br><span class="line"><span class="function">ThreadedNode* <span class="title">insert</span><span class="params">(ThreadedNode* root, <span class="type">int</span> key)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 创建一个新节点</span></span><br><span class="line">    ThreadedNode* newNode = <span class="keyword">new</span> <span class="built_in">ThreadedNode</span>(key);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果树为空，直接返回新节点作为根节点</span></span><br><span class="line">    <span class="keyword">if</span> (root == <span class="literal">nullptr</span>) <span class="keyword">return</span> newNode;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// `current` 用于跟踪当前节点，`parent` 用于跟踪当前节点的父节点</span></span><br><span class="line">    ThreadedNode* current = root;</span><br><span class="line">    ThreadedNode* parent = <span class="literal">nullptr</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 找到要插入的位置</span></span><br><span class="line">    <span class="keyword">while</span> (current != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        parent = current;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 插入左子树</span></span><br><span class="line">        <span class="keyword">if</span> (key &lt; current-&gt;value) &#123;</span><br><span class="line">            <span class="comment">// 如果左指针不是线索，继续向左子树移动</span></span><br><span class="line">            <span class="keyword">if</span> (!current-&gt;lThread)</span><br><span class="line">                current = current-&gt;left;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">break</span>; <span class="comment">// 遇到线索停止</span></span><br><span class="line">        &#125; </span><br><span class="line">        <span class="comment">// 插入右子树</span></span><br><span class="line">        <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="comment">// 如果右指针不是线索，继续向右子树移动</span></span><br><span class="line">            <span class="keyword">if</span> (!current-&gt;rThread)</span><br><span class="line">                current = current-&gt;right;</span><br><span class="line">            <span class="keyword">else</span></span><br><span class="line">                <span class="keyword">break</span>; <span class="comment">// 遇到线索停止</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 根据值的大小决定插入到左子树还是右子树</span></span><br><span class="line">    <span class="keyword">if</span> (key &lt; parent-&gt;value) &#123;</span><br><span class="line">        <span class="comment">// 左子树插入</span></span><br><span class="line">        newNode-&gt;left = parent-&gt;left;  <span class="comment">// 新节点的左指针指向父节点的左指针</span></span><br><span class="line">        newNode-&gt;right = parent;       <span class="comment">// 新节点的右指针指向父节点</span></span><br><span class="line">        parent-&gt;lThread = <span class="literal">false</span>;       <span class="comment">// 插入后，父节点的左指针不再是线索</span></span><br><span class="line">        parent-&gt;left = newNode;        <span class="comment">// 父节点的左子树变为新节点</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 右子树插入</span></span><br><span class="line">        newNode-&gt;right = parent-&gt;right; <span class="comment">// 新节点的右指针指向父节点的右指针</span></span><br><span class="line">        newNode-&gt;left = parent;         <span class="comment">// 新节点的左指针指向父节点</span></span><br><span class="line">        parent-&gt;rThread = <span class="literal">false</span>;        <span class="comment">// 插入后，父节点的右指针不再是线索</span></span><br><span class="line">        parent-&gt;right = newNode;        <span class="comment">// 父节点的右子树变为新节点</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 返回根节点</span></span><br><span class="line">    <span class="keyword">return</span> root;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 找到中序遍历的起点（即最左边的节点）</span></span><br><span class="line"><span class="function">ThreadedNode* <span class="title">leftmost</span><span class="params">(ThreadedNode* node)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (node == <span class="literal">nullptr</span>) <span class="keyword">return</span> <span class="literal">nullptr</span>;</span><br><span class="line">    <span class="comment">// 一直移动到没有左子节点的节点</span></span><br><span class="line">    <span class="keyword">while</span> (!node-&gt;lThread) </span><br><span class="line">        node = node-&gt;left;</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 线索化二叉树的中序遍历</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">inOrderTraversal</span><span class="params">(ThreadedNode* root)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 从最左边的节点开始</span></span><br><span class="line">    ThreadedNode* current = <span class="built_in">leftmost</span>(root);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 遍历整个树</span></span><br><span class="line">    <span class="keyword">while</span> (current != <span class="literal">nullptr</span>) &#123;</span><br><span class="line">        <span class="comment">// 输出当前节点的值</span></span><br><span class="line">        cout &lt;&lt; current-&gt;value &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 如果当前节点的右指针是线索，直接跳到下一个中序节点</span></span><br><span class="line">        <span class="keyword">if</span> (current-&gt;rThread)</span><br><span class="line">            current = current-&gt;right;</span><br><span class="line">        <span class="keyword">else</span></span><br><span class="line">            <span class="comment">// 否则找到当前节点右子树中的最左节点</span></span><br><span class="line">            current = <span class="built_in">leftmost</span>(current-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    ThreadedNode* root = <span class="literal">nullptr</span>;  <span class="comment">// 创建一个空的线索二叉树</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 插入节点，构建线索二叉树</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">5</span>);  <span class="comment">// 插入根节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">3</span>);  <span class="comment">// 插入左子节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">8</span>);  <span class="comment">// 插入右子节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">2</span>);  <span class="comment">// 插入左子树中的左子节点</span></span><br><span class="line">    root = <span class="built_in">insert</span>(root, <span class="number">4</span>);  <span class="comment">// 插入左子树中的右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 线索化后的中序遍历</span></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;中序遍历: &quot;</span>;</span><br><span class="line">    <span class="built_in">inOrderTraversal</span>(root);</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="代码说明："><a href="#代码说明：" class="headerlink" title="代码说明："></a>代码说明：</h3><ol>
+<li><p><strong>树的结构</strong>：</p>
+<ul>
+<li>我们插入节点顺序为 <code>5, 3, 8, 2, 4</code>，构造如下的树：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   4</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>中序遍历顺序</strong>：</p>
+<ul>
+<li>中序遍历的顺序是：<strong>先访问左子树，再访问根节点，最后访问右子树</strong>.</li>
+<li>对于这棵树的中序遍历顺序是：<code>2 3 4 5 8</code>.</li>
+</ul>
+</li>
+<li><p><strong>关键函数</strong>：</p>
+<ul>
+<li><code>insert</code>：在二叉树中插入节点，同时维护线索化指针.</li>
+<li><code>leftmost</code>：寻找中序遍历中最左边的节点，作为遍历起点.</li>
+<li><code>inOrderTraversal</code>：通过线索化指针进行中序遍历.</li>
+</ul>
+</li>
+</ol>
+<h3 id="输出结果："><a href="#输出结果：" class="headerlink" title="输出结果："></a>输出结果：</h3><p>运行此代码，输出将会是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">中序遍历: 2 3 4 5 8</span><br></pre></td></tr></table></figure>
+
+<h1 id="线索化二叉树解释："><a href="#线索化二叉树解释：" class="headerlink" title="线索化二叉树解释："></a>线索化二叉树解释：</h1><h3 id="1-初始状态："><a href="#1-初始状态：" class="headerlink" title="1. 初始状态："></a>1. <strong>初始状态</strong>：</h3><p>我们创建了一个空的线索二叉树 <code>root</code>，即 <code>root = nullptr</code>.</p>
+<h3 id="2-插入节点-5："><a href="#2-插入节点-5：" class="headerlink" title="2. 插入节点 5："></a>2. <strong>插入节点 5</strong>：</h3><ul>
+<li>调用 <code>insert(root, 5)</code>.</li>
+<li>因为 <code>root</code> 是 <code>nullptr</code>，直接返回新节点 <code>5</code> 作为根节点.此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">5</span><br></pre></td></tr></table></figure></li>
+<li><code>5</code> 没有子节点，也没有线索.</li>
+</ul>
+<h3 id="3-插入节点-3："><a href="#3-插入节点-3：" class="headerlink" title="3. 插入节点 3："></a>3. <strong>插入节点 3</strong>：</h3><ul>
+<li>调用 <code>insert(root, 3)</code>，即在节点 <code>5</code> 的基础上插入.</li>
+<li><code>3 &lt; 5</code>，因此我们将其插入到 <code>5</code> 的左子树中.</li>
+<li>节点 <code>3</code> 的右指针作为线索指向节点 <code>5</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  5</span><br><span class="line"> /</span><br><span class="line">3</span><br><span class="line"> \</span><br><span class="line">  5 (线索)</span><br></pre></td></tr></table></figure></li>
+<li><code>5</code> 的左指针不再是线索，它现在有一个真正的左子树（节点 <code>3</code>）.</li>
+</ul>
+<h3 id="4-插入节点-8："><a href="#4-插入节点-8：" class="headerlink" title="4. 插入节点 8："></a>4. <strong>插入节点 8</strong>：</h3><ul>
+<li>调用 <code>insert(root, 8)</code>，即在当前树结构上插入.</li>
+<li><code>8 &gt; 5</code>，因此我们将其插入到节点 <code>5</code> 的右子树中.</li>
+<li>节点 <code>8</code> 的左指针作为线索指向节点 <code>5</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">  5</span><br><span class="line"> / \</span><br><span class="line">3   8</span><br><span class="line"> \</span><br><span class="line">  5 (线索)</span><br><span class="line">  8 (线索)</span><br></pre></td></tr></table></figure></li>
+<li>节点 <code>5</code> 的右指针现在指向真正的右子树（节点 <code>8</code>）.</li>
+</ul>
+<h3 id="5-插入节点-2："><a href="#5-插入节点-2：" class="headerlink" title="5. 插入节点 2："></a>5. <strong>插入节点 2</strong>：</h3><ul>
+<li>调用 <code>insert(root, 2)</code>，即在当前树结构上插入.</li>
+<li><code>2 &lt; 5</code>，继续向左走，<code>2 &lt; 3</code>，因此我们将其插入到节点 <code>3</code> 的左子树中.</li>
+<li>节点 <code>2</code> 的右指针作为线索指向节点 <code>3</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   5 (线索)</span><br><span class="line"> \</span><br><span class="line">  3 (线索)</span><br></pre></td></tr></table></figure></li>
+<li>节点 <code>3</code> 的左指针不再是线索，它现在有一个真正的左子树（节点 <code>2</code>）.</li>
+</ul>
+<h3 id="6-插入节点-4："><a href="#6-插入节点-4：" class="headerlink" title="6. 插入节点 4："></a>6. <strong>插入节点 4</strong>：</h3><ul>
+<li>调用 <code>insert(root, 4)</code>，即在当前树结构上插入.</li>
+<li><code>4 &lt; 5</code>，继续向左走，<code>4 &gt; 3</code>，因此我们将其插入到节点 <code>3</code> 的右子树中.</li>
+<li>节点 <code>4</code> 的右指针作为线索指向节点 <code>5</code>，此时树结构如下：<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   4</span><br><span class="line">\	 \</span><br><span class="line">3(线) 5 (线索)</span><br><span class="line">    </span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="7-树的最终结构："><a href="#7-树的最终结构：" class="headerlink" title="7. 树的最终结构："></a>7. <strong>树的最终结构</strong>：</h3><p>经过上述插入操作，最终树的结构如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    5</span><br><span class="line">   / \</span><br><span class="line">  3   8</span><br><span class="line"> / \</span><br><span class="line">2   4</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>左子树是：<code>3 -&gt; 2, 3 -&gt; 4</code>，并且线索指向相应的节点.</li>
+</ul>
+<h3 id="8-中序遍历过程："><a href="#8-中序遍历过程：" class="headerlink" title="8. 中序遍历过程："></a>8. <strong>中序遍历过程</strong>：</h3><h4 id="步骤-1：找到最左边的节点"><a href="#步骤-1：找到最左边的节点" class="headerlink" title="步骤 1：找到最左边的节点"></a>步骤 1：找到最左边的节点</h4><ul>
+<li>调用 <code>leftmost(root)</code>，找到树中最左边的节点，即 <code>2</code>.</li>
+</ul>
+<h4 id="步骤-2：遍历中序节点"><a href="#步骤-2：遍历中序节点" class="headerlink" title="步骤 2：遍历中序节点"></a>步骤 2：遍历中序节点</h4><ul>
+<li>当前节点是 <code>2</code>，输出 <code>2</code>，然后查看 <code>2</code> 的右指针，发现它是线索指向节点 <code>3</code>，因此移动到节点 <code>3</code>.</li>
+<li>当前节点是 <code>3</code>，输出 <code>3</code>，然后查看 <code>3</code> 的右指针，发现它指向节点 <code>4</code>，移动到节点 <code>4</code>.</li>
+<li>当前节点是 <code>4</code>，输出 <code>4</code>，然后查看 <code>4</code> 的右指针，发现它是线索，指向节点 <code>5</code>，移动到节点 <code>5</code>.</li>
+<li>当前节点是 <code>5</code>，输出 <code>5</code>，然后查看 <code>5</code> 的右指针，指向真正的右子树，找到最左边的节点 <code>8</code>.</li>
+<li>当前节点是 <code>8</code>，输出 <code>8</code>，然后它没有右子树或线索，遍历结束.</li>
+</ul>
+<h3 id="9-中序遍历输出："><a href="#9-中序遍历输出：" class="headerlink" title="9. 中序遍历输出："></a>9. <strong>中序遍历输出</strong>：</h3><p>最终中序遍历输出是：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">2 3 4 5 8</span><br></pre></td></tr></table></figure>
+
+<p>这就是整个代码的运行过程和中序遍历结果.</p>
 ]]></content>
       <categories>
         <category>经验</category>
@@ -1551,7 +1552,6 @@
       <tags>
         <tag>数据结构与算法</tag>
         <tag>二叉树</tag>
-        <tag>平衡二叉树</tag>
       </tags>
   </entry>
   <entry>
