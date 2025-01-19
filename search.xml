@@ -1,37 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
-    <title>DFS，BFS遍历非联通图</title>
-    <url>/2024/10/16/DFS%E9%81%8D%E5%8E%86%E9%9D%9E%E8%81%94%E9%80%9A%E5%9B%BE/</url>
-    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 深度优先搜索函数 (DFS)</span><br><span class="line">// 从当前节点 `node` 开始访问，并递归访问其所有相邻的未访问节点</span><br><span class="line">void DFS(char node, unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph, unordered_set&lt;char&gt;&amp; visited) &#123;</span><br><span class="line">    // 标记当前节点为已访问</span><br><span class="line">    visited.insert(node);</span><br><span class="line">    // 输出当前节点（此处可以进行自定义的处理，像打印或其他操作）</span><br><span class="line">    cout &lt;&lt; node &lt;&lt; &quot; &quot;;  </span><br><span class="line"></span><br><span class="line">    // 遍历该节点的所有相邻节点</span><br><span class="line">    for (char neighbor : graph[node]) &#123;</span><br><span class="line">        // 如果相邻节点未访问过，则递归调用 DFS 访问该相邻节点</span><br><span class="line">        if (visited.find(neighbor) == visited.end()) &#123;</span><br><span class="line">            DFS(neighbor, graph, visited);  // 递归调用 DFS</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 遍历整个非联通图的DFS</span><br><span class="line">// 对于图中的每一个顶点，如果该顶点未访问过，执行 DFS 来遍历与其相连的部分</span><br><span class="line">void DFSForDisconnectedGraph(unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph) &#123;</span><br><span class="line">    // 创建一个集合，用于记录哪些节点已经访问过</span><br><span class="line">    unordered_set&lt;char&gt; visited;</span><br><span class="line">    </span><br><span class="line">    // 遍历图中的所有顶点（unordered_map 的每个键）</span><br><span class="line">    for (auto&amp; pair : graph) &#123;</span><br><span class="line">        char node = pair.first;  // 当前顶点</span><br><span class="line">        // 如果当前顶点未访问过，则从该顶点开始进行 DFS</span><br><span class="line">        if (visited.find(node) == visited.end()) &#123;</span><br><span class="line">            // 从一个新的连通分量的顶点开始新的 DFS</span><br><span class="line">            cout &lt;&lt; &quot;Starting new DFS from node: &quot; &lt;&lt; node &lt;&lt; endl;</span><br><span class="line">            DFS(node, graph, visited);  // 对该连通分量进行DFS遍历</span><br><span class="line">            cout &lt;&lt; endl;  // DFS 完成后换行，以区分不同的连通分量</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 使用邻接表表示图：unordered_map&lt;char, vector&lt;char&gt;&gt;，表示图中每个顶点及其相邻顶点</span><br><span class="line">    unordered_map&lt;char, vector&lt;char&gt;&gt; graph;</span><br><span class="line">    </span><br><span class="line">    // 定义图的边</span><br><span class="line">    graph[&#x27;a&#x27;] = &#123;&#x27;b&#x27;&#125;;   // 顶点 a 和 b 相连</span><br><span class="line">    graph[&#x27;b&#x27;] = &#123;&#x27;a&#x27;, &#x27;d&#x27;&#125;;  // 顶点 b 与 a 和 d 相连</span><br><span class="line">    graph[&#x27;c&#x27;] = &#123;&#x27;e&#x27;&#125;;   // 顶点 c 与 e 相连</span><br><span class="line">    graph[&#x27;d&#x27;] = &#123;&#x27;b&#x27;&#125;;   // 顶点 d 与 b 相连</span><br><span class="line">    graph[&#x27;e&#x27;] = &#123;&#x27;c&#x27;&#125;;   // 顶点 e 与 c 相连</span><br><span class="line"></span><br><span class="line">    // 调用 DFSForDisconnectedGraph 对非联通图进行遍历</span><br><span class="line">    DFSForDisconnectedGraph(graph);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    <title>Github拒绝push</title>
+    <url>/2024/09/19/Github%E6%8B%92%E7%BB%9Dpush/</url>
+    <content><![CDATA[<h2 id="Github-拒绝了你的push"><a href="#Github-拒绝了你的push" class="headerlink" title="Github 拒绝了你的push"></a>Github 拒绝了你的push</h2><p>你有没有出现以下问题？</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> ! [remote rejected] HEAD -&gt; main (push declined due to repository rule violations)</span><br><span class="line">error: failed to push some refs to &#x27;https://github.com/cmzcc/cmzcc.github.io.git&#x27;</span><br><span class="line">FATAL Something&#x27;s wrong. Maybe you can find the solution here: https://hexo.io/docs/troubleshooting.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;queue&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 广度优先搜索函数</span><br><span class="line">void bfs(const unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph, char start) &#123;</span><br><span class="line">    // 用于存储待访问节点的队列</span><br><span class="line">    queue&lt;char&gt; q;</span><br><span class="line">    // 用于标记已访问的节点</span><br><span class="line">    unordered_set&lt;char&gt; visited;</span><br><span class="line"></span><br><span class="line">    // 将起始节点标记为已访问并加入队列</span><br><span class="line">    visited.insert(start);</span><br><span class="line">    q.push(start);</span><br><span class="line"></span><br><span class="line">    // 开始遍历</span><br><span class="line">    while (!q.empty()) &#123;</span><br><span class="line">        // 取出队列中的当前节点</span><br><span class="line">        char node = q.front();</span><br><span class="line">        q.pop();</span><br><span class="line"></span><br><span class="line">        // 输出当前节点</span><br><span class="line">        cout &lt;&lt; &quot;Visited: &quot; &lt;&lt; node &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">        // 遍历该节点的所有邻接节点</span><br><span class="line">        for (char neighbor : graph.at(node)) &#123;</span><br><span class="line">            // 如果该邻接节点尚未访问过，加入队列并标记为已访问</span><br><span class="line">            if (visited.find(neighbor) == visited.end()) &#123;</span><br><span class="line">                visited.insert(neighbor);</span><br><span class="line">                q.push(neighbor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 图的邻接表表示法</span><br><span class="line">    unordered_map&lt;char, vector&lt;char&gt;&gt; graph = &#123;</span><br><span class="line">        &#123;&#x27;a&#x27;, &#123;&#x27;b&#x27;, &#x27;c&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;b&#x27;, &#123;&#x27;a&#x27;, &#x27;d&#x27;, &#x27;e&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;c&#x27;, &#123;&#x27;a&#x27;, &#x27;f&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;d&#x27;, &#123;&#x27;b&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;e&#x27;, &#123;&#x27;b&#x27;, &#x27;f&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;f&#x27;, &#123;&#x27;c&#x27;, &#x27;e&#x27;&#125;&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    // 从节点 &#x27;a&#x27; 开始执行 BFS</span><br><span class="line">    bfs(graph, &#x27;a&#x27;);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="访问顺序的区别示例"><a href="#访问顺序的区别示例" class="headerlink" title="访问顺序的区别示例"></a><strong>访问顺序的区别示例</strong></h3><p>以一个简单的图为例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    a</span><br><span class="line">   / \</span><br><span class="line">  b   c</span><br><span class="line"> / \   \</span><br><span class="line">d   e   f</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>DFS 访问顺序</strong>（从节点 <code>a</code> 开始）：<code>a, b, d, e, c, f</code><ul>
-<li>先从 <code>a</code> 开始，访问 <code>b</code>，然后继续到 <code>d</code>，没有其他未访问的邻接节点后回溯到 <code>b</code>，再访问 <code>e</code>，继续回溯到 <code>a</code>，然后访问 <code>c</code>，最后访问 <code>f</code>。</li>
-</ul>
-</li>
-<li><strong>BFS 访问顺序</strong>（从节点 <code>a</code> 开始）：<code>a, b, c, d, e, f</code><ul>
-<li>先从 <code>a</code> 开始，访问其所有邻接节点 <code>b</code> 和 <code>c</code>，然后继续访问 <code>b</code> 和 <code>c</code> 的所有邻接节点 <code>d, e, f</code>。</li>
-</ul>
-</li>
-</ul>
-]]></content>
+<h4 id="今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教"><a href="#今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教" class="headerlink" title="今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教."></a>今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教.</h4><h3 id="1-出现问题的原因"><a href="#1-出现问题的原因" class="headerlink" title="1.出现问题的原因"></a>1.出现问题的原因</h3><h4 id="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用"><a href="#出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用" class="headerlink" title="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用."></a>出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用.</h4><h4 id="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用"><a href="#我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用" class="headerlink" title="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用."></a>我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用.</h4><h3 id="2-解决方法"><a href="#2-解决方法" class="headerlink" title="2.解决方法"></a>2.解决方法</h3><h4 id="（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下"><a href="#（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下" class="headerlink" title="（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下."></a>（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下.</h4><h4 id="（2）找到你放网站的仓库，add-file看到没有"><a href="#（2）找到你放网站的仓库，add-file看到没有" class="headerlink" title="（2）找到你放网站的仓库，add file看到没有"></a>（2）找到你放网站的仓库，add file看到没有</h4><h4 id="然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去-（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"><a href="#然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去-（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）" class="headerlink" title="然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去.（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"></a>然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去.（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）</h4><h4 id="等上传完毕后，不要退出！！！"><a href="#等上传完毕后，不要退出！！！" class="headerlink" title="等上传完毕后，不要退出！！！"></a>等上传完毕后，不要退出！！！</h4><h4 id="点下面的提交即可，你的网站就水灵灵的更新啦"><a href="#点下面的提交即可，你的网站就水灵灵的更新啦" class="headerlink" title="点下面的提交即可，你的网站就水灵灵的更新啦."></a>点下面的提交即可，你的网站就水灵灵的更新啦.</h4>]]></content>
       <categories>
         <category>经验</category>
       </categories>
       <tags>
-        <tag>数据结构与算法</tag>
-        <tag>图</tag>
-        <tag>DFS</tag>
+        <tag>GitHub</tag>
+        <tag>error</tag>
+        <tag>hexo</tag>
+        <tag>网站</tag>
       </tags>
   </entry>
   <entry>
@@ -127,20 +110,106 @@
       </tags>
   </entry>
   <entry>
-    <title>Github拒绝push</title>
-    <url>/2024/09/19/Github%E6%8B%92%E7%BB%9Dpush/</url>
-    <content><![CDATA[<h2 id="Github-拒绝了你的push"><a href="#Github-拒绝了你的push" class="headerlink" title="Github 拒绝了你的push"></a>Github 拒绝了你的push</h2><p>你有没有出现以下问题？</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line"> ! [remote rejected] HEAD -&gt; main (push declined due to repository rule violations)</span><br><span class="line">error: failed to push some refs to &#x27;https://github.com/cmzcc/cmzcc.github.io.git&#x27;</span><br><span class="line">FATAL Something&#x27;s wrong. Maybe you can find the solution here: https://hexo.io/docs/troubleshooting.html</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+    <title>DFS，BFS遍历非联通图</title>
+    <url>/2024/10/16/DFS%E9%81%8D%E5%8E%86%E9%9D%9E%E8%81%94%E9%80%9A%E5%9B%BE/</url>
+    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 深度优先搜索函数 (DFS)</span><br><span class="line">// 从当前节点 `node` 开始访问，并递归访问其所有相邻的未访问节点</span><br><span class="line">void DFS(char node, unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph, unordered_set&lt;char&gt;&amp; visited) &#123;</span><br><span class="line">    // 标记当前节点为已访问</span><br><span class="line">    visited.insert(node);</span><br><span class="line">    // 输出当前节点（此处可以进行自定义的处理，像打印或其他操作）</span><br><span class="line">    cout &lt;&lt; node &lt;&lt; &quot; &quot;;  </span><br><span class="line"></span><br><span class="line">    // 遍历该节点的所有相邻节点</span><br><span class="line">    for (char neighbor : graph[node]) &#123;</span><br><span class="line">        // 如果相邻节点未访问过，则递归调用 DFS 访问该相邻节点</span><br><span class="line">        if (visited.find(neighbor) == visited.end()) &#123;</span><br><span class="line">            DFS(neighbor, graph, visited);  // 递归调用 DFS</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 遍历整个非联通图的DFS</span><br><span class="line">// 对于图中的每一个顶点，如果该顶点未访问过，执行 DFS 来遍历与其相连的部分</span><br><span class="line">void DFSForDisconnectedGraph(unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph) &#123;</span><br><span class="line">    // 创建一个集合，用于记录哪些节点已经访问过</span><br><span class="line">    unordered_set&lt;char&gt; visited;</span><br><span class="line">    </span><br><span class="line">    // 遍历图中的所有顶点（unordered_map 的每个键）</span><br><span class="line">    for (auto&amp; pair : graph) &#123;</span><br><span class="line">        char node = pair.first;  // 当前顶点</span><br><span class="line">        // 如果当前顶点未访问过，则从该顶点开始进行 DFS</span><br><span class="line">        if (visited.find(node) == visited.end()) &#123;</span><br><span class="line">            // 从一个新的连通分量的顶点开始新的 DFS</span><br><span class="line">            cout &lt;&lt; &quot;Starting new DFS from node: &quot; &lt;&lt; node &lt;&lt; endl;</span><br><span class="line">            DFS(node, graph, visited);  // 对该连通分量进行DFS遍历</span><br><span class="line">            cout &lt;&lt; endl;  // DFS 完成后换行，以区分不同的连通分量</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 使用邻接表表示图：unordered_map&lt;char, vector&lt;char&gt;&gt;，表示图中每个顶点及其相邻顶点</span><br><span class="line">    unordered_map&lt;char, vector&lt;char&gt;&gt; graph;</span><br><span class="line">    </span><br><span class="line">    // 定义图的边</span><br><span class="line">    graph[&#x27;a&#x27;] = &#123;&#x27;b&#x27;&#125;;   // 顶点 a 和 b 相连</span><br><span class="line">    graph[&#x27;b&#x27;] = &#123;&#x27;a&#x27;, &#x27;d&#x27;&#125;;  // 顶点 b 与 a 和 d 相连</span><br><span class="line">    graph[&#x27;c&#x27;] = &#123;&#x27;e&#x27;&#125;;   // 顶点 c 与 e 相连</span><br><span class="line">    graph[&#x27;d&#x27;] = &#123;&#x27;b&#x27;&#125;;   // 顶点 d 与 b 相连</span><br><span class="line">    graph[&#x27;e&#x27;] = &#123;&#x27;c&#x27;&#125;;   // 顶点 e 与 c 相连</span><br><span class="line"></span><br><span class="line">    // 调用 DFSForDisconnectedGraph 对非联通图进行遍历</span><br><span class="line">    DFSForDisconnectedGraph(graph);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
 
-<h4 id="今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教"><a href="#今天本人在像往常一样运行hexo-d-时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教" class="headerlink" title="今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教."></a>今天本人在像往常一样运行hexo d 时出现了以上报错，苦思冥想，绞尽脑汁，最终勉强解决，如有大能，望不吝赐教.</h4><h3 id="1-出现问题的原因"><a href="#1-出现问题的原因" class="headerlink" title="1.出现问题的原因"></a>1.出现问题的原因</h3><h4 id="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用"><a href="#出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用" class="headerlink" title="出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用."></a>出现这种问题基本就是像我一样作死，在某一处加入了token之类的隐私，然后github识别到了，觉得有风险，就把你列入失信名单了，把token删了也没用.</h4><h4 id="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用"><a href="#我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用" class="headerlink" title="我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用."></a>我亲测是必须换一个地方创建新的hexo才能解决，像什么删除github仓库之类的都没用.</h4><h3 id="2-解决方法"><a href="#2-解决方法" class="headerlink" title="2.解决方法"></a>2.解决方法</h3><h4 id="（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下"><a href="#（1）在你的github主页里找到setting，然后找到一个code-security，有一个push-protection-for-yourself-把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下" class="headerlink" title="（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下."></a>（1）在你的github主页里找到setting，然后找到一个code security，有一个push protection for yourself,把这玩意关了，能解决以后的问题，但亲测当前的问题无法解决，你们可以试一下.</h4><h4 id="（2）找到你放网站的仓库，add-file看到没有"><a href="#（2）找到你放网站的仓库，add-file看到没有" class="headerlink" title="（2）找到你放网站的仓库，add file看到没有"></a>（2）找到你放网站的仓库，add file看到没有</h4><h4 id="然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去-（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"><a href="#然后upload-files-在你的git里面运行hexo-g之后将public里面的文件拖动上去-（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）" class="headerlink" title="然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去.（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）"></a>然后upload files 在你的git里面运行hexo  g之后将public里面的文件拖动上去.（注意，是public下的文件，不是public这个文件夹，类比上图里面的东西）</h4><h4 id="等上传完毕后，不要退出！！！"><a href="#等上传完毕后，不要退出！！！" class="headerlink" title="等上传完毕后，不要退出！！！"></a>等上传完毕后，不要退出！！！</h4><h4 id="点下面的提交即可，你的网站就水灵灵的更新啦"><a href="#点下面的提交即可，你的网站就水灵灵的更新啦" class="headerlink" title="点下面的提交即可，你的网站就水灵灵的更新啦."></a>点下面的提交即可，你的网站就水灵灵的更新啦.</h4>]]></content>
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;queue&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 广度优先搜索函数</span><br><span class="line">void bfs(const unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph, char start) &#123;</span><br><span class="line">    // 用于存储待访问节点的队列</span><br><span class="line">    queue&lt;char&gt; q;</span><br><span class="line">    // 用于标记已访问的节点</span><br><span class="line">    unordered_set&lt;char&gt; visited;</span><br><span class="line"></span><br><span class="line">    // 将起始节点标记为已访问并加入队列</span><br><span class="line">    visited.insert(start);</span><br><span class="line">    q.push(start);</span><br><span class="line"></span><br><span class="line">    // 开始遍历</span><br><span class="line">    while (!q.empty()) &#123;</span><br><span class="line">        // 取出队列中的当前节点</span><br><span class="line">        char node = q.front();</span><br><span class="line">        q.pop();</span><br><span class="line"></span><br><span class="line">        // 输出当前节点</span><br><span class="line">        cout &lt;&lt; &quot;Visited: &quot; &lt;&lt; node &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">        // 遍历该节点的所有邻接节点</span><br><span class="line">        for (char neighbor : graph.at(node)) &#123;</span><br><span class="line">            // 如果该邻接节点尚未访问过，加入队列并标记为已访问</span><br><span class="line">            if (visited.find(neighbor) == visited.end()) &#123;</span><br><span class="line">                visited.insert(neighbor);</span><br><span class="line">                q.push(neighbor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 图的邻接表表示法</span><br><span class="line">    unordered_map&lt;char, vector&lt;char&gt;&gt; graph = &#123;</span><br><span class="line">        &#123;&#x27;a&#x27;, &#123;&#x27;b&#x27;, &#x27;c&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;b&#x27;, &#123;&#x27;a&#x27;, &#x27;d&#x27;, &#x27;e&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;c&#x27;, &#123;&#x27;a&#x27;, &#x27;f&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;d&#x27;, &#123;&#x27;b&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;e&#x27;, &#123;&#x27;b&#x27;, &#x27;f&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;f&#x27;, &#123;&#x27;c&#x27;, &#x27;e&#x27;&#125;&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    // 从节点 &#x27;a&#x27; 开始执行 BFS</span><br><span class="line">    bfs(graph, &#x27;a&#x27;);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="访问顺序的区别示例"><a href="#访问顺序的区别示例" class="headerlink" title="访问顺序的区别示例"></a><strong>访问顺序的区别示例</strong></h3><p>以一个简单的图为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    a</span><br><span class="line">   / \</span><br><span class="line">  b   c</span><br><span class="line"> / \   \</span><br><span class="line">d   e   f</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>DFS 访问顺序</strong>（从节点 <code>a</code> 开始）：<code>a, b, d, e, c, f</code><ul>
+<li>先从 <code>a</code> 开始，访问 <code>b</code>，然后继续到 <code>d</code>，没有其他未访问的邻接节点后回溯到 <code>b</code>，再访问 <code>e</code>，继续回溯到 <code>a</code>，然后访问 <code>c</code>，最后访问 <code>f</code>。</li>
+</ul>
+</li>
+<li><strong>BFS 访问顺序</strong>（从节点 <code>a</code> 开始）：<code>a, b, c, d, e, f</code><ul>
+<li>先从 <code>a</code> 开始，访问其所有邻接节点 <code>b</code> 和 <code>c</code>，然后继续访问 <code>b</code> 和 <code>c</code> 的所有邻接节点 <code>d, e, f</code>。</li>
+</ul>
+</li>
+</ul>
+]]></content>
       <categories>
         <category>经验</category>
       </categories>
       <tags>
-        <tag>GitHub</tag>
-        <tag>error</tag>
-        <tag>hexo</tag>
-        <tag>网站</tag>
+        <tag>数据结构与算法</tag>
+        <tag>图</tag>
+        <tag>DFS</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>Unity（一）</title>
+    <url>/2024/09/19/Unity%EF%BC%88%E4%B8%80%EF%BC%89/</url>
+    <content><![CDATA[<h1 id="平动和转动"><a href="#平动和转动" class="headerlink" title="平动和转动"></a>平动和转动</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class instance : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    public float moveSpeed = 10f;</span><br><span class="line">    public float turnSpeed = 50f;</span><br><span class="line">    private void Update()//update是每帧更新的函数</span><br><span class="line">    &#123;</span><br><span class="line">        if(Input.GetKey(KeyCode.UpArrow))</span><br><span class="line">        &#123;</span><br><span class="line">            transform.Translate(Vector3.forward * moveSpeed*Time.deltaTime);</span><br><span class="line">        &#125;</span><br><span class="line">        //translate是平移，vector3是一个三维数组，forward代表（0，0，1)</span><br><span class="line">        //deltatime是两帧之间的时间间隔</span><br><span class="line">        //没有使用 Time.deltaTime 的问题</span><br><span class="line">        //如果你只是使用 moveSpeed 来移动物体，而不使用 Time.deltaTime，</span><br><span class="line">        //物体每帧的移动量将是恒定的.如果帧率提高，物体移动的频率就会增加</span><br><span class="line">        //移动速度就会变快；如果帧率降低，物体的移动频率减小，移动速度就会变慢.</span><br><span class="line">        //使用 Time.deltaTime</span><br><span class="line">        //通过乘以 Time.deltaTime，可以保证物体每秒的移动量保持一致，不受帧率影响.</span><br><span class="line">        if (Input.GetKey(KeyCode.LeftArrow)) </span><br><span class="line">        &#123;</span><br><span class="line">            transform.Rotate(Vector3.up,turnSpeed*Time.deltaTime); </span><br><span class="line">        &#125;</span><br><span class="line">        //rotate是旋转，vector3.up表示（0，1，0），这里是转动的轴</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="摄像机的平滑跟随和视角锁定"><a href="#摄像机的平滑跟随和视角锁定" class="headerlink" title="摄像机的平滑跟随和视角锁定"></a>摄像机的平滑跟随和视角锁定</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[SerializeField] Transform target;</span><br><span class="line">[SerializeField] Vector3 offset;</span><br><span class="line">[SerializeField] float transitionSpeed = 2;</span><br><span class="line"></span><br><span class="line">private void LateUpdate()</span><br><span class="line">&#123;</span><br><span class="line">    if (target != null)</span><br><span class="line">    &#123;</span><br><span class="line">       Vector3 targetPos = target.position + offset;</span><br><span class="line">        transform.position = Vector3.Lerp(transform.position, targetPos, transitionSpeed * Time.deltaTime);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>​    </p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public Transform target;</span><br><span class="line">    private void Update()</span><br><span class="line">    &#123;</span><br><span class="line">        transform.LookAt(target);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<p>两种对摄像头的设置<br>第一种是摄像机的平滑跟随，第二种是视角锁定（摄像机不动，只转动）</p>
+<h1 id="GetAxis"><a href="#GetAxis" class="headerlink" title="GetAxis"></a>GetAxis</h1><p>在 <strong>Unity</strong> 的 <strong>Input Manager</strong> 中，<code>Positive Button</code> 和 <code>Negative Button</code> 是用来处理轴输入（axis input）的.当你配置诸如 <code>&quot;Horizontal&quot;</code> 或 <code>&quot;Vertical&quot;</code> 这样代表方向或动作的输入轴时，这两个按钮起到了重要的作用.</p>
+<h3 id="轴输入（Axis-Input）简介"><a href="#轴输入（Axis-Input）简介" class="headerlink" title="轴输入（Axis Input）简介"></a>轴输入（Axis Input）简介</h3><p>Unity 中的轴输入通常用来处理类似于左右、上下移动这样的操作.输入轴是一种 <strong>模拟输入</strong>，而不是简单的二元按键（开&#x2F;关）.例如：</p>
+<ul>
+<li><code>&quot;Horizontal&quot;</code> 轴可以映射到 <strong>A&#x2F;D</strong> 键或 <strong>左&#x2F;右</strong> 方向键，表示横向移动.</li>
+<li><code>&quot;Vertical&quot;</code> 轴可以映射到 <strong>W&#x2F;S</strong> 键或 <strong>上&#x2F;下</strong> 方向键，表示纵向移动.</li>
+</ul>
+<p>这些轴输入返回的值在 <strong>-1 到 1</strong> 之间，用来表示不同的方向或强度.</p>
+<h3 id="Positive-Button-和-Negative-Button-的作用"><a href="#Positive-Button-和-Negative-Button-的作用" class="headerlink" title="Positive Button 和 Negative Button 的作用"></a><code>Positive Button</code> 和 <code>Negative Button</code> 的作用</h3><ul>
+<li><strong>Positive Button</strong> 是用来指定当你按下该按钮时，输入轴返回正向值（如 <code>1</code>）.例如，”D” 键或右方向键通常用作 <code>Positive Button</code>，它会让角色向右移动.</li>
+<li><strong>Negative Button</strong> 是用来指定当你按下该按钮时，输入轴返回负向值（如 <code>-1</code>）.例如，”A” 键或左方向键通常用作 <code>Negative Button</code>，它会让角色向左移动.</li>
+</ul>
+<h3 id="示例：Horizontal-轴配置"><a href="#示例：Horizontal-轴配置" class="headerlink" title="示例：Horizontal 轴配置"></a>示例：<code>Horizontal</code> 轴配置</h3><p>假设我们在 <strong>Input Manager</strong> 中配置了一个名为 <code>&quot;Horizontal&quot;</code> 的输入轴.常见的设置可能是这样的：</p>
+<ul>
+<li><strong>Name</strong>: Horizontal</li>
+<li><strong>Negative Button</strong>: A (或 Left Arrow)</li>
+<li><strong>Positive Button</strong>: D (或 Right Arrow)</li>
+<li><strong>Gravity</strong>: 3</li>
+<li><strong>Dead</strong>: 0.001</li>
+<li><strong>Sensitivity</strong>: 3</li>
+<li><strong>Type</strong>: Key or Mouse Button</li>
+<li><strong>Axis</strong>: X axis</li>
+</ul>
+<h4 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h4><ol>
+<li>当你按下 <code>Positive Button</code>（比如 <code>&quot;D&quot;</code> 键），<code>Input.GetAxis(&quot;Horizontal&quot;)</code> 会返回一个正值，接近 <code>1</code>.</li>
+<li>当你按下 <code>Negative Button</code>（比如 <code>&quot;A&quot;</code> 键），<code>Input.GetAxis(&quot;Horizontal&quot;)</code> 会返回一个负值，接近 <code>-1</code>.</li>
+<li>如果没有按下任何按钮，<code>Input.GetAxis(&quot;Horizontal&quot;)</code> 将返回 <code>0</code>，表示没有水平输入.</li>
+</ol>
+<h3 id="为什么使用-Positive-和-Negative-按钮？"><a href="#为什么使用-Positive-和-Negative-按钮？" class="headerlink" title="为什么使用 Positive 和 Negative 按钮？"></a>为什么使用 Positive 和 Negative 按钮？</h3><p>它们的主要作用是提供一种简便的方式来处理方向性输入.例如，移动角色时，可以根据返回的轴值决定角色的移动方向：</p>
+<ul>
+<li>如果 <code>Input.GetAxis(&quot;Horizontal&quot;)</code> 返回正值（如 1），角色向右移动.</li>
+<li>如果返回负值（如 -1），角色向左移动.</li>
+</ul>
+<h3 id="示例：检测水平轴输入并移动角色"><a href="#示例：检测水平轴输入并移动角色" class="headerlink" title="示例：检测水平轴输入并移动角色"></a>示例：检测水平轴输入并移动角色</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void Update()</span><br><span class="line">&#123;</span><br><span class="line">    float move = Input.GetAxis(&quot;Horizontal&quot;);</span><br><span class="line">    transform.Translate(Vector3.right * move * Time.deltaTime * speed);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果玩家按下 <strong>“D”</strong> 或 <strong>右方向键</strong>（<code>Positive Button</code>），<code>move</code> 会变成正值，角色向右移动.</li>
+<li>如果玩家按下 <strong>“A”</strong> 或 <strong>左方向键</strong>（<code>Negative Button</code>），<code>move</code> 会变成负值，角色向左移动.</li>
+</ul>
+<h3 id="配置解释"><a href="#配置解释" class="headerlink" title="配置解释"></a>配置解释</h3><ul>
+<li><strong>Gravity</strong>: 控制按键松开后，轴值回到零的速度.数值越大，返回到 0 的速度越快.</li>
+<li><strong>Sensitivity</strong>: 控制按键按下时，轴值从 0 加速到 1（或 -1）的速度.数值越大，响应越快.</li>
+<li><strong>Dead</strong>: 一个小阈值，避免微小输入造成意外响应.小于该值的输入会被视为 0.</li>
+</ul>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong>Positive Button</strong>：用于正方向的输入，通常映射为右&#x2F;上方向键或控制器的正向输入.</li>
+<li><strong>Negative Button</strong>：用于负方向的输入，通常映射为左&#x2F;下方向键或控制器的反向输入.</li>
+<li>它们是用于控制方向性输入的核心元素，特别是在控制角色移动时.</li>
+</ul>
+<h1 id=""><a href="#" class="headerlink" title=""></a></h1>]]></content>
+      <categories>
+        <category>日志</category>
+      </categories>
+      <tags>
+        <tag>unity</tag>
+        <tag>打卡</tag>
+        <tag>闲得无聊所以发发</tag>
       </tags>
   </entry>
   <entry>
@@ -213,75 +282,6 @@
         <tag>c++</tag>
         <tag>重载</tag>
         <tag>深拷贝</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>Unity（一）</title>
-    <url>/2024/09/19/Unity%EF%BC%88%E4%B8%80%EF%BC%89/</url>
-    <content><![CDATA[<h1 id="平动和转动"><a href="#平动和转动" class="headerlink" title="平动和转动"></a>平动和转动</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class instance : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    public float moveSpeed = 10f;</span><br><span class="line">    public float turnSpeed = 50f;</span><br><span class="line">    private void Update()//update是每帧更新的函数</span><br><span class="line">    &#123;</span><br><span class="line">        if(Input.GetKey(KeyCode.UpArrow))</span><br><span class="line">        &#123;</span><br><span class="line">            transform.Translate(Vector3.forward * moveSpeed*Time.deltaTime);</span><br><span class="line">        &#125;</span><br><span class="line">        //translate是平移，vector3是一个三维数组，forward代表（0，0，1)</span><br><span class="line">        //deltatime是两帧之间的时间间隔</span><br><span class="line">        //没有使用 Time.deltaTime 的问题</span><br><span class="line">        //如果你只是使用 moveSpeed 来移动物体，而不使用 Time.deltaTime，</span><br><span class="line">        //物体每帧的移动量将是恒定的.如果帧率提高，物体移动的频率就会增加</span><br><span class="line">        //移动速度就会变快；如果帧率降低，物体的移动频率减小，移动速度就会变慢.</span><br><span class="line">        //使用 Time.deltaTime</span><br><span class="line">        //通过乘以 Time.deltaTime，可以保证物体每秒的移动量保持一致，不受帧率影响.</span><br><span class="line">        if (Input.GetKey(KeyCode.LeftArrow)) </span><br><span class="line">        &#123;</span><br><span class="line">            transform.Rotate(Vector3.up,turnSpeed*Time.deltaTime); </span><br><span class="line">        &#125;</span><br><span class="line">        //rotate是旋转，vector3.up表示（0，1，0），这里是转动的轴</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h1 id="摄像机的平滑跟随和视角锁定"><a href="#摄像机的平滑跟随和视角锁定" class="headerlink" title="摄像机的平滑跟随和视角锁定"></a>摄像机的平滑跟随和视角锁定</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">[SerializeField] Transform target;</span><br><span class="line">[SerializeField] Vector3 offset;</span><br><span class="line">[SerializeField] float transitionSpeed = 2;</span><br><span class="line"></span><br><span class="line">private void LateUpdate()</span><br><span class="line">&#123;</span><br><span class="line">    if (target != null)</span><br><span class="line">    &#123;</span><br><span class="line">       Vector3 targetPos = target.position + offset;</span><br><span class="line">        transform.position = Vector3.Lerp(transform.position, targetPos, transitionSpeed * Time.deltaTime);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>​    </p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public Transform target;</span><br><span class="line">    private void Update()</span><br><span class="line">    &#123;</span><br><span class="line">        transform.LookAt(target);</span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
-
-<p>两种对摄像头的设置<br>第一种是摄像机的平滑跟随，第二种是视角锁定（摄像机不动，只转动）</p>
-<h1 id="GetAxis"><a href="#GetAxis" class="headerlink" title="GetAxis"></a>GetAxis</h1><p>在 <strong>Unity</strong> 的 <strong>Input Manager</strong> 中，<code>Positive Button</code> 和 <code>Negative Button</code> 是用来处理轴输入（axis input）的.当你配置诸如 <code>&quot;Horizontal&quot;</code> 或 <code>&quot;Vertical&quot;</code> 这样代表方向或动作的输入轴时，这两个按钮起到了重要的作用.</p>
-<h3 id="轴输入（Axis-Input）简介"><a href="#轴输入（Axis-Input）简介" class="headerlink" title="轴输入（Axis Input）简介"></a>轴输入（Axis Input）简介</h3><p>Unity 中的轴输入通常用来处理类似于左右、上下移动这样的操作.输入轴是一种 <strong>模拟输入</strong>，而不是简单的二元按键（开&#x2F;关）.例如：</p>
-<ul>
-<li><code>&quot;Horizontal&quot;</code> 轴可以映射到 <strong>A&#x2F;D</strong> 键或 <strong>左&#x2F;右</strong> 方向键，表示横向移动.</li>
-<li><code>&quot;Vertical&quot;</code> 轴可以映射到 <strong>W&#x2F;S</strong> 键或 <strong>上&#x2F;下</strong> 方向键，表示纵向移动.</li>
-</ul>
-<p>这些轴输入返回的值在 <strong>-1 到 1</strong> 之间，用来表示不同的方向或强度.</p>
-<h3 id="Positive-Button-和-Negative-Button-的作用"><a href="#Positive-Button-和-Negative-Button-的作用" class="headerlink" title="Positive Button 和 Negative Button 的作用"></a><code>Positive Button</code> 和 <code>Negative Button</code> 的作用</h3><ul>
-<li><strong>Positive Button</strong> 是用来指定当你按下该按钮时，输入轴返回正向值（如 <code>1</code>）.例如，”D” 键或右方向键通常用作 <code>Positive Button</code>，它会让角色向右移动.</li>
-<li><strong>Negative Button</strong> 是用来指定当你按下该按钮时，输入轴返回负向值（如 <code>-1</code>）.例如，”A” 键或左方向键通常用作 <code>Negative Button</code>，它会让角色向左移动.</li>
-</ul>
-<h3 id="示例：Horizontal-轴配置"><a href="#示例：Horizontal-轴配置" class="headerlink" title="示例：Horizontal 轴配置"></a>示例：<code>Horizontal</code> 轴配置</h3><p>假设我们在 <strong>Input Manager</strong> 中配置了一个名为 <code>&quot;Horizontal&quot;</code> 的输入轴.常见的设置可能是这样的：</p>
-<ul>
-<li><strong>Name</strong>: Horizontal</li>
-<li><strong>Negative Button</strong>: A (或 Left Arrow)</li>
-<li><strong>Positive Button</strong>: D (或 Right Arrow)</li>
-<li><strong>Gravity</strong>: 3</li>
-<li><strong>Dead</strong>: 0.001</li>
-<li><strong>Sensitivity</strong>: 3</li>
-<li><strong>Type</strong>: Key or Mouse Button</li>
-<li><strong>Axis</strong>: X axis</li>
-</ul>
-<h4 id="工作原理"><a href="#工作原理" class="headerlink" title="工作原理"></a>工作原理</h4><ol>
-<li>当你按下 <code>Positive Button</code>（比如 <code>&quot;D&quot;</code> 键），<code>Input.GetAxis(&quot;Horizontal&quot;)</code> 会返回一个正值，接近 <code>1</code>.</li>
-<li>当你按下 <code>Negative Button</code>（比如 <code>&quot;A&quot;</code> 键），<code>Input.GetAxis(&quot;Horizontal&quot;)</code> 会返回一个负值，接近 <code>-1</code>.</li>
-<li>如果没有按下任何按钮，<code>Input.GetAxis(&quot;Horizontal&quot;)</code> 将返回 <code>0</code>，表示没有水平输入.</li>
-</ol>
-<h3 id="为什么使用-Positive-和-Negative-按钮？"><a href="#为什么使用-Positive-和-Negative-按钮？" class="headerlink" title="为什么使用 Positive 和 Negative 按钮？"></a>为什么使用 Positive 和 Negative 按钮？</h3><p>它们的主要作用是提供一种简便的方式来处理方向性输入.例如，移动角色时，可以根据返回的轴值决定角色的移动方向：</p>
-<ul>
-<li>如果 <code>Input.GetAxis(&quot;Horizontal&quot;)</code> 返回正值（如 1），角色向右移动.</li>
-<li>如果返回负值（如 -1），角色向左移动.</li>
-</ul>
-<h3 id="示例：检测水平轴输入并移动角色"><a href="#示例：检测水平轴输入并移动角色" class="headerlink" title="示例：检测水平轴输入并移动角色"></a>示例：检测水平轴输入并移动角色</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">void Update()</span><br><span class="line">&#123;</span><br><span class="line">    float move = Input.GetAxis(&quot;Horizontal&quot;);</span><br><span class="line">    transform.Translate(Vector3.right * move * Time.deltaTime * speed);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>如果玩家按下 <strong>“D”</strong> 或 <strong>右方向键</strong>（<code>Positive Button</code>），<code>move</code> 会变成正值，角色向右移动.</li>
-<li>如果玩家按下 <strong>“A”</strong> 或 <strong>左方向键</strong>（<code>Negative Button</code>），<code>move</code> 会变成负值，角色向左移动.</li>
-</ul>
-<h3 id="配置解释"><a href="#配置解释" class="headerlink" title="配置解释"></a>配置解释</h3><ul>
-<li><strong>Gravity</strong>: 控制按键松开后，轴值回到零的速度.数值越大，返回到 0 的速度越快.</li>
-<li><strong>Sensitivity</strong>: 控制按键按下时，轴值从 0 加速到 1（或 -1）的速度.数值越大，响应越快.</li>
-<li><strong>Dead</strong>: 一个小阈值，避免微小输入造成意外响应.小于该值的输入会被视为 0.</li>
-</ul>
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li><strong>Positive Button</strong>：用于正方向的输入，通常映射为右&#x2F;上方向键或控制器的正向输入.</li>
-<li><strong>Negative Button</strong>：用于负方向的输入，通常映射为左&#x2F;下方向键或控制器的反向输入.</li>
-<li>它们是用于控制方向性输入的核心元素，特别是在控制角色移动时.</li>
-</ul>
-<h1 id=""><a href="#" class="headerlink" title=""></a></h1>]]></content>
-      <categories>
-        <category>日志</category>
-      </categories>
-      <tags>
-        <tag>unity</tag>
-        <tag>打卡</tag>
-        <tag>闲得无聊所以发发</tag>
       </tags>
   </entry>
   <entry>
@@ -359,82 +359,6 @@
         <tag>c++</tag>
         <tag>c++11</tag>
         <tag>I/O流</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>c++中的线程</title>
-    <url>/2025/01/12/c++%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B/</url>
-    <content><![CDATA[<p>在 C++ 中，线程是用来实现并发编程的重要工具，它允许程序同时执行多个任务。C++11 标准引入了多线程支持，主要通过 <strong><code>&lt;thread&gt;</code></strong> 标头文件提供相关功能，包括线程创建、管理和同步等。</p>
-<hr>
-<h2 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a><strong>1. 基本概念</strong></h2><ul>
-<li><strong>线程</strong>是程序执行的基本单位，一个程序可以包含多个线程。</li>
-<li><strong>多线程</strong>可以提高程序效率，特别是在多核 CPU 上，每个线程可以在不同的核上运行。</li>
-<li>C++ 提供的多线程功能包括：<ul>
-<li>线程的创建与管理（<code>std::thread</code>）。</li>
-<li>同步机制（如互斥锁 <code>std::mutex</code>、条件变量 <code>std::condition_variable</code> 等）。</li>
-<li>数据保护（如线程安全的操作）。</li>
-</ul>
-</li>
-</ul>
-<hr>
-<h2 id="2-创建和管理线程"><a href="#2-创建和管理线程" class="headerlink" title="2. 创建和管理线程"></a><strong>2. 创建和管理线程</strong></h2><h3 id="1-创建线程"><a href="#1-创建线程" class="headerlink" title="1) 创建线程"></a><strong>1) 创建线程</strong></h3><p>线程可以通过 <strong><code>std::thread</code></strong> 创建，并且可以使用函数、lambda 表达式或可调用对象作为线程入口。</p>
-<h4 id="a-使用普通函数"><a href="#a-使用普通函数" class="headerlink" title="(a) 使用普通函数"></a><strong>(a) 使用普通函数</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">threadFunction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread is running...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(threadFunction)</span></span>; <span class="comment">// 创建线程</span></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程执行完毕</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>**<code>std::thread t(threadFunction)</code>**：创建线程并执行 <code>threadFunction</code>。</li>
-<li>**<code>t.join()</code>**：主线程等待 <code>t</code> 线程执行完成。</li>
-</ul>
-<hr>
-<h4 id="b-使用-lambda-表达式"><a href="#b-使用-lambda-表达式" class="headerlink" title="(b) 使用 lambda 表达式"></a><strong>(b) 使用 lambda 表达式</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">([] &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">        std::cout &lt;&lt; <span class="string">&quot;Thread running with lambda!&quot;</span> &lt;&lt; std::endl;</span></span></span><br><span class="line"><span class="params"><span class="function">    &#125;)</span></span>;</span><br><span class="line"></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程结束</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h4 id="c-使用类的成员函数"><a href="#c-使用类的成员函数" class="headerlink" title="(c) 使用类的成员函数"></a><strong>(c) 使用类的成员函数</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Worker</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Thread running with functor!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Worker worker;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(worker)</span></span>; <span class="comment">// 创建线程并执行 Worker 的重载函数</span></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程结束</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="2-分离线程（detach）"><a href="#2-分离线程（detach）" class="headerlink" title="2) 分离线程（detach）"></a><strong>2) 分离线程（<code>detach</code>）</strong></h3><p>分离线程允许主线程与新线程独立运行。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">threadFunction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">2</span>));</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Detached thread completed!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(threadFunction)</span></span>;</span><br><span class="line">    t.<span class="built_in">detach</span>(); <span class="comment">// 分离线程</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Main thread continues...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">3</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意</strong>：分离的线程在程序结束前需要完成，否则会出现未定义行为。</p>
-<hr>
-<h3 id="3-获取线程-ID"><a href="#3-获取线程-ID" class="headerlink" title="3) 获取线程 ID"></a><strong>3) 获取线程 ID</strong></h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::thread::id id = std::this_thread::<span class="built_in">get_id</span>();</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Thread ID: &quot;</span> &lt;&lt; id &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="3-线程同步"><a href="#3-线程同步" class="headerlink" title="3. 线程同步"></a><strong>3. 线程同步</strong></h2><p>由于线程是并发执行的，因此多个线程访问共享资源时可能会导致数据竞争（Race Condition）。C++ 提供了多种同步工具来避免这种问题。</p>
-<h3 id="1-互斥锁（std-mutex）"><a href="#1-互斥锁（std-mutex）" class="headerlink" title="1) 互斥锁（std::mutex）"></a><strong>1) 互斥锁（<code>std::mutex</code>）</strong></h3><p><strong>互斥锁</strong>用于保证只有一个线程可以访问共享资源。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printMessage</span><span class="params">(<span class="type">const</span> std::string&amp; message)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>; <span class="comment">// 自动加锁和解锁</span></span><br><span class="line">    std::cout &lt;&lt; message &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(printMessage, <span class="string">&quot;Thread 1: Hello&quot;</span>)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(printMessage, <span class="string">&quot;Thread 2: World&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>**<code>std::lock_guard</code>**：管理锁的生命周期，防止忘记解锁。</li>
-<li>**<code>mtx.lock()</code> 和 <code>mtx.unlock()</code>**：手动加锁和解锁，但可能导致死锁，不推荐使用。</li>
-</ul>
-<hr>
-<h3 id="2-条件变量（std-condition-variable）"><a href="#2-条件变量（std-condition-variable）" class="headerlink" title="2) 条件变量（std::condition_variable）"></a><strong>2) 条件变量（<code>std::condition_variable</code>）</strong></h3><p>条件变量用于实现线程间的协调，例如一个线程等待某个条件成立时再执行。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line">std::condition_variable cv;</span><br><span class="line"><span class="type">bool</span> ready = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">worker</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">    cv.<span class="built_in">wait</span>(lock, [] &#123; <span class="keyword">return</span> ready; &#125;); <span class="comment">// 等待条件成立</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Worker thread is running!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">notify</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        ready = <span class="literal">true</span>; <span class="comment">// 修改条件</span></span><br><span class="line">    &#125;</span><br><span class="line">    cv.<span class="built_in">notify_one</span>(); <span class="comment">// 通知一个等待线程</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(worker)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(notify)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="3-原子操作（std-atomic）"><a href="#3-原子操作（std-atomic）" class="headerlink" title="3) 原子操作（std::atomic）"></a><strong>3) 原子操作（<code>std::atomic</code>）</strong></h3><p><strong>原子操作</strong>用于多线程中对单个变量的操作，避免数据竞争。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">counter</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i) &#123;</span><br><span class="line">        ++counter; <span class="comment">// 原子操作，线程安全</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(increment)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(increment)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Final counter: &quot;</span> &lt;&lt; counter &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="4-注意事项"><a href="#4-注意事项" class="headerlink" title="4. 注意事项"></a><strong>4. 注意事项</strong></h2><ol>
-<li><strong>数据竞争</strong>：多个线程同时修改共享资源可能导致错误，需要使用同步机制。</li>
-<li><strong>死锁</strong>：多个线程互相等待资源，导致程序无法继续。</li>
-<li><strong>分离线程的风险</strong>：主线程结束时，分离的线程未完成可能会导致崩溃。</li>
-<li><strong>性能开销</strong>：线程切换会带来一定的系统开销。</li>
-</ol>
-<hr>
-<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a><strong>5. 总结</strong></h2><ul>
-<li><strong>线程创建</strong>：<code>std::thread</code> 提供简单易用的接口。</li>
-<li><strong>线程同步</strong>：使用 <code>std::mutex</code>、<code>std::condition_variable</code> 等工具保护共享数据。</li>
-<li><strong>线程安全</strong>：推荐使用 <code>std::atomic</code> 或其他同步机制避免数据竞争。</li>
-</ul>
-<p>线程是 C++ 中实现并发的核心工具，但需要小心处理共享资源和线程生命周期，确保程序的正确性和性能。</p>
-]]></content>
-      <categories>
-        <category>经验</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
       </tags>
   </entry>
   <entry>
@@ -549,16 +473,79 @@
       </tags>
   </entry>
   <entry>
-    <title>leetcode心得</title>
-    <url>/2024/11/02/leetcode%E5%BF%83%E5%BE%97/</url>
-    <content><![CDATA[<p>1.对于复杂条件的题，看能不能将条件简化，比如通过排序让题目简单，比如去掉多余空格，让后序算法简化操作</p>
-<p>2.双指针对于局部的变化有奇效</p>
+    <title>c++中的线程</title>
+    <url>/2025/01/12/c++%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B/</url>
+    <content><![CDATA[<p>在 C++ 中，线程是用来实现并发编程的重要工具，它允许程序同时执行多个任务。C++11 标准引入了多线程支持，主要通过 <strong><code>&lt;thread&gt;</code></strong> 标头文件提供相关功能，包括线程创建、管理和同步等。</p>
+<hr>
+<h2 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a><strong>1. 基本概念</strong></h2><ul>
+<li><strong>线程</strong>是程序执行的基本单位，一个程序可以包含多个线程。</li>
+<li><strong>多线程</strong>可以提高程序效率，特别是在多核 CPU 上，每个线程可以在不同的核上运行。</li>
+<li>C++ 提供的多线程功能包括：<ul>
+<li>线程的创建与管理（<code>std::thread</code>）。</li>
+<li>同步机制（如互斥锁 <code>std::mutex</code>、条件变量 <code>std::condition_variable</code> 等）。</li>
+<li>数据保护（如线程安全的操作）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="2-创建和管理线程"><a href="#2-创建和管理线程" class="headerlink" title="2. 创建和管理线程"></a><strong>2. 创建和管理线程</strong></h2><h3 id="1-创建线程"><a href="#1-创建线程" class="headerlink" title="1) 创建线程"></a><strong>1) 创建线程</strong></h3><p>线程可以通过 <strong><code>std::thread</code></strong> 创建，并且可以使用函数、lambda 表达式或可调用对象作为线程入口。</p>
+<h4 id="a-使用普通函数"><a href="#a-使用普通函数" class="headerlink" title="(a) 使用普通函数"></a><strong>(a) 使用普通函数</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">threadFunction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread is running...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(threadFunction)</span></span>; <span class="comment">// 创建线程</span></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程执行完毕</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>**<code>std::thread t(threadFunction)</code>**：创建线程并执行 <code>threadFunction</code>。</li>
+<li>**<code>t.join()</code>**：主线程等待 <code>t</code> 线程执行完成。</li>
+</ul>
+<hr>
+<h4 id="b-使用-lambda-表达式"><a href="#b-使用-lambda-表达式" class="headerlink" title="(b) 使用 lambda 表达式"></a><strong>(b) 使用 lambda 表达式</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">([] &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">        std::cout &lt;&lt; <span class="string">&quot;Thread running with lambda!&quot;</span> &lt;&lt; std::endl;</span></span></span><br><span class="line"><span class="params"><span class="function">    &#125;)</span></span>;</span><br><span class="line"></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程结束</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="c-使用类的成员函数"><a href="#c-使用类的成员函数" class="headerlink" title="(c) 使用类的成员函数"></a><strong>(c) 使用类的成员函数</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Worker</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Thread running with functor!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Worker worker;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(worker)</span></span>; <span class="comment">// 创建线程并执行 Worker 的重载函数</span></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程结束</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-分离线程（detach）"><a href="#2-分离线程（detach）" class="headerlink" title="2) 分离线程（detach）"></a><strong>2) 分离线程（<code>detach</code>）</strong></h3><p>分离线程允许主线程与新线程独立运行。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">threadFunction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">2</span>));</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Detached thread completed!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(threadFunction)</span></span>;</span><br><span class="line">    t.<span class="built_in">detach</span>(); <span class="comment">// 分离线程</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Main thread continues...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">3</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：分离的线程在程序结束前需要完成，否则会出现未定义行为。</p>
+<hr>
+<h3 id="3-获取线程-ID"><a href="#3-获取线程-ID" class="headerlink" title="3) 获取线程 ID"></a><strong>3) 获取线程 ID</strong></h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::thread::id id = std::this_thread::<span class="built_in">get_id</span>();</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Thread ID: &quot;</span> &lt;&lt; id &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-线程同步"><a href="#3-线程同步" class="headerlink" title="3. 线程同步"></a><strong>3. 线程同步</strong></h2><p>由于线程是并发执行的，因此多个线程访问共享资源时可能会导致数据竞争（Race Condition）。C++ 提供了多种同步工具来避免这种问题。</p>
+<h3 id="1-互斥锁（std-mutex）"><a href="#1-互斥锁（std-mutex）" class="headerlink" title="1) 互斥锁（std::mutex）"></a><strong>1) 互斥锁（<code>std::mutex</code>）</strong></h3><p><strong>互斥锁</strong>用于保证只有一个线程可以访问共享资源。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printMessage</span><span class="params">(<span class="type">const</span> std::string&amp; message)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>; <span class="comment">// 自动加锁和解锁</span></span><br><span class="line">    std::cout &lt;&lt; message &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(printMessage, <span class="string">&quot;Thread 1: Hello&quot;</span>)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(printMessage, <span class="string">&quot;Thread 2: World&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>**<code>std::lock_guard</code>**：管理锁的生命周期，防止忘记解锁。</li>
+<li>**<code>mtx.lock()</code> 和 <code>mtx.unlock()</code>**：手动加锁和解锁，但可能导致死锁，不推荐使用。</li>
+</ul>
+<hr>
+<h3 id="2-条件变量（std-condition-variable）"><a href="#2-条件变量（std-condition-variable）" class="headerlink" title="2) 条件变量（std::condition_variable）"></a><strong>2) 条件变量（<code>std::condition_variable</code>）</strong></h3><p>条件变量用于实现线程间的协调，例如一个线程等待某个条件成立时再执行。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line">std::condition_variable cv;</span><br><span class="line"><span class="type">bool</span> ready = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">worker</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">    cv.<span class="built_in">wait</span>(lock, [] &#123; <span class="keyword">return</span> ready; &#125;); <span class="comment">// 等待条件成立</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Worker thread is running!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">notify</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        ready = <span class="literal">true</span>; <span class="comment">// 修改条件</span></span><br><span class="line">    &#125;</span><br><span class="line">    cv.<span class="built_in">notify_one</span>(); <span class="comment">// 通知一个等待线程</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(worker)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(notify)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-原子操作（std-atomic）"><a href="#3-原子操作（std-atomic）" class="headerlink" title="3) 原子操作（std::atomic）"></a><strong>3) 原子操作（<code>std::atomic</code>）</strong></h3><p><strong>原子操作</strong>用于多线程中对单个变量的操作，避免数据竞争。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">counter</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i) &#123;</span><br><span class="line">        ++counter; <span class="comment">// 原子操作，线程安全</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(increment)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(increment)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Final counter: &quot;</span> &lt;&lt; counter &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-注意事项"><a href="#4-注意事项" class="headerlink" title="4. 注意事项"></a><strong>4. 注意事项</strong></h2><ol>
+<li><strong>数据竞争</strong>：多个线程同时修改共享资源可能导致错误，需要使用同步机制。</li>
+<li><strong>死锁</strong>：多个线程互相等待资源，导致程序无法继续。</li>
+<li><strong>分离线程的风险</strong>：主线程结束时，分离的线程未完成可能会导致崩溃。</li>
+<li><strong>性能开销</strong>：线程切换会带来一定的系统开销。</li>
+</ol>
+<hr>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a><strong>5. 总结</strong></h2><ul>
+<li><strong>线程创建</strong>：<code>std::thread</code> 提供简单易用的接口。</li>
+<li><strong>线程同步</strong>：使用 <code>std::mutex</code>、<code>std::condition_variable</code> 等工具保护共享数据。</li>
+<li><strong>线程安全</strong>：推荐使用 <code>std::atomic</code> 或其他同步机制避免数据竞争。</li>
+</ul>
+<p>线程是 C++ 中实现并发的核心工具，但需要小心处理共享资源和线程生命周期，确保程序的正确性和性能。</p>
 ]]></content>
       <categories>
         <category>经验</category>
       </categories>
       <tags>
-        <tag>leetcode</tag>
+        <tag>c++</tag>
       </tags>
   </entry>
   <entry>
@@ -648,6 +635,19 @@
         <tag>数据结构与算法</tag>
         <tag>图</tag>
         <tag>拓扑排序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>leetcode心得</title>
+    <url>/2024/11/02/leetcode%E5%BF%83%E5%BE%97/</url>
+    <content><![CDATA[<p>1.对于复杂条件的题，看能不能将条件简化，比如通过排序让题目简单，比如去掉多余空格，让后序算法简化操作</p>
+<p>2.双指针对于局部的变化有奇效</p>
+]]></content>
+      <categories>
+        <category>经验</category>
+      </categories>
+      <tags>
+        <tag>leetcode</tag>
       </tags>
   </entry>
   <entry>
@@ -951,6 +951,181 @@
       </categories>
       <tags>
         <tag>c++</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>几种排序</title>
+    <url>/2024/11/12/%E5%87%A0%E7%A7%8D%E6%8E%92%E5%BA%8F/</url>
+    <content><![CDATA[<p><strong>冒泡排序</strong>（Bubble Sort）是一种简单直观的排序算法，其基本思想是通过多次遍历待排序的序列，比较相邻元素并交换它们的位置，使较大的元素逐渐“冒泡”到序列的末尾。尽管效率较低，但它是介绍排序算法时常用的例子之一，适合对小规模数据的排序。</p>
+<h3 id="冒泡排序的原理"><a href="#冒泡排序的原理" class="headerlink" title="冒泡排序的原理"></a>冒泡排序的原理</h3><ol>
+<li>从序列的第一个元素开始，依次比较相邻的两个元素。如果前面的元素大于后面的元素，就交换它们的位置。</li>
+<li>每次遍历后，最大的元素会被交换到当前未排序部分的末尾。</li>
+<li>对未排序部分重复上述过程，直到没有元素需要交换为止。</li>
+</ol>
+<h3 id="冒泡排序的特点"><a href="#冒泡排序的特点" class="headerlink" title="冒泡排序的特点"></a>冒泡排序的特点</h3><ul>
+<li><strong>时间复杂度</strong>：<ul>
+<li>最坏情况： $O(n^2)$（数组逆序）</li>
+<li>最好情况： $O(n)$（数组已经有序，只需一次遍历）</li>
+<li>平均情况： $O(n^2)$</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>： $O(1)$（只需常数级的额外空间）</li>
+<li><strong>稳定性</strong>：起泡排序是稳定的排序算法，即相同的元素在排序后不会改变相对顺序。</li>
+</ul>
+<h3 id="冒泡排序的实现"><a href="#冒泡排序的实现" class="headerlink" title="冒泡排序的实现"></a>冒泡排序的实现</h3><h4 id="C-实现"><a href="#C-实现" class="headerlink" title="C++ 实现"></a>C++ 实现</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 外层循环控制需要进行的轮数</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// 标志变量用于检测数组是否已经有序</span></span><br><span class="line">        <span class="type">bool</span> swapped = <span class="literal">false</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 内层循环用于比较和交换相邻元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="comment">// 交换相邻元素</span></span><br><span class="line">                <span class="built_in">swap</span>(arr[j], arr[j + <span class="number">1</span>]);</span><br><span class="line">                swapped = <span class="literal">true</span>;  <span class="comment">// 记录交换发生</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果本轮没有发生交换，数组已排序，提前退出</span></span><br><span class="line">        <span class="keyword">if</span> (!swapped) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printArray</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[] = &#123;<span class="number">64</span>, <span class="number">34</span>, <span class="number">25</span>, <span class="number">12</span>, <span class="number">22</span>, <span class="number">11</span>, <span class="number">90</span>&#125;;</span><br><span class="line">    <span class="type">int</span> n = <span class="built_in">sizeof</span>(arr) / <span class="built_in">sizeof</span>(arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">bubbleSort</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;排序后的数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<p><strong>快速排序</strong>（Quick Sort）是一种高效的基于分治法的排序算法，它通过递归地将数组分成两个子数组来排序。快速排序通常是实际应用中最快的排序算法之一，适用于大规模数据排序。</p>
+<h3 id="快速排序的原理"><a href="#快速排序的原理" class="headerlink" title="快速排序的原理"></a>快速排序的原理</h3><ol>
+<li><strong>选取基准（pivot）</strong>：从数组中选择一个元素作为基准，可以是第一个元素、最后一个元素、中间元素或随机选择。</li>
+<li><strong>分区（Partition）</strong>：将数组分成两部分，使得左侧子数组的所有元素都小于基准，而右侧子数组的所有元素都大于或等于基准。</li>
+<li><strong>递归排序</strong>：对左右两个子数组分别递归地应用快速排序。</li>
+<li><strong>合并</strong>：由于在分区的过程中数组已经部分有序，所以不需要额外的合并操作。</li>
+</ol>
+<h3 id="快速排序的特点"><a href="#快速排序的特点" class="headerlink" title="快速排序的特点"></a>快速排序的特点</h3><ul>
+<li><strong>时间复杂度</strong>：<ul>
+<li>最坏情况： $O(n^2)$（当数组基本有序或基准选择不当时）</li>
+<li>最好情况： $O(n \log n)$（理想情况下，基准能将数组均匀分割）</li>
+<li>平均情况： $O(n \log n)$</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>： $O(\log n)$，用于递归栈空间。</li>
+<li><strong>不稳定性</strong>：快速排序是不稳定的排序算法，即相同的元素在排序后可能会改变相对顺序。</li>
+</ul>
+<h3 id="快速排序的实现"><a href="#快速排序的实现" class="headerlink" title="快速排序的实现"></a>快速排序的实现</h3><p>下面是快速排序的经典实现，其中基准选取最后一个元素。</p>
+<h4 id="C-实现-1"><a href="#C-实现-1" class="headerlink" title="C++ 实现"></a>C++ 实现</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 分区函数，将基准放到正确位置，并返回基准的最终位置索引</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">partition</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> low, <span class="type">int</span> high)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> pivot = arr[high];  <span class="comment">// 选择最后一个元素为基准</span></span><br><span class="line">    <span class="type">int</span> i = low - <span class="number">1</span>;        <span class="comment">// i 为较小元素的边界</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = low; j &lt; high; j++) &#123;</span><br><span class="line">        <span class="comment">// 如果当前元素小于等于基准</span></span><br><span class="line">        <span class="keyword">if</span> (arr[j] &lt;= pivot) &#123;</span><br><span class="line">            i++;  <span class="comment">// 增加边界索引</span></span><br><span class="line">            <span class="built_in">swap</span>(arr[i], arr[j]);  <span class="comment">// 交换当前元素与边界元素</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">swap</span>(arr[i + <span class="number">1</span>], arr[high]);  <span class="comment">// 将基准放到正确位置</span></span><br><span class="line">    <span class="keyword">return</span> (i + <span class="number">1</span>);  <span class="comment">// 返回基准的最终位置</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 快速排序函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">quickSort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> low, <span class="type">int</span> high)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (low &lt; high) &#123;</span><br><span class="line">        <span class="type">int</span> pi = <span class="built_in">partition</span>(arr, low, high);  <span class="comment">// 分区，并获取基准位置</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 递归排序左右子数组</span></span><br><span class="line">        <span class="built_in">quickSort</span>(arr, low, pi - <span class="number">1</span>);</span><br><span class="line">        <span class="built_in">quickSort</span>(arr, pi + <span class="number">1</span>, high);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 辅助函数：打印数组</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printArray</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[] = &#123;<span class="number">10</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">1</span>, <span class="number">5</span>&#125;;</span><br><span class="line">    <span class="type">int</span> n = <span class="built_in">sizeof</span>(arr) / <span class="built_in">sizeof</span>(arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">quickSort</span>(arr, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;排序后的数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="快速排序的优化"><a href="#快速排序的优化" class="headerlink" title="快速排序的优化"></a>快速排序的优化</h3><ol>
+<li><strong>三数取中</strong>：选择基准时，可以取头、中、尾三个元素的中间值，避免数组本身有序时出现最坏情况。</li>
+<li><strong>随机选择基准</strong>：通过随机选择基准位置，打乱输入数组，减少最坏情况发生的概率。</li>
+<li><strong>小数组插入排序</strong>：当子数组长度较小时（如10以下），可以使用插入排序代替快速排序，以提高效率。</li>
+</ol>
+<h3 id="快速排序的性能分析"><a href="#快速排序的性能分析" class="headerlink" title="快速排序的性能分析"></a>快速排序的性能分析</h3><p>$$<br>快速排序的性能在很大程度上取决于分区是否平衡。<br>$$</p>
+<p>$$<br>平衡的分区能保证时间复杂度接近 O(n \log n)，而极端不平衡的分区会导致最坏的 O(n^2)复杂度。因此，优化基准的选择非常重要。<br>$$</p>
+<p>简单选择排序（Selection Sort）是一种排序算法，通过反复找到未排序部分中的最小元素，将其放到数组的起始位置，逐步构建有序序列。这个算法适合数据量较小的情况，时间复杂度为 $O(n^2)$。</p>
+<h3 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h3><ol>
+<li>从数组的第一个元素开始，假设它是最小元素。</li>
+<li>遍历数组的剩余部分，找到比当前最小元素更小的值并更新最小元素。</li>
+<li>遍历完成后，将找到的最小值和当前未排序部分的第一个元素交换。</li>
+<li>移动到下一个位置，重复上述步骤，直到整个数组排序完毕。</li>
+</ol>
+<h3 id="实现代码（C-）"><a href="#实现代码（C-）" class="headerlink" title="实现代码（C++）"></a>实现代码（C++）</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">selectionSort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 逐一确定数组中每一个位置的最终元素</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="type">int</span> minIndex = i; <span class="comment">// 假设当前索引 i 是最小元素的位置</span></span><br><span class="line">        <span class="comment">// 查找从 i+1 到 n-1 中比 arr[minIndex] 更小的元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (arr[j] &lt; arr[minIndex]) &#123; <span class="comment">// 更新最小元素的位置</span></span><br><span class="line">                minIndex = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 交换最小元素到当前的 i 位置</span></span><br><span class="line">        <span class="keyword">if</span> (minIndex != i) &#123; <span class="comment">// 避免自身交换</span></span><br><span class="line">            <span class="built_in">swap</span>(arr[i], arr[minIndex]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印数组函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printArray</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[] = &#123;<span class="number">64</span>, <span class="number">25</span>, <span class="number">12</span>, <span class="number">22</span>, <span class="number">11</span>&#125;;</span><br><span class="line">    <span class="type">int</span> n = <span class="built_in">sizeof</span>(arr) / <span class="built_in">sizeof</span>(arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">selectionSort</span>(arr, n); <span class="comment">// 对数组进行选择排序</span></span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;排序后的数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n); <span class="comment">// 输出排序结果</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>堆排序（Heap Sort）是一种基于二叉堆的数据结构实现的排序算法，具有时间复杂度为 $O(n \log n)$，可以被认为是一种改进的选择排序。堆排序的特点是无论数据情况如何，其时间复杂度都能保持稳定，是一种不稳定的原地排序算法。</p>
+<h3 id="二叉堆简介"><a href="#二叉堆简介" class="headerlink" title="二叉堆简介"></a>二叉堆简介</h3><p>堆排序使用<strong>最大堆</strong>或<strong>最小堆</strong>来辅助排序：</p>
+<ul>
+<li><strong>最大堆</strong>：父节点的值总是大于或等于子节点的值。</li>
+<li><strong>最小堆</strong>：父节点的值总是小于或等于子节点的值。</li>
+</ul>
+<p>在堆排序中，通常使用<strong>最大堆</strong>来实现升序排序。</p>
+<h3 id="堆排序算法步骤"><a href="#堆排序算法步骤" class="headerlink" title="堆排序算法步骤"></a>堆排序算法步骤</h3><ol>
+<li><strong>构建最大堆</strong>：将数组视为一个完全二叉树，从最后一个非叶子节点开始，对每个节点进行<strong>堆调整</strong>，使整个数组满足最大堆的性质。</li>
+<li><strong>排序</strong>：<ul>
+<li>将堆顶元素（最大值）与数组末尾元素交换，这样最大值就处于正确的最终位置。</li>
+<li>将堆的大小减一，对新的堆顶元素进行<strong>堆调整</strong>，以重新保持最大堆的性质。</li>
+<li>重复上述过程，直到堆的大小减为 1，排序完成。</li>
+</ul>
+</li>
+</ol>
+<h3 id="堆排序代码实现（C-）"><a href="#堆排序代码实现（C-）" class="headerlink" title="堆排序代码实现（C++）"></a>堆排序代码实现（C++）</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将以 root 为根的子树调整为最大堆</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">heapify</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n, <span class="type">int</span> root)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> largest = root;         <span class="comment">// 将根节点设为最大值</span></span><br><span class="line">    <span class="type">int</span> left = <span class="number">2</span> * root + <span class="number">1</span>;    <span class="comment">// 左子节点</span></span><br><span class="line">    <span class="type">int</span> right = <span class="number">2</span> * root + <span class="number">2</span>;   <span class="comment">// 右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果左子节点存在且大于根节点</span></span><br><span class="line">    <span class="keyword">if</span> (left &lt; n &amp;&amp; arr[left] &gt; arr[largest]) &#123;</span><br><span class="line">        largest = left;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果右子节点存在且大于当前最大值</span></span><br><span class="line">    <span class="keyword">if</span> (right &lt; n &amp;&amp; arr[right] &gt; arr[largest]) &#123;</span><br><span class="line">        largest = right;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果最大值不是根节点，则交换并递归调整</span></span><br><span class="line">    <span class="keyword">if</span> (largest != root) &#123;</span><br><span class="line">        <span class="built_in">swap</span>(arr[root], arr[largest]);</span><br><span class="line">        <span class="built_in">heapify</span>(arr, n, largest);  <span class="comment">// 递归调整受影响的子树</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 堆排序主函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">heapSort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1. 构建最大堆</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n / <span class="number">2</span> - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="built_in">heapify</span>(arr, n, i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 逐一取出元素并调整堆</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="built_in">swap</span>(arr[<span class="number">0</span>], arr[i]);    <span class="comment">// 将最大元素移动到末尾</span></span><br><span class="line">        <span class="built_in">heapify</span>(arr, i, <span class="number">0</span>);      <span class="comment">// 调整剩下的元素形成最大堆</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印数组</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printArray</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主函数</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[] = &#123;<span class="number">12</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>&#125;;</span><br><span class="line">    <span class="type">int</span> n = <span class="built_in">sizeof</span>(arr) / <span class="built_in">sizeof</span>(arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">heapSort</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;排序后的数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="示例执行过程"><a href="#示例执行过程" class="headerlink" title="示例执行过程"></a>示例执行过程</h3><p>假设我们对数组 <code>&#123;12, 11, 13, 5, 6, 7&#125;</code> 进行堆排序：</p>
+<ol>
+<li><p><strong>构建最大堆</strong>：  </p>
+<ul>
+<li>选择非叶子节点 <code>5</code> 和 <code>6</code>，调整以 <code>5</code> 和 <code>6</code> 为根的子树。</li>
+<li>继续调整上层节点，最后整个数组满足最大堆的结构：<code>&#123;13, 11, 12, 5, 6, 7&#125;</code>。</li>
+</ul>
+</li>
+<li><p><strong>排序过程</strong>：</p>
+<ul>
+<li>将堆顶元素 <code>13</code> 与最后一个元素交换：<code>&#123;7, 11, 12, 5, 6, 13&#125;</code>，缩小堆的范围到 <code>[0, n-2]</code>，再对堆顶进行堆调整。</li>
+<li>重复此过程直到排序完成，最终结果为：<code>&#123;5, 6, 7, 11, 12, 13&#125;</code>。</li>
+</ul>
+</li>
+</ol>
+<h3 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><p>堆排序的时间复杂度为 $O(n \log n)$，因为：</p>
+<ul>
+<li>建堆操作的时间复杂度为 $O(n)$。</li>
+<li>排序过程中需要 $O(\log n)$ 的时间进行堆调整，总体复杂度为 $O(n \log n)$。</li>
+</ul>
+<p>归并排序（Merge Sort）是一种基于<strong>分治法（Divide and Conquer）</strong>的排序算法。它将数组分成较小的子数组，分别排序后再合并，最终完成排序。</p>
+<h3 id="1-算法原理"><a href="#1-算法原理" class="headerlink" title="1. 算法原理"></a>1. 算法原理</h3><p>归并排序的核心思想是：</p>
+<ol>
+<li><strong>分</strong>：将待排序数组分成两个子数组，分别对这两个子数组进行排序。</li>
+<li><strong>治</strong>：通过递归将子数组继续分割，直到每个子数组的长度为 1。</li>
+<li><strong>合</strong>：将两个有序子数组合并成一个有序数组。</li>
+</ol>
+<h3 id="2-算法步骤"><a href="#2-算法步骤" class="headerlink" title="2. 算法步骤"></a>2. 算法步骤</h3><ol>
+<li><strong>递归分割数组</strong>：<ul>
+<li>将数组从中间分成两部分，直到每部分只剩一个元素。</li>
+</ul>
+</li>
+<li><strong>合并子数组</strong>：<ul>
+<li>合并两个已排序的子数组为一个有序数组。</li>
+</ul>
+</li>
+</ol>
+<h3 id="3-时间复杂度"><a href="#3-时间复杂度" class="headerlink" title="3. 时间复杂度"></a>3. 时间复杂度</h3><ul>
+<li><strong>时间复杂度</strong>：$O(n \log n)$<ul>
+<li>每次分割数组的时间复杂度为 $O(\log n)$，合并数组的时间复杂度为 $O(n)$。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>：$O(n)$<ul>
+<li>归并排序需要额外的数组空间来存储合并后的结果。</li>
+</ul>
+</li>
+</ul>
+<h3 id="4-C-实现"><a href="#4-C-实现" class="headerlink" title="4. C++ 实现"></a>4. C++ 实现</h3><p>以下是归并排序的完整代码：</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 合并两个有序数组</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> left, <span class="type">int</span> mid, <span class="type">int</span> right)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> n1 = mid - left + <span class="number">1</span>; <span class="comment">// 左子数组大小</span></span><br><span class="line">    <span class="type">int</span> n2 = right - mid;    <span class="comment">// 右子数组大小</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建临时数组</span></span><br><span class="line">    <span class="type">int</span> L[n1], R[n2];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝数据到临时数组</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n1; i++)</span><br><span class="line">        L[i] = arr[left + i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n2; i++)</span><br><span class="line">        R[i] = arr[mid + <span class="number">1</span> + i];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 合并两个有序数组</span></span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>, k = left; <span class="comment">// 初始索引</span></span><br><span class="line">    <span class="keyword">while</span> (i &lt; n1 &amp;&amp; j &lt; n2) &#123;</span><br><span class="line">        <span class="keyword">if</span> (L[i] &lt;= R[j]) &#123;</span><br><span class="line">            arr[k] = L[i];</span><br><span class="line">            i++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            arr[k] = R[j];</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        k++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝剩余元素</span></span><br><span class="line">    <span class="keyword">while</span> (i &lt; n1) &#123;</span><br><span class="line">        arr[k] = L[i];</span><br><span class="line">        i++;</span><br><span class="line">        k++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (j &lt; n2) &#123;</span><br><span class="line">        arr[k] = R[j];</span><br><span class="line">        j++;</span><br><span class="line">        k++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 递归归并排序</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mergeSort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> left, <span class="type">int</span> right)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (left &lt; right) &#123;</span><br><span class="line">        <span class="type">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 分割</span></span><br><span class="line">        <span class="built_in">mergeSort</span>(arr, left, mid);</span><br><span class="line">        <span class="built_in">mergeSort</span>(arr, mid + <span class="number">1</span>, right);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并</span></span><br><span class="line">        <span class="built_in">merge</span>(arr, left, mid, right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印数组</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printArray</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主函数</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[] = &#123;<span class="number">12</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>&#125;;</span><br><span class="line">    <span class="type">int</span> n = <span class="built_in">sizeof</span>(arr) / <span class="built_in">sizeof</span>(arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;原始数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">mergeSort</span>(arr, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;排序后的数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">原始数组: 12 11 13 5 6 7 </span><br><span class="line">排序后的数组: 5 6 7 11 12 13 </span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="代码说明"><a href="#代码说明" class="headerlink" title="代码说明"></a>代码说明</h3><ol>
+<li><p><strong>merge 函数</strong>：</p>
+<ul>
+<li>将两个有序数组（<code>L</code> 和 <code>R</code>）合并为一个有序数组。</li>
+<li>使用两个指针遍历子数组，同时更新原数组中的值。</li>
+</ul>
+</li>
+<li><p><strong>mergeSort 函数</strong>：</p>
+<ul>
+<li>递归分割数组为两部分，直到每部分只剩一个元素。</li>
+<li>调用 <code>merge</code> 函数将子数组合并。</li>
+</ul>
+</li>
+<li><p><strong>递归基线条件</strong>：</p>
+<ul>
+<li>当 <code>left &gt;= right</code> 时，数组无法再分割，递归结束。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
+<li><strong>稳定性</strong>：归并排序是一种稳定的排序算法。</li>
+<li><strong>性能稳定</strong>：时间复杂度始终为 $O(n \log n)$，无论最佳、最差或平均情况。</li>
+</ol>
+<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
+<li><strong>空间复杂度较高</strong>：需要额外的数组空间来辅助合并操作。</li>
+<li><strong>递归开销</strong>：递归调用会增加时间和空间的开销。</li>
+</ol>
+<hr>
+<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>归并排序适用于需要稳定排序的场景，特别是在处理大规模数据集或链表时（链表中归并排序的空间复杂度为 $O(1)$）。</p>
+]]></content>
+      <categories>
+        <category>经验</category>
+      </categories>
+      <tags>
+        <tag>数据结构与算法</tag>
+        <tag>二叉树</tag>
+        <tag>堆排序</tag>
+        <tag>快速排序</tag>
+        <tag>归并排序</tag>
       </tags>
   </entry>
   <entry>
@@ -1302,8 +1477,8 @@
         <category>日志</category>
       </categories>
       <tags>
-        <tag>数据结构与算法</tag>
         <tag>c++</tag>
+        <tag>数据结构与算法</tag>
         <tag>leetcode</tag>
       </tags>
   </entry>
@@ -1422,181 +1597,6 @@
       </tags>
   </entry>
   <entry>
-    <title>几种排序</title>
-    <url>/2024/11/12/%E5%87%A0%E7%A7%8D%E6%8E%92%E5%BA%8F/</url>
-    <content><![CDATA[<p><strong>冒泡排序</strong>（Bubble Sort）是一种简单直观的排序算法，其基本思想是通过多次遍历待排序的序列，比较相邻元素并交换它们的位置，使较大的元素逐渐“冒泡”到序列的末尾。尽管效率较低，但它是介绍排序算法时常用的例子之一，适合对小规模数据的排序。</p>
-<h3 id="冒泡排序的原理"><a href="#冒泡排序的原理" class="headerlink" title="冒泡排序的原理"></a>冒泡排序的原理</h3><ol>
-<li>从序列的第一个元素开始，依次比较相邻的两个元素。如果前面的元素大于后面的元素，就交换它们的位置。</li>
-<li>每次遍历后，最大的元素会被交换到当前未排序部分的末尾。</li>
-<li>对未排序部分重复上述过程，直到没有元素需要交换为止。</li>
-</ol>
-<h3 id="冒泡排序的特点"><a href="#冒泡排序的特点" class="headerlink" title="冒泡排序的特点"></a>冒泡排序的特点</h3><ul>
-<li><strong>时间复杂度</strong>：<ul>
-<li>最坏情况： $O(n^2)$（数组逆序）</li>
-<li>最好情况： $O(n)$（数组已经有序，只需一次遍历）</li>
-<li>平均情况： $O(n^2)$</li>
-</ul>
-</li>
-<li><strong>空间复杂度</strong>： $O(1)$（只需常数级的额外空间）</li>
-<li><strong>稳定性</strong>：起泡排序是稳定的排序算法，即相同的元素在排序后不会改变相对顺序。</li>
-</ul>
-<h3 id="冒泡排序的实现"><a href="#冒泡排序的实现" class="headerlink" title="冒泡排序的实现"></a>冒泡排序的实现</h3><h4 id="C-实现"><a href="#C-实现" class="headerlink" title="C++ 实现"></a>C++ 实现</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">bubbleSort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 外层循环控制需要进行的轮数</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="comment">// 标志变量用于检测数组是否已经有序</span></span><br><span class="line">        <span class="type">bool</span> swapped = <span class="literal">false</span>;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 内层循环用于比较和交换相邻元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = <span class="number">0</span>; j &lt; n - i - <span class="number">1</span>; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (arr[j] &gt; arr[j + <span class="number">1</span>]) &#123;</span><br><span class="line">                <span class="comment">// 交换相邻元素</span></span><br><span class="line">                <span class="built_in">swap</span>(arr[j], arr[j + <span class="number">1</span>]);</span><br><span class="line">                swapped = <span class="literal">true</span>;  <span class="comment">// 记录交换发生</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="comment">// 如果本轮没有发生交换，数组已排序，提前退出</span></span><br><span class="line">        <span class="keyword">if</span> (!swapped) &#123;</span><br><span class="line">            <span class="keyword">break</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printArray</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[] = &#123;<span class="number">64</span>, <span class="number">34</span>, <span class="number">25</span>, <span class="number">12</span>, <span class="number">22</span>, <span class="number">11</span>, <span class="number">90</span>&#125;;</span><br><span class="line">    <span class="type">int</span> n = <span class="built_in">sizeof</span>(arr) / <span class="built_in">sizeof</span>(arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">bubbleSort</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;排序后的数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<p><strong>快速排序</strong>（Quick Sort）是一种高效的基于分治法的排序算法，它通过递归地将数组分成两个子数组来排序。快速排序通常是实际应用中最快的排序算法之一，适用于大规模数据排序。</p>
-<h3 id="快速排序的原理"><a href="#快速排序的原理" class="headerlink" title="快速排序的原理"></a>快速排序的原理</h3><ol>
-<li><strong>选取基准（pivot）</strong>：从数组中选择一个元素作为基准，可以是第一个元素、最后一个元素、中间元素或随机选择。</li>
-<li><strong>分区（Partition）</strong>：将数组分成两部分，使得左侧子数组的所有元素都小于基准，而右侧子数组的所有元素都大于或等于基准。</li>
-<li><strong>递归排序</strong>：对左右两个子数组分别递归地应用快速排序。</li>
-<li><strong>合并</strong>：由于在分区的过程中数组已经部分有序，所以不需要额外的合并操作。</li>
-</ol>
-<h3 id="快速排序的特点"><a href="#快速排序的特点" class="headerlink" title="快速排序的特点"></a>快速排序的特点</h3><ul>
-<li><strong>时间复杂度</strong>：<ul>
-<li>最坏情况： $O(n^2)$（当数组基本有序或基准选择不当时）</li>
-<li>最好情况： $O(n \log n)$（理想情况下，基准能将数组均匀分割）</li>
-<li>平均情况： $O(n \log n)$</li>
-</ul>
-</li>
-<li><strong>空间复杂度</strong>： $O(\log n)$，用于递归栈空间。</li>
-<li><strong>不稳定性</strong>：快速排序是不稳定的排序算法，即相同的元素在排序后可能会改变相对顺序。</li>
-</ul>
-<h3 id="快速排序的实现"><a href="#快速排序的实现" class="headerlink" title="快速排序的实现"></a>快速排序的实现</h3><p>下面是快速排序的经典实现，其中基准选取最后一个元素。</p>
-<h4 id="C-实现-1"><a href="#C-实现-1" class="headerlink" title="C++ 实现"></a>C++ 实现</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 分区函数，将基准放到正确位置，并返回基准的最终位置索引</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">partition</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> low, <span class="type">int</span> high)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> pivot = arr[high];  <span class="comment">// 选择最后一个元素为基准</span></span><br><span class="line">    <span class="type">int</span> i = low - <span class="number">1</span>;        <span class="comment">// i 为较小元素的边界</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> j = low; j &lt; high; j++) &#123;</span><br><span class="line">        <span class="comment">// 如果当前元素小于等于基准</span></span><br><span class="line">        <span class="keyword">if</span> (arr[j] &lt;= pivot) &#123;</span><br><span class="line">            i++;  <span class="comment">// 增加边界索引</span></span><br><span class="line">            <span class="built_in">swap</span>(arr[i], arr[j]);  <span class="comment">// 交换当前元素与边界元素</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">swap</span>(arr[i + <span class="number">1</span>], arr[high]);  <span class="comment">// 将基准放到正确位置</span></span><br><span class="line">    <span class="keyword">return</span> (i + <span class="number">1</span>);  <span class="comment">// 返回基准的最终位置</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 快速排序函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">quickSort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> low, <span class="type">int</span> high)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (low &lt; high) &#123;</span><br><span class="line">        <span class="type">int</span> pi = <span class="built_in">partition</span>(arr, low, high);  <span class="comment">// 分区，并获取基准位置</span></span><br><span class="line"></span><br><span class="line">        <span class="comment">// 递归排序左右子数组</span></span><br><span class="line">        <span class="built_in">quickSort</span>(arr, low, pi - <span class="number">1</span>);</span><br><span class="line">        <span class="built_in">quickSort</span>(arr, pi + <span class="number">1</span>, high);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 辅助函数：打印数组</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printArray</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[] = &#123;<span class="number">10</span>, <span class="number">7</span>, <span class="number">8</span>, <span class="number">9</span>, <span class="number">1</span>, <span class="number">5</span>&#125;;</span><br><span class="line">    <span class="type">int</span> n = <span class="built_in">sizeof</span>(arr) / <span class="built_in">sizeof</span>(arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">quickSort</span>(arr, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;排序后的数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="快速排序的优化"><a href="#快速排序的优化" class="headerlink" title="快速排序的优化"></a>快速排序的优化</h3><ol>
-<li><strong>三数取中</strong>：选择基准时，可以取头、中、尾三个元素的中间值，避免数组本身有序时出现最坏情况。</li>
-<li><strong>随机选择基准</strong>：通过随机选择基准位置，打乱输入数组，减少最坏情况发生的概率。</li>
-<li><strong>小数组插入排序</strong>：当子数组长度较小时（如10以下），可以使用插入排序代替快速排序，以提高效率。</li>
-</ol>
-<h3 id="快速排序的性能分析"><a href="#快速排序的性能分析" class="headerlink" title="快速排序的性能分析"></a>快速排序的性能分析</h3><p>$$<br>快速排序的性能在很大程度上取决于分区是否平衡。<br>$$</p>
-<p>$$<br>平衡的分区能保证时间复杂度接近 O(n \log n)，而极端不平衡的分区会导致最坏的 O(n^2)复杂度。因此，优化基准的选择非常重要。<br>$$</p>
-<p>简单选择排序（Selection Sort）是一种排序算法，通过反复找到未排序部分中的最小元素，将其放到数组的起始位置，逐步构建有序序列。这个算法适合数据量较小的情况，时间复杂度为 $O(n^2)$。</p>
-<h3 id="算法步骤"><a href="#算法步骤" class="headerlink" title="算法步骤"></a>算法步骤</h3><ol>
-<li>从数组的第一个元素开始，假设它是最小元素。</li>
-<li>遍历数组的剩余部分，找到比当前最小元素更小的值并更新最小元素。</li>
-<li>遍历完成后，将找到的最小值和当前未排序部分的第一个元素交换。</li>
-<li>移动到下一个位置，重复上述步骤，直到整个数组排序完毕。</li>
-</ol>
-<h3 id="实现代码（C-）"><a href="#实现代码（C-）" class="headerlink" title="实现代码（C++）"></a>实现代码（C++）</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">selectionSort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 逐一确定数组中每一个位置的最终元素</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n - <span class="number">1</span>; i++) &#123;</span><br><span class="line">        <span class="type">int</span> minIndex = i; <span class="comment">// 假设当前索引 i 是最小元素的位置</span></span><br><span class="line">        <span class="comment">// 查找从 i+1 到 n-1 中比 arr[minIndex] 更小的元素</span></span><br><span class="line">        <span class="keyword">for</span> (<span class="type">int</span> j = i + <span class="number">1</span>; j &lt; n; j++) &#123;</span><br><span class="line">            <span class="keyword">if</span> (arr[j] &lt; arr[minIndex]) &#123; <span class="comment">// 更新最小元素的位置</span></span><br><span class="line">                minIndex = j;</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="comment">// 交换最小元素到当前的 i 位置</span></span><br><span class="line">        <span class="keyword">if</span> (minIndex != i) &#123; <span class="comment">// 避免自身交换</span></span><br><span class="line">            <span class="built_in">swap</span>(arr[i], arr[minIndex]);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印数组函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printArray</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[] = &#123;<span class="number">64</span>, <span class="number">25</span>, <span class="number">12</span>, <span class="number">22</span>, <span class="number">11</span>&#125;;</span><br><span class="line">    <span class="type">int</span> n = <span class="built_in">sizeof</span>(arr) / <span class="built_in">sizeof</span>(arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">selectionSort</span>(arr, n); <span class="comment">// 对数组进行选择排序</span></span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;排序后的数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n); <span class="comment">// 输出排序结果</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-
-<p>堆排序（Heap Sort）是一种基于二叉堆的数据结构实现的排序算法，具有时间复杂度为 $O(n \log n)$，可以被认为是一种改进的选择排序。堆排序的特点是无论数据情况如何，其时间复杂度都能保持稳定，是一种不稳定的原地排序算法。</p>
-<h3 id="二叉堆简介"><a href="#二叉堆简介" class="headerlink" title="二叉堆简介"></a>二叉堆简介</h3><p>堆排序使用<strong>最大堆</strong>或<strong>最小堆</strong>来辅助排序：</p>
-<ul>
-<li><strong>最大堆</strong>：父节点的值总是大于或等于子节点的值。</li>
-<li><strong>最小堆</strong>：父节点的值总是小于或等于子节点的值。</li>
-</ul>
-<p>在堆排序中，通常使用<strong>最大堆</strong>来实现升序排序。</p>
-<h3 id="堆排序算法步骤"><a href="#堆排序算法步骤" class="headerlink" title="堆排序算法步骤"></a>堆排序算法步骤</h3><ol>
-<li><strong>构建最大堆</strong>：将数组视为一个完全二叉树，从最后一个非叶子节点开始，对每个节点进行<strong>堆调整</strong>，使整个数组满足最大堆的性质。</li>
-<li><strong>排序</strong>：<ul>
-<li>将堆顶元素（最大值）与数组末尾元素交换，这样最大值就处于正确的最终位置。</li>
-<li>将堆的大小减一，对新的堆顶元素进行<strong>堆调整</strong>，以重新保持最大堆的性质。</li>
-<li>重复上述过程，直到堆的大小减为 1，排序完成。</li>
-</ul>
-</li>
-</ol>
-<h3 id="堆排序代码实现（C-）"><a href="#堆排序代码实现（C-）" class="headerlink" title="堆排序代码实现（C++）"></a>堆排序代码实现（C++）</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 将以 root 为根的子树调整为最大堆</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">heapify</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n, <span class="type">int</span> root)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> largest = root;         <span class="comment">// 将根节点设为最大值</span></span><br><span class="line">    <span class="type">int</span> left = <span class="number">2</span> * root + <span class="number">1</span>;    <span class="comment">// 左子节点</span></span><br><span class="line">    <span class="type">int</span> right = <span class="number">2</span> * root + <span class="number">2</span>;   <span class="comment">// 右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果左子节点存在且大于根节点</span></span><br><span class="line">    <span class="keyword">if</span> (left &lt; n &amp;&amp; arr[left] &gt; arr[largest]) &#123;</span><br><span class="line">        largest = left;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果右子节点存在且大于当前最大值</span></span><br><span class="line">    <span class="keyword">if</span> (right &lt; n &amp;&amp; arr[right] &gt; arr[largest]) &#123;</span><br><span class="line">        largest = right;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 如果最大值不是根节点，则交换并递归调整</span></span><br><span class="line">    <span class="keyword">if</span> (largest != root) &#123;</span><br><span class="line">        <span class="built_in">swap</span>(arr[root], arr[largest]);</span><br><span class="line">        <span class="built_in">heapify</span>(arr, n, largest);  <span class="comment">// 递归调整受影响的子树</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 堆排序主函数</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">heapSort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 1. 构建最大堆</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n / <span class="number">2</span> - <span class="number">1</span>; i &gt;= <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="built_in">heapify</span>(arr, n, i);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 2. 逐一取出元素并调整堆</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = n - <span class="number">1</span>; i &gt; <span class="number">0</span>; i--) &#123;</span><br><span class="line">        <span class="built_in">swap</span>(arr[<span class="number">0</span>], arr[i]);    <span class="comment">// 将最大元素移动到末尾</span></span><br><span class="line">        <span class="built_in">heapify</span>(arr, i, <span class="number">0</span>);      <span class="comment">// 调整剩下的元素形成最大堆</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印数组</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printArray</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++) &#123;</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主函数</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[] = &#123;<span class="number">12</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>&#125;;</span><br><span class="line">    <span class="type">int</span> n = <span class="built_in">sizeof</span>(arr) / <span class="built_in">sizeof</span>(arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">heapSort</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;排序后的数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="示例执行过程"><a href="#示例执行过程" class="headerlink" title="示例执行过程"></a>示例执行过程</h3><p>假设我们对数组 <code>&#123;12, 11, 13, 5, 6, 7&#125;</code> 进行堆排序：</p>
-<ol>
-<li><p><strong>构建最大堆</strong>：  </p>
-<ul>
-<li>选择非叶子节点 <code>5</code> 和 <code>6</code>，调整以 <code>5</code> 和 <code>6</code> 为根的子树。</li>
-<li>继续调整上层节点，最后整个数组满足最大堆的结构：<code>&#123;13, 11, 12, 5, 6, 7&#125;</code>。</li>
-</ul>
-</li>
-<li><p><strong>排序过程</strong>：</p>
-<ul>
-<li>将堆顶元素 <code>13</code> 与最后一个元素交换：<code>&#123;7, 11, 12, 5, 6, 13&#125;</code>，缩小堆的范围到 <code>[0, n-2]</code>，再对堆顶进行堆调整。</li>
-<li>重复此过程直到排序完成，最终结果为：<code>&#123;5, 6, 7, 11, 12, 13&#125;</code>。</li>
-</ul>
-</li>
-</ol>
-<h3 id="时间复杂度"><a href="#时间复杂度" class="headerlink" title="时间复杂度"></a>时间复杂度</h3><p>堆排序的时间复杂度为 $O(n \log n)$，因为：</p>
-<ul>
-<li>建堆操作的时间复杂度为 $O(n)$。</li>
-<li>排序过程中需要 $O(\log n)$ 的时间进行堆调整，总体复杂度为 $O(n \log n)$。</li>
-</ul>
-<p>归并排序（Merge Sort）是一种基于<strong>分治法（Divide and Conquer）</strong>的排序算法。它将数组分成较小的子数组，分别排序后再合并，最终完成排序。</p>
-<h3 id="1-算法原理"><a href="#1-算法原理" class="headerlink" title="1. 算法原理"></a>1. 算法原理</h3><p>归并排序的核心思想是：</p>
-<ol>
-<li><strong>分</strong>：将待排序数组分成两个子数组，分别对这两个子数组进行排序。</li>
-<li><strong>治</strong>：通过递归将子数组继续分割，直到每个子数组的长度为 1。</li>
-<li><strong>合</strong>：将两个有序子数组合并成一个有序数组。</li>
-</ol>
-<h3 id="2-算法步骤"><a href="#2-算法步骤" class="headerlink" title="2. 算法步骤"></a>2. 算法步骤</h3><ol>
-<li><strong>递归分割数组</strong>：<ul>
-<li>将数组从中间分成两部分，直到每部分只剩一个元素。</li>
-</ul>
-</li>
-<li><strong>合并子数组</strong>：<ul>
-<li>合并两个已排序的子数组为一个有序数组。</li>
-</ul>
-</li>
-</ol>
-<h3 id="3-时间复杂度"><a href="#3-时间复杂度" class="headerlink" title="3. 时间复杂度"></a>3. 时间复杂度</h3><ul>
-<li><strong>时间复杂度</strong>：$O(n \log n)$<ul>
-<li>每次分割数组的时间复杂度为 $O(\log n)$，合并数组的时间复杂度为 $O(n)$。</li>
-</ul>
-</li>
-<li><strong>空间复杂度</strong>：$O(n)$<ul>
-<li>归并排序需要额外的数组空间来存储合并后的结果。</li>
-</ul>
-</li>
-</ul>
-<h3 id="4-C-实现"><a href="#4-C-实现" class="headerlink" title="4. C++ 实现"></a>4. C++ 实现</h3><p>以下是归并排序的完整代码：</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 合并两个有序数组</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">merge</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> left, <span class="type">int</span> mid, <span class="type">int</span> right)</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> n1 = mid - left + <span class="number">1</span>; <span class="comment">// 左子数组大小</span></span><br><span class="line">    <span class="type">int</span> n2 = right - mid;    <span class="comment">// 右子数组大小</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建临时数组</span></span><br><span class="line">    <span class="type">int</span> L[n1], R[n2];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝数据到临时数组</span></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n1; i++)</span><br><span class="line">        L[i] = arr[left + i];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n2; i++)</span><br><span class="line">        R[i] = arr[mid + <span class="number">1</span> + i];</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 合并两个有序数组</span></span><br><span class="line">    <span class="type">int</span> i = <span class="number">0</span>, j = <span class="number">0</span>, k = left; <span class="comment">// 初始索引</span></span><br><span class="line">    <span class="keyword">while</span> (i &lt; n1 &amp;&amp; j &lt; n2) &#123;</span><br><span class="line">        <span class="keyword">if</span> (L[i] &lt;= R[j]) &#123;</span><br><span class="line">            arr[k] = L[i];</span><br><span class="line">            i++;</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            arr[k] = R[j];</span><br><span class="line">            j++;</span><br><span class="line">        &#125;</span><br><span class="line">        k++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 拷贝剩余元素</span></span><br><span class="line">    <span class="keyword">while</span> (i &lt; n1) &#123;</span><br><span class="line">        arr[k] = L[i];</span><br><span class="line">        i++;</span><br><span class="line">        k++;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (j &lt; n2) &#123;</span><br><span class="line">        arr[k] = R[j];</span><br><span class="line">        j++;</span><br><span class="line">        k++;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 递归归并排序</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mergeSort</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> left, <span class="type">int</span> right)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (left &lt; right) &#123;</span><br><span class="line">        <span class="type">int</span> mid = left + (right - left) / <span class="number">2</span>;</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 分割</span></span><br><span class="line">        <span class="built_in">mergeSort</span>(arr, left, mid);</span><br><span class="line">        <span class="built_in">mergeSort</span>(arr, mid + <span class="number">1</span>, right);</span><br><span class="line"></span><br><span class="line">        <span class="comment">// 合并</span></span><br><span class="line">        <span class="built_in">merge</span>(arr, left, mid, right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 打印数组</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printArray</span><span class="params">(<span class="type">int</span> arr[], <span class="type">int</span> n)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; n; i++)</span><br><span class="line">        cout &lt;&lt; arr[i] &lt;&lt; <span class="string">&quot; &quot;</span>;</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 主函数</span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span> arr[] = &#123;<span class="number">12</span>, <span class="number">11</span>, <span class="number">13</span>, <span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>&#125;;</span><br><span class="line">    <span class="type">int</span> n = <span class="built_in">sizeof</span>(arr) / <span class="built_in">sizeof</span>(arr[<span class="number">0</span>]);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;原始数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    <span class="built_in">mergeSort</span>(arr, <span class="number">0</span>, n - <span class="number">1</span>);</span><br><span class="line"></span><br><span class="line">    cout &lt;&lt; <span class="string">&quot;排序后的数组: &quot;</span>;</span><br><span class="line">    <span class="built_in">printArray</span>(arr, n);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="输出结果"><a href="#输出结果" class="headerlink" title="输出结果"></a>输出结果</h3><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">原始数组: 12 11 13 5 6 7 </span><br><span class="line">排序后的数组: 5 6 7 11 12 13 </span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="代码说明"><a href="#代码说明" class="headerlink" title="代码说明"></a>代码说明</h3><ol>
-<li><p><strong>merge 函数</strong>：</p>
-<ul>
-<li>将两个有序数组（<code>L</code> 和 <code>R</code>）合并为一个有序数组。</li>
-<li>使用两个指针遍历子数组，同时更新原数组中的值。</li>
-</ul>
-</li>
-<li><p><strong>mergeSort 函数</strong>：</p>
-<ul>
-<li>递归分割数组为两部分，直到每部分只剩一个元素。</li>
-<li>调用 <code>merge</code> 函数将子数组合并。</li>
-</ul>
-</li>
-<li><p><strong>递归基线条件</strong>：</p>
-<ul>
-<li>当 <code>left &gt;= right</code> 时，数组无法再分割，递归结束。</li>
-</ul>
-</li>
-</ol>
-<hr>
-<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a>优缺点</h3><h4 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h4><ol>
-<li><strong>稳定性</strong>：归并排序是一种稳定的排序算法。</li>
-<li><strong>性能稳定</strong>：时间复杂度始终为 $O(n \log n)$，无论最佳、最差或平均情况。</li>
-</ol>
-<h4 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h4><ol>
-<li><strong>空间复杂度较高</strong>：需要额外的数组空间来辅助合并操作。</li>
-<li><strong>递归开销</strong>：递归调用会增加时间和空间的开销。</li>
-</ol>
-<hr>
-<h3 id="应用场景"><a href="#应用场景" class="headerlink" title="应用场景"></a>应用场景</h3><p>归并排序适用于需要稳定排序的场景，特别是在处理大规模数据集或链表时（链表中归并排序的空间复杂度为 $O(1)$）。</p>
-]]></content>
-      <categories>
-        <category>经验</category>
-      </categories>
-      <tags>
-        <tag>数据结构与算法</tag>
-        <tag>二叉树</tag>
-        <tag>堆排序</tag>
-        <tag>快速排序</tag>
-        <tag>归并排序</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>四种强制类型转换操作符</title>
     <url>/2024/11/25/%E5%9B%9B%E7%A7%8D%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2%E6%93%8D%E4%BD%9C%E7%AC%A6/</url>
     <content><![CDATA[<p>在 C++ 中，有四种强制类型转换操作符，分别是：</p>
@@ -1698,6 +1698,127 @@
       </tags>
   </entry>
   <entry>
+    <title>平衡二叉树的调整(左旋与右旋)</title>
+    <url>/2024/10/30/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E8%B0%83%E6%95%B4-%E5%B7%A6%E6%97%8B%E4%B8%8E%E5%8F%B3%E6%97%8B/</url>
+    <content><![CDATA[<h1 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h1><p>平衡二叉树（Balanced Binary Tree）是一种特殊的二叉树，它在结构上保持一定的平衡，以确保在最坏情况下依然具有较好的查找、插入和删除性能。</p>
+<h3 id="平衡二叉树的定义"><a href="#平衡二叉树的定义" class="headerlink" title="平衡二叉树的定义"></a>平衡二叉树的定义</h3><p><strong>平衡</strong>的具体定义可以根据不同类型的平衡树略有不同。一般来说，一个二叉树是平衡的，当其任意节点的左右子树高度差的绝对值不超过某个特定值（通常是1）时。</p>
+<h3 id="常见类型的平衡二叉树"><a href="#常见类型的平衡二叉树" class="headerlink" title="常见类型的平衡二叉树"></a>常见类型的平衡二叉树</h3><ol>
+<li><p><strong>AVL树</strong>：</p>
+<ul>
+<li><p>每个节点的左右子树高度差（平衡因子）只允许为 -1、0 或 1。</p>
+</li>
+<li><p>在插入或删除节点后，如果导致不平衡，会通过旋转操作来恢复平衡。</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;algorithm&gt; // 用于 std::max</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 节点结构</span><br><span class="line">struct Node &#123;</span><br><span class="line">    int key;       // 节点值</span><br><span class="line">    Node* left;    // 左子节点</span><br><span class="line">    Node* right;   // 右子节点</span><br><span class="line">    int height;    // 节点高度</span><br><span class="line"></span><br><span class="line">    Node(int k) : key(k), left(nullptr), right(nullptr), height(1) &#123;&#125; // 初始化节点</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 获取节点的高度</span><br><span class="line">int getHeight(Node* node) &#123;</span><br><span class="line">    return node ? node-&gt;height : 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 获取平衡因子</span><br><span class="line">int getBalanceFactor(Node* node) &#123;</span><br><span class="line">    return node ? getHeight(node-&gt;left) - getHeight(node-&gt;right) : 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 更新节点的高度</span><br><span class="line">void updateHeight(Node* node) &#123;</span><br><span class="line">    node-&gt;height = max(getHeight(node-&gt;left), getHeight(node-&gt;right)) + 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 右旋操作</span><br><span class="line">Node* rightRotate(Node* y) &#123;</span><br><span class="line">    Node* x = y-&gt;left;</span><br><span class="line">    Node* T2 = x-&gt;right;</span><br><span class="line"></span><br><span class="line">    // 右旋转</span><br><span class="line">    x-&gt;right = y;</span><br><span class="line">    y-&gt;left = T2;</span><br><span class="line"></span><br><span class="line">    // 更新高度</span><br><span class="line">    updateHeight(y);</span><br><span class="line">    updateHeight(x);</span><br><span class="line"></span><br><span class="line">    // 返回新的根节点</span><br><span class="line">    return x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 左旋操作</span><br><span class="line">Node* leftRotate(Node* x) &#123;</span><br><span class="line">    Node* y = x-&gt;right;</span><br><span class="line">    Node* T2 = y-&gt;left;</span><br><span class="line"></span><br><span class="line">    // 左旋转</span><br><span class="line">    y-&gt;left = x;</span><br><span class="line">    x-&gt;right = T2;</span><br><span class="line"></span><br><span class="line">    // 更新高度</span><br><span class="line">    updateHeight(x);</span><br><span class="line">    updateHeight(y);</span><br><span class="line"></span><br><span class="line">    // 返回新的根节点</span><br><span class="line">    return y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 插入节点并保持平衡</span><br><span class="line">Node* insert(Node* node, int key) &#123;</span><br><span class="line">    // 1. 标准的二叉搜索树插入</span><br><span class="line">    if (!node) return new Node(key);</span><br><span class="line"></span><br><span class="line">    if (key &lt; node-&gt;key) &#123;</span><br><span class="line">        node-&gt;left = insert(node-&gt;left, key);</span><br><span class="line">    &#125; else if (key &gt; node-&gt;key) &#123;</span><br><span class="line">        node-&gt;right = insert(node-&gt;right, key);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 不允许插入重复值</span><br><span class="line">        return node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 2. 更新当前节点的高度</span><br><span class="line">    updateHeight(node);</span><br><span class="line"></span><br><span class="line">    // 3. 计算平衡因子</span><br><span class="line">    int balanceFactor = getBalanceFactor(node);</span><br><span class="line"></span><br><span class="line">    // 4. 根据平衡因子进行相应的旋转操作</span><br><span class="line">    // 左左情况</span><br><span class="line">    if (balanceFactor &gt; 1 &amp;&amp; key &lt; node-&gt;left-&gt;key) &#123;</span><br><span class="line">        return rightRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 右右情况</span><br><span class="line">    if (balanceFactor &lt; -1 &amp;&amp; key &gt; node-&gt;right-&gt;key) &#123;</span><br><span class="line">        return leftRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 左右情况</span><br><span class="line">    if (balanceFactor &gt; 1 &amp;&amp; key &gt; node-&gt;left-&gt;key) &#123;</span><br><span class="line">        node-&gt;left = leftRotate(node-&gt;left);</span><br><span class="line">        return rightRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 右左情况</span><br><span class="line">    if (balanceFactor &lt; -1 &amp;&amp; key &lt; node-&gt;right-&gt;key) &#123;</span><br><span class="line">        node-&gt;right = rightRotate(node-&gt;right);</span><br><span class="line">        return leftRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 返回不变的节点指针</span><br><span class="line">    return node;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 中序遍历树以显示结果</span><br><span class="line">void inOrder(Node* root) &#123;</span><br><span class="line">    if (root) &#123;</span><br><span class="line">        inOrder(root-&gt;left);</span><br><span class="line">        cout &lt;&lt; root-&gt;key &lt;&lt; &quot; &quot;;</span><br><span class="line">        inOrder(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 主函数测试AVL树</span><br><span class="line">int main() &#123;</span><br><span class="line">    Node* root = nullptr;</span><br><span class="line"></span><br><span class="line">    // 插入一些节点</span><br><span class="line">    root = insert(root, 10);</span><br><span class="line">    root = insert(root, 20);</span><br><span class="line">    root = insert(root, 30);</span><br><span class="line">    root = insert(root, 40);</span><br><span class="line">    root = insert(root, 50);</span><br><span class="line">    root = insert(root, 25);</span><br><span class="line"></span><br><span class="line">    // 中序遍历 AVL 树</span><br><span class="line">    cout &lt;&lt; &quot;中序遍历 AVL 树: &quot;;</span><br><span class="line">    inOrder(root);</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><p><strong>红黑树</strong>：</p>
+<ul>
+<li>是一种自平衡的二叉搜索树，每个节点都有一个颜色属性（红色或黑色），并遵循特定的颜色规则。</li>
+<li>保证从根到叶的路径上的黑色节点数量相同，从而保持树的平衡性。</li>
+</ul>
+</li>
+</ol>
+<h3 id="平衡二叉树的特点"><a href="#平衡二叉树的特点" class="headerlink" title="平衡二叉树的特点"></a>平衡二叉树的特点</h3><ul>
+<li><p><strong>时间复杂度</strong>：</p>
+<ul>
+<li>查找、插入和删除操作的时间复杂度通常为 O(\log n)，这使得平衡二叉树非常高效，特别是在大量数据的情况下。</li>
+</ul>
+</li>
+<li><p><strong>空间复杂度</strong>：</p>
+<ul>
+<li>平衡二叉树的空间复杂度为 O(n)，与普通的二叉树相同。</li>
+</ul>
+</li>
+<li><p><strong>自我平衡</strong>：</p>
+<ul>
+<li>在插入或删除节点时，通过旋转和调整树的结构，保持树的平衡，从而避免退化成链表。</li>
+</ul>
+</li>
+</ul>
+<p> 旋转操作是平衡二叉树（如 AVL 树和红黑树）中的重要技术，用于在插入或删除节点后恢复树的平衡。旋转操作可以分为两种类型：左旋（Left Rotation）和右旋（Right Rotation）。以下是这两种旋转的详细介绍及其实现。</p>
+<h1 id="平衡二叉树的调整"><a href="#平衡二叉树的调整" class="headerlink" title="平衡二叉树的调整"></a>平衡二叉树的调整</h1><p>首先注意，右旋（L）实际上是将树向左旋转，左旋则是将树向右旋转</p>
+<h3 id="1-右旋（Right-Rotation）"><a href="#1-右旋（Right-Rotation）" class="headerlink" title="1. 右旋（Right Rotation）"></a>1. 右旋（Right Rotation）</h3><p>右旋操作是将某个节点（称为“失衡节点”）的左子节点提升为新的根节点，同时将失衡节点降为新根节点的右子节点。</p>
+<h4 id="右旋的步骤"><a href="#右旋的步骤" class="headerlink" title="右旋的步骤"></a>右旋的步骤</h4><ol>
+<li>设失衡节点为 <code>y</code>，其左子节点为 <code>x</code>。</li>
+<li>将 <code>x</code> 的右子节点（如果存在）连接到 <code>y</code> 的左子节点。</li>
+<li>将 <code>x</code> 提升为新的根节点。</li>
+<li>将 <code>y</code> 设为 <code>x</code> 的右子节点。</li>
+</ol>
+<h4 id="右旋的伪代码"><a href="#右旋的伪代码" class="headerlink" title="右旋的伪代码"></a>右旋的伪代码</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> key;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    <span class="type">int</span> height; <span class="comment">// 用于 AVL 树的高度</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 右旋操作</span></span><br><span class="line"><span class="function">TreeNode* <span class="title">rightRotate</span><span class="params">(TreeNode* y)</span> </span>&#123;</span><br><span class="line">    TreeNode* x = y-&gt;left;           <span class="comment">// 让 x 指向 y 的左子节点</span></span><br><span class="line">    TreeNode* T2 = x-&gt;right;         <span class="comment">// 保存 x 的右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 进行旋转</span></span><br><span class="line">    x-&gt;right = y;                    <span class="comment">// 将 y 设置为 x 的右子节点</span></span><br><span class="line">    y-&gt;left = T2;                    <span class="comment">// 将 T2 设置为 y 的左子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新高度（如果需要）</span></span><br><span class="line">    y-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(y-&gt;left), <span class="built_in">height</span>(y-&gt;right)) + <span class="number">1</span>;</span><br><span class="line">    x-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(x-&gt;left), <span class="built_in">height</span>(x-&gt;right)) + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x; <span class="comment">// 返回新的根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-左旋（Left-Rotation）"><a href="#2-左旋（Left-Rotation）" class="headerlink" title="2. 左旋（Left Rotation）"></a>2. 左旋（Left Rotation）</h3><p>左旋操作是将某个节点的右子节点提升为新的根节点，同时将失衡节点降为新根节点的左子节点。</p>
+<h4 id="左旋的步骤"><a href="#左旋的步骤" class="headerlink" title="左旋的步骤"></a>左旋的步骤</h4><ol>
+<li>设失衡节点为 <code>x</code>，其右子节点为 <code>y</code>。</li>
+<li>将 <code>y</code> 的左子节点（如果存在）连接到 <code>x</code> 的右子节点。</li>
+<li>将 <code>y</code> 提升为新的根节点。</li>
+<li>将 <code>x</code> 设为 <code>y</code> 的左子节点。</li>
+</ol>
+<h4 id="左旋的伪代码"><a href="#左旋的伪代码" class="headerlink" title="左旋的伪代码"></a>左旋的伪代码</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 左旋操作</span></span><br><span class="line"><span class="function">TreeNode* <span class="title">leftRotate</span><span class="params">(TreeNode* x)</span> </span>&#123;</span><br><span class="line">    TreeNode* y = x-&gt;right;         <span class="comment">// 让 y 指向 x 的右子节点</span></span><br><span class="line">    TreeNode* T2 = y-&gt;left;         <span class="comment">// 保存 y 的左子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 进行旋转</span></span><br><span class="line">    y-&gt;left = x;                    <span class="comment">// 将 x 设置为 y 的左子节点</span></span><br><span class="line">    x-&gt;right = T2;                  <span class="comment">// 将 T2 设置为 x 的右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新高度（如果需要）</span></span><br><span class="line">    x-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(x-&gt;left), <span class="built_in">height</span>(x-&gt;right)) + <span class="number">1</span>;</span><br><span class="line">    y-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(y-&gt;left), <span class="built_in">height</span>(y-&gt;right)) + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> y; <span class="comment">// 返回新的根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-组合旋转"><a href="#3-组合旋转" class="headerlink" title="3. 组合旋转"></a>3. 组合旋转</h3><h4 id="AVL有且只有的四种情况（LL-LR-RL-RR）"><a href="#AVL有且只有的四种情况（LL-LR-RL-RR）" class="headerlink" title="AVL有且只有的四种情况（LL,LR,RL,RR）"></a>AVL有且只有的四种情况（LL,LR,RL,RR）</h4><p>图片来自<a href="https://blog.csdn.net/a6892255/article/details/117001282?ops_request_misc=%7B%22request_id%22:%22EBCFF1FE-F5C1-4776-B879-A508C09E98D5%22,%22scm%22:%2220140713.130102334..%22%7D&request_id=EBCFF1FE-F5C1-4776-B879-A508C09E98D5&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-117001282-null-null.142%5Ev100%5Epc_search_result_base8&utm_term=%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B7%A6%E6%97%8B%E5%8F%B3%E6%97%8B&spm=1018.2226.3001.4187">数据结构之AVL树(平衡二叉树)的理解_avl左右旋-CSDN博客</a></p>
+<h4 id="1-LL"><a href="#1-LL" class="headerlink" title="1.LL"></a>1.LL</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/edea4edc378247e01a490437e164a51f.png" alt="LL"></p>
+<h4 id="2-LR"><a href="#2-LR" class="headerlink" title="2.LR"></a>2.LR</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/dc372fd873d281a3bb0b8a92eaae54fa.png" alt="LR(1)"></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/30204ce4046bd0a9c2316159496d1886.png" alt="LR(2)"></p>
+<h4 id="3-RL"><a href="#3-RL" class="headerlink" title="3.RL"></a>3.RL</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/d60980e235068364f15691ef822690de.png" alt="RL(1)"></p>
+<p><img src="https://i-blog.csdnimg.cn/blog_migrate/084bc177d55d0797ab75c3caf6963405.png" alt="RL(2)"></p>
+<h4 id="4-RR"><a href="#4-RR" class="headerlink" title="4.RR"></a>4.RR</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/60bb25e94471951b5602f0507a5b232c.png" alt="RR2"></p>
+]]></content>
+      <categories>
+        <category>经验</category>
+      </categories>
+      <tags>
+        <tag>数据结构与算法</tag>
+        <tag>二叉树</tag>
+        <tag>平衡二叉树</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>指向常量的指针与常量指针</title>
+    <url>/2024/11/17/%E6%8C%87%E5%90%91%E5%B8%B8%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E4%B8%8E%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88/</url>
+    <content><![CDATA[<p>好久没有更新博客了，与最近考试多有关，也与个人怠惰有关</p>
+<p>今天的内容是指向常量的指针（pointer to const）与指针常量（const pointer），这是昨天在阅读《c++ primer》中重新理解的内容，有了些许新的感悟，趁热打铁，发在博客上</p>
+<h3 id="在讲那两个之前，先说一下const与对常量的引用（reference-to-const）"><a href="#在讲那两个之前，先说一下const与对常量的引用（reference-to-const）" class="headerlink" title="在讲那两个之前，先说一下const与对常量的引用（reference to const）"></a>在讲那两个之前，先说一下const与对常量的引用（reference to const）</h3><h4 id="const修饰词"><a href="#const修饰词" class="headerlink" title="const修饰词"></a>const修饰词</h4><p>使用const修饰词修饰的变量，即常量，是必须初始化的，且初始化后不能修改其值</p>
+<p>初始化时除了用如下方法</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const int a=1;</span><br></pre></td></tr></table></figure>
+
+<p>同样可以用非常量但同类型的值进行赋值（拷贝）</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a=1;</span><br><span class="line">const int b=a;</span><br><span class="line">a=b;</span><br></pre></td></tr></table></figure>
+
+<p>const修饰的对象在编译时直接替换，类似define，即提前将所有出现其的位置替换成对应的数值，不申请额外空间</p>
+<p>以下场景除外(都要等具体的值才能初始化)</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const int a =fun();</span><br><span class="line">const int &amp;b=c;</span><br></pre></td></tr></table></figure>
+
+<p>同时const对象仅在文件内部有效，要实现在一个文件中定义，在多个文件中声明并使用，要用extern 关键字修饰所有const对象</p>
+<h4 id="对const的引用（常量引用）"><a href="#对const的引用（常量引用）" class="headerlink" title="对const的引用（常量引用）"></a>对const的引用（常量引用）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">常量引用本身是常量，无法修改引用的对象</span><br><span class="line">const int a=1;</span><br><span class="line">const int b=2;</span><br><span class="line">const int &amp;r =a;</span><br><span class="line">r=b;//错误，不可修改</span><br><span class="line">r=2;//错误，不可修改</span><br></pre></td></tr></table></figure>
+
+<p>常量引用不能改变引用的值（毕竟常量的值无法改变）</p>
+<p>要对常量使用引用，也只能使用常量引用</p>
+<h2 id="但是，常量引用可以引用非常量的同类型变量"><a href="#但是，常量引用可以引用非常量的同类型变量" class="headerlink" title="但是，常量引用可以引用非常量的同类型变量"></a>但是，常量引用可以引用非常量的同类型变量</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int i=0;</span><br><span class="line">const int &amp;r =i;//正确</span><br><span class="line"></span><br><span class="line">const int &amp;r2=r1*2;//正确</span><br><span class="line"></span><br><span class="line">i=4;//i不是常量，可以修改，同样会导致r的值变动</span><br></pre></td></tr></table></figure>
+
+<p>这种场景经常出现，甚至比引用常量更多，主要应用场景在函数参数传递时，传递参数的常量引用，可以确保参数不被修改，同时避免拷贝的花销。</p>
+<p>在接口等地方非常常见，可以参考《effective c++》中的建议</p>
+<p>可以理解为常量引用引用的是一个临时常量，变量的值赋给了临时变量。</p>
+<p>ok.到此为止，下面是指向常量的指针与常量指针</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a = 1;</span><br><span class="line">int b = 2;</span><br><span class="line"></span><br><span class="line">常量指针</span><br><span class="line">int* const p1 = &amp;a;</span><br><span class="line">*p1 = 6;</span><br><span class="line">// const pointer,本身是个常量，不能改变指向的对象</span><br><span class="line">//只能指向变量，无法指向常量</span><br><span class="line">//如果指向的对象并非是常量，指向对象的值还是可以修改的</span><br><span class="line"></span><br><span class="line">指向常量的指针</span><br><span class="line">const int* p2 = &amp;a;</span><br><span class="line">p2 = &amp;b;//正确，pointer to const,本身不是常量，可以改变指向的对象</span><br><span class="line">*p2=3;//错误，无法通过这种方式修改指向的变量的值</span><br><span class="line">//类似常量引用，可以指向常量，也可以指向变量</span><br><span class="line"></span><br><span class="line">const int* const p3 = &amp;a;//指向常量的常量指针</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="顶层const与底层const"><a href="#顶层const与底层const" class="headerlink" title="顶层const与底层const"></a>顶层const与底层const</h3><p>顶层const表示其本身是常量，即常量和常量指针，无法修改其值（常量指针无法修改指向的对象，即地址，也就是其值）</p>
+<p>底层const表示指向（引用）的对象是一个“常量”（常量或变量），无法修改指向（引用）对象的值，即常量引用和指向常量的指针等</p>
+<p>拷贝时，两者区别非常明显</p>
+<p>顶层const，可以随意赋给变量做值</p>
+<p>底层const,不可以赋给变量做值</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a=1;</span><br><span class="line">const int *r1=a;</span><br><span class="line">int *const r2=a;</span><br><span class="line"></span><br><span class="line">int *p=r1;//错误，底层const无法赋值</span><br><span class="line">int *p=r2;//正确</span><br></pre></td></tr></table></figure>
+
+]]></content>
+      <categories>
+        <category>思考</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
+        <tag>指针</tag>
+        <tag>const</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>智能指针</title>
     <url>/2025/01/12/%E6%99%BA%E8%83%BD%E6%8C%87%E9%92%88/</url>
     <content><![CDATA[<p><strong>智能指针</strong>是一种在编程中管理动态内存资源的对象。它封装了原始指针（raw pointer），并提供额外的功能，例如自动释放资源、避免内存泄漏和管理对象的生命周期。智能指针广泛用于需要动态分配内存的语言（如 C++），通过 RAII（Resource Acquisition Is Initialization）原则实现内存管理。</p>
@@ -1790,52 +1911,6 @@
       </tags>
   </entry>
   <entry>
-    <title>指向常量的指针与常量指针</title>
-    <url>/2024/11/17/%E6%8C%87%E5%90%91%E5%B8%B8%E9%87%8F%E7%9A%84%E6%8C%87%E9%92%88%E4%B8%8E%E5%B8%B8%E9%87%8F%E6%8C%87%E9%92%88/</url>
-    <content><![CDATA[<p>好久没有更新博客了，与最近考试多有关，也与个人怠惰有关</p>
-<p>今天的内容是指向常量的指针（pointer to const）与指针常量（const pointer），这是昨天在阅读《c++ primer》中重新理解的内容，有了些许新的感悟，趁热打铁，发在博客上</p>
-<h3 id="在讲那两个之前，先说一下const与对常量的引用（reference-to-const）"><a href="#在讲那两个之前，先说一下const与对常量的引用（reference-to-const）" class="headerlink" title="在讲那两个之前，先说一下const与对常量的引用（reference to const）"></a>在讲那两个之前，先说一下const与对常量的引用（reference to const）</h3><h4 id="const修饰词"><a href="#const修饰词" class="headerlink" title="const修饰词"></a>const修饰词</h4><p>使用const修饰词修饰的变量，即常量，是必须初始化的，且初始化后不能修改其值</p>
-<p>初始化时除了用如下方法</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const int a=1;</span><br></pre></td></tr></table></figure>
-
-<p>同样可以用非常量但同类型的值进行赋值（拷贝）</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a=1;</span><br><span class="line">const int b=a;</span><br><span class="line">a=b;</span><br></pre></td></tr></table></figure>
-
-<p>const修饰的对象在编译时直接替换，类似define，即提前将所有出现其的位置替换成对应的数值，不申请额外空间</p>
-<p>以下场景除外(都要等具体的值才能初始化)</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">const int a =fun();</span><br><span class="line">const int &amp;b=c;</span><br></pre></td></tr></table></figure>
-
-<p>同时const对象仅在文件内部有效，要实现在一个文件中定义，在多个文件中声明并使用，要用extern 关键字修饰所有const对象</p>
-<h4 id="对const的引用（常量引用）"><a href="#对const的引用（常量引用）" class="headerlink" title="对const的引用（常量引用）"></a>对const的引用（常量引用）</h4><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">常量引用本身是常量，无法修改引用的对象</span><br><span class="line">const int a=1;</span><br><span class="line">const int b=2;</span><br><span class="line">const int &amp;r =a;</span><br><span class="line">r=b;//错误，不可修改</span><br><span class="line">r=2;//错误，不可修改</span><br></pre></td></tr></table></figure>
-
-<p>常量引用不能改变引用的值（毕竟常量的值无法改变）</p>
-<p>要对常量使用引用，也只能使用常量引用</p>
-<h2 id="但是，常量引用可以引用非常量的同类型变量"><a href="#但是，常量引用可以引用非常量的同类型变量" class="headerlink" title="但是，常量引用可以引用非常量的同类型变量"></a>但是，常量引用可以引用非常量的同类型变量</h2><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int i=0;</span><br><span class="line">const int &amp;r =i;//正确</span><br><span class="line"></span><br><span class="line">const int &amp;r2=r1*2;//正确</span><br><span class="line"></span><br><span class="line">i=4;//i不是常量，可以修改，同样会导致r的值变动</span><br></pre></td></tr></table></figure>
-
-<p>这种场景经常出现，甚至比引用常量更多，主要应用场景在函数参数传递时，传递参数的常量引用，可以确保参数不被修改，同时避免拷贝的花销。</p>
-<p>在接口等地方非常常见，可以参考《effective c++》中的建议</p>
-<p>可以理解为常量引用引用的是一个临时常量，变量的值赋给了临时变量。</p>
-<p>ok.到此为止，下面是指向常量的指针与常量指针</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a = 1;</span><br><span class="line">int b = 2;</span><br><span class="line"></span><br><span class="line">常量指针</span><br><span class="line">int* const p1 = &amp;a;</span><br><span class="line">*p1 = 6;</span><br><span class="line">// const pointer,本身是个常量，不能改变指向的对象</span><br><span class="line">//只能指向变量，无法指向常量</span><br><span class="line">//如果指向的对象并非是常量，指向对象的值还是可以修改的</span><br><span class="line"></span><br><span class="line">指向常量的指针</span><br><span class="line">const int* p2 = &amp;a;</span><br><span class="line">p2 = &amp;b;//正确，pointer to const,本身不是常量，可以改变指向的对象</span><br><span class="line">*p2=3;//错误，无法通过这种方式修改指向的变量的值</span><br><span class="line">//类似常量引用，可以指向常量，也可以指向变量</span><br><span class="line"></span><br><span class="line">const int* const p3 = &amp;a;//指向常量的常量指针</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="顶层const与底层const"><a href="#顶层const与底层const" class="headerlink" title="顶层const与底层const"></a>顶层const与底层const</h3><p>顶层const表示其本身是常量，即常量和常量指针，无法修改其值（常量指针无法修改指向的对象，即地址，也就是其值）</p>
-<p>底层const表示指向（引用）的对象是一个“常量”（常量或变量），无法修改指向（引用）对象的值，即常量引用和指向常量的指针等</p>
-<p>拷贝时，两者区别非常明显</p>
-<p>顶层const，可以随意赋给变量做值</p>
-<p>底层const,不可以赋给变量做值</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">int a=1;</span><br><span class="line">const int *r1=a;</span><br><span class="line">int *const r2=a;</span><br><span class="line"></span><br><span class="line">int *p=r1;//错误，底层const无法赋值</span><br><span class="line">int *p=r2;//正确</span><br></pre></td></tr></table></figure>
-
-]]></content>
-      <categories>
-        <category>思考</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-        <tag>指针</tag>
-        <tag>const</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>最小生成树:Prim 算法和Kruskal 算法</title>
     <url>/2024/10/16/%E6%9C%80%E5%B0%8F%E7%94%9F%E6%88%90%E6%A0%91-Prim-%E7%AE%97%E6%B3%95%E5%92%8CKruskal-%E7%AE%97%E6%B3%95/</url>
     <content><![CDATA[<p>在 C++ 中，实现最小生成树（MST）的常用算法有两种：<strong>Prim 算法</strong>和<strong>Kruskal 算法</strong>。这两种算法适用于加权无向图，用于寻找包含所有顶点的边的集合，使得边的总权重最小，且没有环路。</p>
@@ -1882,81 +1957,6 @@
         <tag>二叉树</tag>
         <tag>最小生成树</tag>
         <tag>贪心算法</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>平衡二叉树的调整(左旋与右旋)</title>
-    <url>/2024/10/30/%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E8%B0%83%E6%95%B4-%E5%B7%A6%E6%97%8B%E4%B8%8E%E5%8F%B3%E6%97%8B/</url>
-    <content><![CDATA[<h1 id="平衡二叉树"><a href="#平衡二叉树" class="headerlink" title="平衡二叉树"></a>平衡二叉树</h1><p>平衡二叉树（Balanced Binary Tree）是一种特殊的二叉树，它在结构上保持一定的平衡，以确保在最坏情况下依然具有较好的查找、插入和删除性能。</p>
-<h3 id="平衡二叉树的定义"><a href="#平衡二叉树的定义" class="headerlink" title="平衡二叉树的定义"></a>平衡二叉树的定义</h3><p><strong>平衡</strong>的具体定义可以根据不同类型的平衡树略有不同。一般来说，一个二叉树是平衡的，当其任意节点的左右子树高度差的绝对值不超过某个特定值（通常是1）时。</p>
-<h3 id="常见类型的平衡二叉树"><a href="#常见类型的平衡二叉树" class="headerlink" title="常见类型的平衡二叉树"></a>常见类型的平衡二叉树</h3><ol>
-<li><p><strong>AVL树</strong>：</p>
-<ul>
-<li><p>每个节点的左右子树高度差（平衡因子）只允许为 -1、0 或 1。</p>
-</li>
-<li><p>在插入或删除节点后，如果导致不平衡，会通过旋转操作来恢复平衡。</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;algorithm&gt; // 用于 std::max</span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 节点结构</span><br><span class="line">struct Node &#123;</span><br><span class="line">    int key;       // 节点值</span><br><span class="line">    Node* left;    // 左子节点</span><br><span class="line">    Node* right;   // 右子节点</span><br><span class="line">    int height;    // 节点高度</span><br><span class="line"></span><br><span class="line">    Node(int k) : key(k), left(nullptr), right(nullptr), height(1) &#123;&#125; // 初始化节点</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">// 获取节点的高度</span><br><span class="line">int getHeight(Node* node) &#123;</span><br><span class="line">    return node ? node-&gt;height : 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 获取平衡因子</span><br><span class="line">int getBalanceFactor(Node* node) &#123;</span><br><span class="line">    return node ? getHeight(node-&gt;left) - getHeight(node-&gt;right) : 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 更新节点的高度</span><br><span class="line">void updateHeight(Node* node) &#123;</span><br><span class="line">    node-&gt;height = max(getHeight(node-&gt;left), getHeight(node-&gt;right)) + 1;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 右旋操作</span><br><span class="line">Node* rightRotate(Node* y) &#123;</span><br><span class="line">    Node* x = y-&gt;left;</span><br><span class="line">    Node* T2 = x-&gt;right;</span><br><span class="line"></span><br><span class="line">    // 右旋转</span><br><span class="line">    x-&gt;right = y;</span><br><span class="line">    y-&gt;left = T2;</span><br><span class="line"></span><br><span class="line">    // 更新高度</span><br><span class="line">    updateHeight(y);</span><br><span class="line">    updateHeight(x);</span><br><span class="line"></span><br><span class="line">    // 返回新的根节点</span><br><span class="line">    return x;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 左旋操作</span><br><span class="line">Node* leftRotate(Node* x) &#123;</span><br><span class="line">    Node* y = x-&gt;right;</span><br><span class="line">    Node* T2 = y-&gt;left;</span><br><span class="line"></span><br><span class="line">    // 左旋转</span><br><span class="line">    y-&gt;left = x;</span><br><span class="line">    x-&gt;right = T2;</span><br><span class="line"></span><br><span class="line">    // 更新高度</span><br><span class="line">    updateHeight(x);</span><br><span class="line">    updateHeight(y);</span><br><span class="line"></span><br><span class="line">    // 返回新的根节点</span><br><span class="line">    return y;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 插入节点并保持平衡</span><br><span class="line">Node* insert(Node* node, int key) &#123;</span><br><span class="line">    // 1. 标准的二叉搜索树插入</span><br><span class="line">    if (!node) return new Node(key);</span><br><span class="line"></span><br><span class="line">    if (key &lt; node-&gt;key) &#123;</span><br><span class="line">        node-&gt;left = insert(node-&gt;left, key);</span><br><span class="line">    &#125; else if (key &gt; node-&gt;key) &#123;</span><br><span class="line">        node-&gt;right = insert(node-&gt;right, key);</span><br><span class="line">    &#125; else &#123;</span><br><span class="line">        // 不允许插入重复值</span><br><span class="line">        return node;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 2. 更新当前节点的高度</span><br><span class="line">    updateHeight(node);</span><br><span class="line"></span><br><span class="line">    // 3. 计算平衡因子</span><br><span class="line">    int balanceFactor = getBalanceFactor(node);</span><br><span class="line"></span><br><span class="line">    // 4. 根据平衡因子进行相应的旋转操作</span><br><span class="line">    // 左左情况</span><br><span class="line">    if (balanceFactor &gt; 1 &amp;&amp; key &lt; node-&gt;left-&gt;key) &#123;</span><br><span class="line">        return rightRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 右右情况</span><br><span class="line">    if (balanceFactor &lt; -1 &amp;&amp; key &gt; node-&gt;right-&gt;key) &#123;</span><br><span class="line">        return leftRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 左右情况</span><br><span class="line">    if (balanceFactor &gt; 1 &amp;&amp; key &gt; node-&gt;left-&gt;key) &#123;</span><br><span class="line">        node-&gt;left = leftRotate(node-&gt;left);</span><br><span class="line">        return rightRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 右左情况</span><br><span class="line">    if (balanceFactor &lt; -1 &amp;&amp; key &lt; node-&gt;right-&gt;key) &#123;</span><br><span class="line">        node-&gt;right = rightRotate(node-&gt;right);</span><br><span class="line">        return leftRotate(node);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    // 返回不变的节点指针</span><br><span class="line">    return node;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 中序遍历树以显示结果</span><br><span class="line">void inOrder(Node* root) &#123;</span><br><span class="line">    if (root) &#123;</span><br><span class="line">        inOrder(root-&gt;left);</span><br><span class="line">        cout &lt;&lt; root-&gt;key &lt;&lt; &quot; &quot;;</span><br><span class="line">        inOrder(root-&gt;right);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 主函数测试AVL树</span><br><span class="line">int main() &#123;</span><br><span class="line">    Node* root = nullptr;</span><br><span class="line"></span><br><span class="line">    // 插入一些节点</span><br><span class="line">    root = insert(root, 10);</span><br><span class="line">    root = insert(root, 20);</span><br><span class="line">    root = insert(root, 30);</span><br><span class="line">    root = insert(root, 40);</span><br><span class="line">    root = insert(root, 50);</span><br><span class="line">    root = insert(root, 25);</span><br><span class="line"></span><br><span class="line">    // 中序遍历 AVL 树</span><br><span class="line">    cout &lt;&lt; &quot;中序遍历 AVL 树: &quot;;</span><br><span class="line">    inOrder(root);</span><br><span class="line">    cout &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure></li>
-</ul>
-</li>
-<li><p><strong>红黑树</strong>：</p>
-<ul>
-<li>是一种自平衡的二叉搜索树，每个节点都有一个颜色属性（红色或黑色），并遵循特定的颜色规则。</li>
-<li>保证从根到叶的路径上的黑色节点数量相同，从而保持树的平衡性。</li>
-</ul>
-</li>
-</ol>
-<h3 id="平衡二叉树的特点"><a href="#平衡二叉树的特点" class="headerlink" title="平衡二叉树的特点"></a>平衡二叉树的特点</h3><ul>
-<li><p><strong>时间复杂度</strong>：</p>
-<ul>
-<li>查找、插入和删除操作的时间复杂度通常为 O(\log n)，这使得平衡二叉树非常高效，特别是在大量数据的情况下。</li>
-</ul>
-</li>
-<li><p><strong>空间复杂度</strong>：</p>
-<ul>
-<li>平衡二叉树的空间复杂度为 O(n)，与普通的二叉树相同。</li>
-</ul>
-</li>
-<li><p><strong>自我平衡</strong>：</p>
-<ul>
-<li>在插入或删除节点时，通过旋转和调整树的结构，保持树的平衡，从而避免退化成链表。</li>
-</ul>
-</li>
-</ul>
-<p> 旋转操作是平衡二叉树（如 AVL 树和红黑树）中的重要技术，用于在插入或删除节点后恢复树的平衡。旋转操作可以分为两种类型：左旋（Left Rotation）和右旋（Right Rotation）。以下是这两种旋转的详细介绍及其实现。</p>
-<h1 id="平衡二叉树的调整"><a href="#平衡二叉树的调整" class="headerlink" title="平衡二叉树的调整"></a>平衡二叉树的调整</h1><p>首先注意，右旋（L）实际上是将树向左旋转，左旋则是将树向右旋转</p>
-<h3 id="1-右旋（Right-Rotation）"><a href="#1-右旋（Right-Rotation）" class="headerlink" title="1. 右旋（Right Rotation）"></a>1. 右旋（Right Rotation）</h3><p>右旋操作是将某个节点（称为“失衡节点”）的左子节点提升为新的根节点，同时将失衡节点降为新根节点的右子节点。</p>
-<h4 id="右旋的步骤"><a href="#右旋的步骤" class="headerlink" title="右旋的步骤"></a>右旋的步骤</h4><ol>
-<li>设失衡节点为 <code>y</code>，其左子节点为 <code>x</code>。</li>
-<li>将 <code>x</code> 的右子节点（如果存在）连接到 <code>y</code> 的左子节点。</li>
-<li>将 <code>x</code> 提升为新的根节点。</li>
-<li>将 <code>y</code> 设为 <code>x</code> 的右子节点。</li>
-</ol>
-<h4 id="右旋的伪代码"><a href="#右旋的伪代码" class="headerlink" title="右旋的伪代码"></a>右旋的伪代码</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">TreeNode</span> &#123;</span><br><span class="line">    <span class="type">int</span> key;</span><br><span class="line">    TreeNode* left;</span><br><span class="line">    TreeNode* right;</span><br><span class="line">    <span class="type">int</span> height; <span class="comment">// 用于 AVL 树的高度</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 右旋操作</span></span><br><span class="line"><span class="function">TreeNode* <span class="title">rightRotate</span><span class="params">(TreeNode* y)</span> </span>&#123;</span><br><span class="line">    TreeNode* x = y-&gt;left;           <span class="comment">// 让 x 指向 y 的左子节点</span></span><br><span class="line">    TreeNode* T2 = x-&gt;right;         <span class="comment">// 保存 x 的右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 进行旋转</span></span><br><span class="line">    x-&gt;right = y;                    <span class="comment">// 将 y 设置为 x 的右子节点</span></span><br><span class="line">    y-&gt;left = T2;                    <span class="comment">// 将 T2 设置为 y 的左子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新高度（如果需要）</span></span><br><span class="line">    y-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(y-&gt;left), <span class="built_in">height</span>(y-&gt;right)) + <span class="number">1</span>;</span><br><span class="line">    x-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(x-&gt;left), <span class="built_in">height</span>(x-&gt;right)) + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x; <span class="comment">// 返回新的根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="2-左旋（Left-Rotation）"><a href="#2-左旋（Left-Rotation）" class="headerlink" title="2. 左旋（Left Rotation）"></a>2. 左旋（Left Rotation）</h3><p>左旋操作是将某个节点的右子节点提升为新的根节点，同时将失衡节点降为新根节点的左子节点。</p>
-<h4 id="左旋的步骤"><a href="#左旋的步骤" class="headerlink" title="左旋的步骤"></a>左旋的步骤</h4><ol>
-<li>设失衡节点为 <code>x</code>，其右子节点为 <code>y</code>。</li>
-<li>将 <code>y</code> 的左子节点（如果存在）连接到 <code>x</code> 的右子节点。</li>
-<li>将 <code>y</code> 提升为新的根节点。</li>
-<li>将 <code>x</code> 设为 <code>y</code> 的左子节点。</li>
-</ol>
-<h4 id="左旋的伪代码"><a href="#左旋的伪代码" class="headerlink" title="左旋的伪代码"></a>左旋的伪代码</h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="comment">// 左旋操作</span></span><br><span class="line"><span class="function">TreeNode* <span class="title">leftRotate</span><span class="params">(TreeNode* x)</span> </span>&#123;</span><br><span class="line">    TreeNode* y = x-&gt;right;         <span class="comment">// 让 y 指向 x 的右子节点</span></span><br><span class="line">    TreeNode* T2 = y-&gt;left;         <span class="comment">// 保存 y 的左子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 进行旋转</span></span><br><span class="line">    y-&gt;left = x;                    <span class="comment">// 将 x 设置为 y 的左子节点</span></span><br><span class="line">    x-&gt;right = T2;                  <span class="comment">// 将 T2 设置为 x 的右子节点</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 更新高度（如果需要）</span></span><br><span class="line">    x-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(x-&gt;left), <span class="built_in">height</span>(x-&gt;right)) + <span class="number">1</span>;</span><br><span class="line">    y-&gt;height = <span class="built_in">max</span>(<span class="built_in">height</span>(y-&gt;left), <span class="built_in">height</span>(y-&gt;right)) + <span class="number">1</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> y; <span class="comment">// 返回新的根节点</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="3-组合旋转"><a href="#3-组合旋转" class="headerlink" title="3. 组合旋转"></a>3. 组合旋转</h3><h4 id="AVL有且只有的四种情况（LL-LR-RL-RR）"><a href="#AVL有且只有的四种情况（LL-LR-RL-RR）" class="headerlink" title="AVL有且只有的四种情况（LL,LR,RL,RR）"></a>AVL有且只有的四种情况（LL,LR,RL,RR）</h4><p>图片来自<a href="https://blog.csdn.net/a6892255/article/details/117001282?ops_request_misc=%7B%22request_id%22:%22EBCFF1FE-F5C1-4776-B879-A508C09E98D5%22,%22scm%22:%2220140713.130102334..%22%7D&request_id=EBCFF1FE-F5C1-4776-B879-A508C09E98D5&biz_id=0&utm_medium=distribute.pc_search_result.none-task-blog-2~all~top_positive~default-1-117001282-null-null.142%5Ev100%5Epc_search_result_base8&utm_term=%E5%B9%B3%E8%A1%A1%E4%BA%8C%E5%8F%89%E6%A0%91%E7%9A%84%E5%B7%A6%E6%97%8B%E5%8F%B3%E6%97%8B&spm=1018.2226.3001.4187">数据结构之AVL树(平衡二叉树)的理解_avl左右旋-CSDN博客</a></p>
-<h4 id="1-LL"><a href="#1-LL" class="headerlink" title="1.LL"></a>1.LL</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/edea4edc378247e01a490437e164a51f.png" alt="LL"></p>
-<h4 id="2-LR"><a href="#2-LR" class="headerlink" title="2.LR"></a>2.LR</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/dc372fd873d281a3bb0b8a92eaae54fa.png" alt="LR(1)"></p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/30204ce4046bd0a9c2316159496d1886.png" alt="LR(2)"></p>
-<h4 id="3-RL"><a href="#3-RL" class="headerlink" title="3.RL"></a>3.RL</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/d60980e235068364f15691ef822690de.png" alt="RL(1)"></p>
-<p><img src="https://i-blog.csdnimg.cn/blog_migrate/084bc177d55d0797ab75c3caf6963405.png" alt="RL(2)"></p>
-<h4 id="4-RR"><a href="#4-RR" class="headerlink" title="4.RR"></a>4.RR</h4><p><img src="https://i-blog.csdnimg.cn/blog_migrate/60bb25e94471951b5602f0507a5b232c.png" alt="RR2"></p>
-]]></content>
-      <categories>
-        <category>经验</category>
-      </categories>
-      <tags>
-        <tag>数据结构与算法</tag>
-        <tag>二叉树</tag>
-        <tag>平衡二叉树</tag>
       </tags>
   </entry>
   <entry>
