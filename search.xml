@@ -1,6 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
 <search>
   <entry>
+    <title>DFS，BFS遍历非联通图</title>
+    <url>/2024/10/16/DFS%E9%81%8D%E5%8E%86%E9%9D%9E%E8%81%94%E9%80%9A%E5%9B%BE/</url>
+    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 深度优先搜索函数 (DFS)</span><br><span class="line">// 从当前节点 `node` 开始访问，并递归访问其所有相邻的未访问节点</span><br><span class="line">void DFS(char node, unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph, unordered_set&lt;char&gt;&amp; visited) &#123;</span><br><span class="line">    // 标记当前节点为已访问</span><br><span class="line">    visited.insert(node);</span><br><span class="line">    // 输出当前节点（此处可以进行自定义的处理，像打印或其他操作）</span><br><span class="line">    cout &lt;&lt; node &lt;&lt; &quot; &quot;;  </span><br><span class="line"></span><br><span class="line">    // 遍历该节点的所有相邻节点</span><br><span class="line">    for (char neighbor : graph[node]) &#123;</span><br><span class="line">        // 如果相邻节点未访问过，则递归调用 DFS 访问该相邻节点</span><br><span class="line">        if (visited.find(neighbor) == visited.end()) &#123;</span><br><span class="line">            DFS(neighbor, graph, visited);  // 递归调用 DFS</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 遍历整个非联通图的DFS</span><br><span class="line">// 对于图中的每一个顶点，如果该顶点未访问过，执行 DFS 来遍历与其相连的部分</span><br><span class="line">void DFSForDisconnectedGraph(unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph) &#123;</span><br><span class="line">    // 创建一个集合，用于记录哪些节点已经访问过</span><br><span class="line">    unordered_set&lt;char&gt; visited;</span><br><span class="line">    </span><br><span class="line">    // 遍历图中的所有顶点（unordered_map 的每个键）</span><br><span class="line">    for (auto&amp; pair : graph) &#123;</span><br><span class="line">        char node = pair.first;  // 当前顶点</span><br><span class="line">        // 如果当前顶点未访问过，则从该顶点开始进行 DFS</span><br><span class="line">        if (visited.find(node) == visited.end()) &#123;</span><br><span class="line">            // 从一个新的连通分量的顶点开始新的 DFS</span><br><span class="line">            cout &lt;&lt; &quot;Starting new DFS from node: &quot; &lt;&lt; node &lt;&lt; endl;</span><br><span class="line">            DFS(node, graph, visited);  // 对该连通分量进行DFS遍历</span><br><span class="line">            cout &lt;&lt; endl;  // DFS 完成后换行，以区分不同的连通分量</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 使用邻接表表示图：unordered_map&lt;char, vector&lt;char&gt;&gt;，表示图中每个顶点及其相邻顶点</span><br><span class="line">    unordered_map&lt;char, vector&lt;char&gt;&gt; graph;</span><br><span class="line">    </span><br><span class="line">    // 定义图的边</span><br><span class="line">    graph[&#x27;a&#x27;] = &#123;&#x27;b&#x27;&#125;;   // 顶点 a 和 b 相连</span><br><span class="line">    graph[&#x27;b&#x27;] = &#123;&#x27;a&#x27;, &#x27;d&#x27;&#125;;  // 顶点 b 与 a 和 d 相连</span><br><span class="line">    graph[&#x27;c&#x27;] = &#123;&#x27;e&#x27;&#125;;   // 顶点 c 与 e 相连</span><br><span class="line">    graph[&#x27;d&#x27;] = &#123;&#x27;b&#x27;&#125;;   // 顶点 d 与 b 相连</span><br><span class="line">    graph[&#x27;e&#x27;] = &#123;&#x27;c&#x27;&#125;;   // 顶点 e 与 c 相连</span><br><span class="line"></span><br><span class="line">    // 调用 DFSForDisconnectedGraph 对非联通图进行遍历</span><br><span class="line">    DFSForDisconnectedGraph(graph);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;queue&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 广度优先搜索函数</span><br><span class="line">void bfs(const unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph, char start) &#123;</span><br><span class="line">    // 用于存储待访问节点的队列</span><br><span class="line">    queue&lt;char&gt; q;</span><br><span class="line">    // 用于标记已访问的节点</span><br><span class="line">    unordered_set&lt;char&gt; visited;</span><br><span class="line"></span><br><span class="line">    // 将起始节点标记为已访问并加入队列</span><br><span class="line">    visited.insert(start);</span><br><span class="line">    q.push(start);</span><br><span class="line"></span><br><span class="line">    // 开始遍历</span><br><span class="line">    while (!q.empty()) &#123;</span><br><span class="line">        // 取出队列中的当前节点</span><br><span class="line">        char node = q.front();</span><br><span class="line">        q.pop();</span><br><span class="line"></span><br><span class="line">        // 输出当前节点</span><br><span class="line">        cout &lt;&lt; &quot;Visited: &quot; &lt;&lt; node &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">        // 遍历该节点的所有邻接节点</span><br><span class="line">        for (char neighbor : graph.at(node)) &#123;</span><br><span class="line">            // 如果该邻接节点尚未访问过，加入队列并标记为已访问</span><br><span class="line">            if (visited.find(neighbor) == visited.end()) &#123;</span><br><span class="line">                visited.insert(neighbor);</span><br><span class="line">                q.push(neighbor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 图的邻接表表示法</span><br><span class="line">    unordered_map&lt;char, vector&lt;char&gt;&gt; graph = &#123;</span><br><span class="line">        &#123;&#x27;a&#x27;, &#123;&#x27;b&#x27;, &#x27;c&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;b&#x27;, &#123;&#x27;a&#x27;, &#x27;d&#x27;, &#x27;e&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;c&#x27;, &#123;&#x27;a&#x27;, &#x27;f&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;d&#x27;, &#123;&#x27;b&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;e&#x27;, &#123;&#x27;b&#x27;, &#x27;f&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;f&#x27;, &#123;&#x27;c&#x27;, &#x27;e&#x27;&#125;&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    // 从节点 &#x27;a&#x27; 开始执行 BFS</span><br><span class="line">    bfs(graph, &#x27;a&#x27;);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h3 id="访问顺序的区别示例"><a href="#访问顺序的区别示例" class="headerlink" title="访问顺序的区别示例"></a><strong>访问顺序的区别示例</strong></h3><p>以一个简单的图为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    a</span><br><span class="line">   / \</span><br><span class="line">  b   c</span><br><span class="line"> / \   \</span><br><span class="line">d   e   f</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>DFS 访问顺序</strong>（从节点 <code>a</code> 开始）：<code>a, b, d, e, c, f</code><ul>
+<li>先从 <code>a</code> 开始，访问 <code>b</code>，然后继续到 <code>d</code>，没有其他未访问的邻接节点后回溯到 <code>b</code>，再访问 <code>e</code>，继续回溯到 <code>a</code>，然后访问 <code>c</code>，最后访问 <code>f</code>。</li>
+</ul>
+</li>
+<li><strong>BFS 访问顺序</strong>（从节点 <code>a</code> 开始）：<code>a, b, c, d, e, f</code><ul>
+<li>先从 <code>a</code> 开始，访问其所有邻接节点 <code>b</code> 和 <code>c</code>，然后继续访问 <code>b</code> 和 <code>c</code> 的所有邻接节点 <code>d, e, f</code>。</li>
+</ul>
+</li>
+</ul>
+]]></content>
+      <categories>
+        <category>经验</category>
+      </categories>
+      <tags>
+        <tag>数据结构与算法</tag>
+        <tag>图</tag>
+        <tag>DFS</tag>
+      </tags>
+  </entry>
+  <entry>
     <title>Github拒绝push</title>
     <url>/2024/09/19/Github%E6%8B%92%E7%BB%9Dpush/</url>
     <content><![CDATA[<h2 id="Github-拒绝了你的push"><a href="#Github-拒绝了你的push" class="headerlink" title="Github 拒绝了你的push"></a>Github 拒绝了你的push</h2><p>你有没有出现以下问题？</p>
@@ -110,40 +144,6 @@
       </tags>
   </entry>
   <entry>
-    <title>DFS，BFS遍历非联通图</title>
-    <url>/2024/10/16/DFS%E9%81%8D%E5%8E%86%E9%9D%9E%E8%81%94%E9%80%9A%E5%9B%BE/</url>
-    <content><![CDATA[<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 深度优先搜索函数 (DFS)</span><br><span class="line">// 从当前节点 `node` 开始访问，并递归访问其所有相邻的未访问节点</span><br><span class="line">void DFS(char node, unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph, unordered_set&lt;char&gt;&amp; visited) &#123;</span><br><span class="line">    // 标记当前节点为已访问</span><br><span class="line">    visited.insert(node);</span><br><span class="line">    // 输出当前节点（此处可以进行自定义的处理，像打印或其他操作）</span><br><span class="line">    cout &lt;&lt; node &lt;&lt; &quot; &quot;;  </span><br><span class="line"></span><br><span class="line">    // 遍历该节点的所有相邻节点</span><br><span class="line">    for (char neighbor : graph[node]) &#123;</span><br><span class="line">        // 如果相邻节点未访问过，则递归调用 DFS 访问该相邻节点</span><br><span class="line">        if (visited.find(neighbor) == visited.end()) &#123;</span><br><span class="line">            DFS(neighbor, graph, visited);  // 递归调用 DFS</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">// 遍历整个非联通图的DFS</span><br><span class="line">// 对于图中的每一个顶点，如果该顶点未访问过，执行 DFS 来遍历与其相连的部分</span><br><span class="line">void DFSForDisconnectedGraph(unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph) &#123;</span><br><span class="line">    // 创建一个集合，用于记录哪些节点已经访问过</span><br><span class="line">    unordered_set&lt;char&gt; visited;</span><br><span class="line">    </span><br><span class="line">    // 遍历图中的所有顶点（unordered_map 的每个键）</span><br><span class="line">    for (auto&amp; pair : graph) &#123;</span><br><span class="line">        char node = pair.first;  // 当前顶点</span><br><span class="line">        // 如果当前顶点未访问过，则从该顶点开始进行 DFS</span><br><span class="line">        if (visited.find(node) == visited.end()) &#123;</span><br><span class="line">            // 从一个新的连通分量的顶点开始新的 DFS</span><br><span class="line">            cout &lt;&lt; &quot;Starting new DFS from node: &quot; &lt;&lt; node &lt;&lt; endl;</span><br><span class="line">            DFS(node, graph, visited);  // 对该连通分量进行DFS遍历</span><br><span class="line">            cout &lt;&lt; endl;  // DFS 完成后换行，以区分不同的连通分量</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 使用邻接表表示图：unordered_map&lt;char, vector&lt;char&gt;&gt;，表示图中每个顶点及其相邻顶点</span><br><span class="line">    unordered_map&lt;char, vector&lt;char&gt;&gt; graph;</span><br><span class="line">    </span><br><span class="line">    // 定义图的边</span><br><span class="line">    graph[&#x27;a&#x27;] = &#123;&#x27;b&#x27;&#125;;   // 顶点 a 和 b 相连</span><br><span class="line">    graph[&#x27;b&#x27;] = &#123;&#x27;a&#x27;, &#x27;d&#x27;&#125;;  // 顶点 b 与 a 和 d 相连</span><br><span class="line">    graph[&#x27;c&#x27;] = &#123;&#x27;e&#x27;&#125;;   // 顶点 c 与 e 相连</span><br><span class="line">    graph[&#x27;d&#x27;] = &#123;&#x27;b&#x27;&#125;;   // 顶点 d 与 b 相连</span><br><span class="line">    graph[&#x27;e&#x27;] = &#123;&#x27;c&#x27;&#125;;   // 顶点 e 与 c 相连</span><br><span class="line"></span><br><span class="line">    // 调用 DFSForDisconnectedGraph 对非联通图进行遍历</span><br><span class="line">    DFSForDisconnectedGraph(graph);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;unordered_map&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;queue&gt;</span><br><span class="line">#include &lt;unordered_set&gt;</span><br><span class="line"></span><br><span class="line">using namespace std;</span><br><span class="line"></span><br><span class="line">// 广度优先搜索函数</span><br><span class="line">void bfs(const unordered_map&lt;char, vector&lt;char&gt;&gt;&amp; graph, char start) &#123;</span><br><span class="line">    // 用于存储待访问节点的队列</span><br><span class="line">    queue&lt;char&gt; q;</span><br><span class="line">    // 用于标记已访问的节点</span><br><span class="line">    unordered_set&lt;char&gt; visited;</span><br><span class="line"></span><br><span class="line">    // 将起始节点标记为已访问并加入队列</span><br><span class="line">    visited.insert(start);</span><br><span class="line">    q.push(start);</span><br><span class="line"></span><br><span class="line">    // 开始遍历</span><br><span class="line">    while (!q.empty()) &#123;</span><br><span class="line">        // 取出队列中的当前节点</span><br><span class="line">        char node = q.front();</span><br><span class="line">        q.pop();</span><br><span class="line"></span><br><span class="line">        // 输出当前节点</span><br><span class="line">        cout &lt;&lt; &quot;Visited: &quot; &lt;&lt; node &lt;&lt; endl;</span><br><span class="line"></span><br><span class="line">        // 遍历该节点的所有邻接节点</span><br><span class="line">        for (char neighbor : graph.at(node)) &#123;</span><br><span class="line">            // 如果该邻接节点尚未访问过，加入队列并标记为已访问</span><br><span class="line">            if (visited.find(neighbor) == visited.end()) &#123;</span><br><span class="line">                visited.insert(neighbor);</span><br><span class="line">                q.push(neighbor);</span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    // 图的邻接表表示法</span><br><span class="line">    unordered_map&lt;char, vector&lt;char&gt;&gt; graph = &#123;</span><br><span class="line">        &#123;&#x27;a&#x27;, &#123;&#x27;b&#x27;, &#x27;c&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;b&#x27;, &#123;&#x27;a&#x27;, &#x27;d&#x27;, &#x27;e&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;c&#x27;, &#123;&#x27;a&#x27;, &#x27;f&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;d&#x27;, &#123;&#x27;b&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;e&#x27;, &#123;&#x27;b&#x27;, &#x27;f&#x27;&#125;&#125;,</span><br><span class="line">        &#123;&#x27;f&#x27;, &#123;&#x27;c&#x27;, &#x27;e&#x27;&#125;&#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    // 从节点 &#x27;a&#x27; 开始执行 BFS</span><br><span class="line">    bfs(graph, &#x27;a&#x27;);</span><br><span class="line"></span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
-
-<h3 id="访问顺序的区别示例"><a href="#访问顺序的区别示例" class="headerlink" title="访问顺序的区别示例"></a><strong>访问顺序的区别示例</strong></h3><p>以一个简单的图为例：</p>
-<figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">    a</span><br><span class="line">   / \</span><br><span class="line">  b   c</span><br><span class="line"> / \   \</span><br><span class="line">d   e   f</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li><strong>DFS 访问顺序</strong>（从节点 <code>a</code> 开始）：<code>a, b, d, e, c, f</code><ul>
-<li>先从 <code>a</code> 开始，访问 <code>b</code>，然后继续到 <code>d</code>，没有其他未访问的邻接节点后回溯到 <code>b</code>，再访问 <code>e</code>，继续回溯到 <code>a</code>，然后访问 <code>c</code>，最后访问 <code>f</code>。</li>
-</ul>
-</li>
-<li><strong>BFS 访问顺序</strong>（从节点 <code>a</code> 开始）：<code>a, b, c, d, e, f</code><ul>
-<li>先从 <code>a</code> 开始，访问其所有邻接节点 <code>b</code> 和 <code>c</code>，然后继续访问 <code>b</code> 和 <code>c</code> 的所有邻接节点 <code>d, e, f</code>。</li>
-</ul>
-</li>
-</ul>
-]]></content>
-      <categories>
-        <category>经验</category>
-      </categories>
-      <tags>
-        <tag>数据结构与算法</tag>
-        <tag>图</tag>
-        <tag>DFS</tag>
-      </tags>
-  </entry>
-  <entry>
     <title>Unity（一）</title>
     <url>/2024/09/19/Unity%EF%BC%88%E4%B8%80%EF%BC%89/</url>
     <content><![CDATA[<h1 id="平动和转动"><a href="#平动和转动" class="headerlink" title="平动和转动"></a>平动和转动</h1><figure class="highlight plaintext"><table><tr><td class="code"><pre><span class="line">public class instance : MonoBehaviour</span><br><span class="line">&#123;</span><br><span class="line"></span><br><span class="line">    public float moveSpeed = 10f;</span><br><span class="line">    public float turnSpeed = 50f;</span><br><span class="line">    private void Update()//update是每帧更新的函数</span><br><span class="line">    &#123;</span><br><span class="line">        if(Input.GetKey(KeyCode.UpArrow))</span><br><span class="line">        &#123;</span><br><span class="line">            transform.Translate(Vector3.forward * moveSpeed*Time.deltaTime);</span><br><span class="line">        &#125;</span><br><span class="line">        //translate是平移，vector3是一个三维数组，forward代表（0，0，1)</span><br><span class="line">        //deltatime是两帧之间的时间间隔</span><br><span class="line">        //没有使用 Time.deltaTime 的问题</span><br><span class="line">        //如果你只是使用 moveSpeed 来移动物体，而不使用 Time.deltaTime，</span><br><span class="line">        //物体每帧的移动量将是恒定的.如果帧率提高，物体移动的频率就会增加</span><br><span class="line">        //移动速度就会变快；如果帧率降低，物体的移动频率减小，移动速度就会变慢.</span><br><span class="line">        //使用 Time.deltaTime</span><br><span class="line">        //通过乘以 Time.deltaTime，可以保证物体每秒的移动量保持一致，不受帧率影响.</span><br><span class="line">        if (Input.GetKey(KeyCode.LeftArrow)) </span><br><span class="line">        &#123;</span><br><span class="line">            transform.Rotate(Vector3.up,turnSpeed*Time.deltaTime); </span><br><span class="line">        &#125;</span><br><span class="line">        //rotate是旋转，vector3.up表示（0，1，0），这里是转动的轴</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br></pre></td></tr></table></figure>
@@ -210,58 +210,6 @@
         <tag>unity</tag>
         <tag>打卡</tag>
         <tag>闲得无聊所以发发</tag>
-      </tags>
-  </entry>
-  <entry>
-    <title>c++11新特性之emplace</title>
-    <url>/2024/11/25/c++11%E6%96%B0%E7%89%B9%E6%80%A7%E4%B9%8Bemplace/</url>
-    <content><![CDATA[<p><code>emplace</code> 是 C++ 中标准库（STL）提供的一种高效的元素插入方式，常用于容器（如 <code>std::vector</code>, <code>std::map</code>, <code>std::unordered_map</code> 等）中。<code>emplace</code> 通过直接在容器内部构造元素，避免了不必要的拷贝或移动操作，从而提高了性能。</p>
-<h3 id="emplace-和-insert-的区别"><a href="#emplace-和-insert-的区别" class="headerlink" title="emplace 和 insert 的区别"></a><code>emplace</code> 和 <code>insert</code> 的区别</h3><ul>
-<li><p>**<code>insert</code>**：将一个已构造的对象插入到容器中。通常需要通过拷贝或移动构造将元素插入容器。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line"><span class="type">int</span> x = <span class="number">5</span>;</span><br><span class="line">vec.<span class="built_in">insert</span>(vec.<span class="built_in">end</span>(), x);  <span class="comment">// 插入时会发生一次拷贝构造</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>**<code>emplace</code>**：直接在容器内部构造元素，避免了额外的拷贝或移动操作。<code>emplace</code> 接受构造元素所需的参数，然后直接在容器中构造该元素。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line">vec.<span class="built_in">emplace_back</span>(<span class="number">5</span>);  <span class="comment">// 在容器内部构造元素，避免拷贝</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="为什么使用-emplace？"><a href="#为什么使用-emplace？" class="headerlink" title="为什么使用 emplace？"></a>为什么使用 <code>emplace</code>？</h3><ol>
-<li><p><strong>避免不必要的拷贝或移动</strong>：</p>
-<ul>
-<li><code>insert</code> 必须先构造一个对象，然后将该对象插入容器，这可能涉及拷贝或移动构造。</li>
-<li><code>emplace</code> 直接在容器中构造元素，省去了额外的拷贝或移动操作。</li>
-</ul>
-</li>
-<li><p><strong>提高效率</strong>：</p>
-<ul>
-<li>特别是在容器中插入复杂对象时，使用 <code>emplace</code> 能显著提高性能，因为它直接传递构造参数，而不需要先创建一个对象。</li>
-</ul>
-</li>
-</ol>
-<h3 id="常见的-emplace-使用场景"><a href="#常见的-emplace-使用场景" class="headerlink" title="常见的 emplace 使用场景"></a>常见的 <code>emplace</code> 使用场景</h3><ul>
-<li><p>**<code>emplace_back</code>**：用于 <code>std::vector</code> 等容器，在容器的末尾构造元素。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;std::pair&lt;<span class="type">int</span>, std::string&gt;&gt; vec;</span><br><span class="line">vec.<span class="built_in">emplace_back</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);  <span class="comment">// 直接构造元素</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>**<code>emplace</code>**：对于 <code>std::map</code>、<code>std::unordered_map</code> 等关联容器，在指定位置构造元素。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::map&lt;<span class="type">int</span>, std::string&gt; m;</span><br><span class="line">m.<span class="built_in">emplace</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);  <span class="comment">// 直接在 map 中构造一个键值对</span></span><br></pre></td></tr></table></figure>
-</li>
-<li><p>**<code>emplace_front</code>**：用于 <code>std::list</code> 等容器，在容器的前面构造元素。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::list&lt;<span class="type">int</span>&gt; lst;</span><br><span class="line">lst.<span class="built_in">emplace_front</span>(<span class="number">10</span>);  <span class="comment">// 在容器前面直接构造一个元素</span></span><br></pre></td></tr></table></figure></li>
-</ul>
-<h3 id="emplace-示例代码"><a href="#emplace-示例代码" class="headerlink" title="emplace 示例代码"></a><code>emplace</code> 示例代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 使用 emplace_back 在 vector 中插入元素</span></span><br><span class="line">    std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line">    vec.<span class="built_in">emplace_back</span>(<span class="number">10</span>);  <span class="comment">// 直接构造元素</span></span><br><span class="line">    vec.<span class="built_in">emplace_back</span>(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; val : vec) &#123;</span><br><span class="line">        std::cout &lt;&lt; val &lt;&lt; <span class="string">&quot; &quot;</span>;  <span class="comment">// 输出: 10 20</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 emplace 在 map 中插入元素</span></span><br><span class="line">    std::map&lt;<span class="type">int</span>, std::string&gt; m;</span><br><span class="line">    m.<span class="built_in">emplace</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);</span><br><span class="line">    m.<span class="built_in">emplace</span>(<span class="number">2</span>, <span class="string">&quot;banana&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; pair : m) &#123;</span><br><span class="line">        std::cout &lt;&lt; pair.first &lt;&lt; <span class="string">&quot;: &quot;</span> &lt;&lt; pair.second &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 输出:</span></span><br><span class="line">    <span class="comment">// 1: apple</span></span><br><span class="line">    <span class="comment">// 2: banana</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
-<li><code>emplace</code> 提供了比 <code>insert</code> 更高效的方式来插入元素，因为它避免了不必要的对象构造、拷贝或移动操作。</li>
-<li><code>emplace</code> 通过传递构造元素所需的参数，直接在容器内构造元素，而不是先创建元素再插入。</li>
-<li>常见的 <code>emplace</code> 变种有 <code>emplace_back</code>（用于 <code>std::vector</code>）、<code>emplace</code>（用于 <code>std::map</code>, <code>std::unordered_map</code> 等）以及 <code>emplace_front</code>（用于 <code>std::list</code>）。</li>
-</ul>
-<p>使用 <code>emplace</code> 可以让你的程序更加高效，尤其是在需要频繁插入复杂对象时。</p>
-]]></content>
-      <categories>
-        <category>思考</category>
-      </categories>
-      <tags>
-        <tag>c++</tag>
-        <tag>c++11</tag>
-        <tag>STL</tag>
       </tags>
   </entry>
   <entry>
@@ -357,8 +305,8 @@
       </categories>
       <tags>
         <tag>c++</tag>
-        <tag>c++11</tag>
         <tag>I/O流</tag>
+        <tag>c++11</tag>
       </tags>
   </entry>
   <entry>
@@ -473,79 +421,55 @@
       </tags>
   </entry>
   <entry>
-    <title>c++中的线程</title>
-    <url>/2025/01/12/c++%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B/</url>
-    <content><![CDATA[<p>在 C++ 中，线程是用来实现并发编程的重要工具，它允许程序同时执行多个任务。C++11 标准引入了多线程支持，主要通过 <strong><code>&lt;thread&gt;</code></strong> 标头文件提供相关功能，包括线程创建、管理和同步等。</p>
-<hr>
-<h2 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a><strong>1. 基本概念</strong></h2><ul>
-<li><strong>线程</strong>是程序执行的基本单位，一个程序可以包含多个线程。</li>
-<li><strong>多线程</strong>可以提高程序效率，特别是在多核 CPU 上，每个线程可以在不同的核上运行。</li>
-<li>C++ 提供的多线程功能包括：<ul>
-<li>线程的创建与管理（<code>std::thread</code>）。</li>
-<li>同步机制（如互斥锁 <code>std::mutex</code>、条件变量 <code>std::condition_variable</code> 等）。</li>
-<li>数据保护（如线程安全的操作）。</li>
+    <title>c++11新特性之emplace</title>
+    <url>/2024/11/25/c++11%E6%96%B0%E7%89%B9%E6%80%A7%E4%B9%8Bemplace/</url>
+    <content><![CDATA[<p><code>emplace</code> 是 C++ 中标准库（STL）提供的一种高效的元素插入方式，常用于容器（如 <code>std::vector</code>, <code>std::map</code>, <code>std::unordered_map</code> 等）中。<code>emplace</code> 通过直接在容器内部构造元素，避免了不必要的拷贝或移动操作，从而提高了性能。</p>
+<h3 id="emplace-和-insert-的区别"><a href="#emplace-和-insert-的区别" class="headerlink" title="emplace 和 insert 的区别"></a><code>emplace</code> 和 <code>insert</code> 的区别</h3><ul>
+<li><p>**<code>insert</code>**：将一个已构造的对象插入到容器中。通常需要通过拷贝或移动构造将元素插入容器。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line"><span class="type">int</span> x = <span class="number">5</span>;</span><br><span class="line">vec.<span class="built_in">insert</span>(vec.<span class="built_in">end</span>(), x);  <span class="comment">// 插入时会发生一次拷贝构造</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>**<code>emplace</code>**：直接在容器内部构造元素，避免了额外的拷贝或移动操作。<code>emplace</code> 接受构造元素所需的参数，然后直接在容器中构造该元素。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line">vec.<span class="built_in">emplace_back</span>(<span class="number">5</span>);  <span class="comment">// 在容器内部构造元素，避免拷贝</span></span><br></pre></td></tr></table></figure></li>
+</ul>
+<h3 id="为什么使用-emplace？"><a href="#为什么使用-emplace？" class="headerlink" title="为什么使用 emplace？"></a>为什么使用 <code>emplace</code>？</h3><ol>
+<li><p><strong>避免不必要的拷贝或移动</strong>：</p>
+<ul>
+<li><code>insert</code> 必须先构造一个对象，然后将该对象插入容器，这可能涉及拷贝或移动构造。</li>
+<li><code>emplace</code> 直接在容器中构造元素，省去了额外的拷贝或移动操作。</li>
 </ul>
 </li>
-</ul>
-<hr>
-<h2 id="2-创建和管理线程"><a href="#2-创建和管理线程" class="headerlink" title="2. 创建和管理线程"></a><strong>2. 创建和管理线程</strong></h2><h3 id="1-创建线程"><a href="#1-创建线程" class="headerlink" title="1) 创建线程"></a><strong>1) 创建线程</strong></h3><p>线程可以通过 <strong><code>std::thread</code></strong> 创建，并且可以使用函数、lambda 表达式或可调用对象作为线程入口。</p>
-<h4 id="a-使用普通函数"><a href="#a-使用普通函数" class="headerlink" title="(a) 使用普通函数"></a><strong>(a) 使用普通函数</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">threadFunction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread is running...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(threadFunction)</span></span>; <span class="comment">// 创建线程</span></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程执行完毕</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
+<li><p><strong>提高效率</strong>：</p>
 <ul>
-<li>**<code>std::thread t(threadFunction)</code>**：创建线程并执行 <code>threadFunction</code>。</li>
-<li>**<code>t.join()</code>**：主线程等待 <code>t</code> 线程执行完成。</li>
+<li>特别是在容器中插入复杂对象时，使用 <code>emplace</code> 能显著提高性能，因为它直接传递构造参数，而不需要先创建一个对象。</li>
 </ul>
-<hr>
-<h4 id="b-使用-lambda-表达式"><a href="#b-使用-lambda-表达式" class="headerlink" title="(b) 使用 lambda 表达式"></a><strong>(b) 使用 lambda 表达式</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">([] &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">        std::cout &lt;&lt; <span class="string">&quot;Thread running with lambda!&quot;</span> &lt;&lt; std::endl;</span></span></span><br><span class="line"><span class="params"><span class="function">    &#125;)</span></span>;</span><br><span class="line"></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程结束</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h4 id="c-使用类的成员函数"><a href="#c-使用类的成员函数" class="headerlink" title="(c) 使用类的成员函数"></a><strong>(c) 使用类的成员函数</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Worker</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Thread running with functor!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Worker worker;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(worker)</span></span>; <span class="comment">// 创建线程并执行 Worker 的重载函数</span></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程结束</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="2-分离线程（detach）"><a href="#2-分离线程（detach）" class="headerlink" title="2) 分离线程（detach）"></a><strong>2) 分离线程（<code>detach</code>）</strong></h3><p>分离线程允许主线程与新线程独立运行。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">threadFunction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">2</span>));</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Detached thread completed!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(threadFunction)</span></span>;</span><br><span class="line">    t.<span class="built_in">detach</span>(); <span class="comment">// 分离线程</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Main thread continues...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">3</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><strong>注意</strong>：分离的线程在程序结束前需要完成，否则会出现未定义行为。</p>
-<hr>
-<h3 id="3-获取线程-ID"><a href="#3-获取线程-ID" class="headerlink" title="3) 获取线程 ID"></a><strong>3) 获取线程 ID</strong></h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::thread::id id = std::this_thread::<span class="built_in">get_id</span>();</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Thread ID: &quot;</span> &lt;&lt; id &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="3-线程同步"><a href="#3-线程同步" class="headerlink" title="3. 线程同步"></a><strong>3. 线程同步</strong></h2><p>由于线程是并发执行的，因此多个线程访问共享资源时可能会导致数据竞争（Race Condition）。C++ 提供了多种同步工具来避免这种问题。</p>
-<h3 id="1-互斥锁（std-mutex）"><a href="#1-互斥锁（std-mutex）" class="headerlink" title="1) 互斥锁（std::mutex）"></a><strong>1) 互斥锁（<code>std::mutex</code>）</strong></h3><p><strong>互斥锁</strong>用于保证只有一个线程可以访问共享资源。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printMessage</span><span class="params">(<span class="type">const</span> std::string&amp; message)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>; <span class="comment">// 自动加锁和解锁</span></span><br><span class="line">    std::cout &lt;&lt; message &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(printMessage, <span class="string">&quot;Thread 1: Hello&quot;</span>)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(printMessage, <span class="string">&quot;Thread 2: World&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<ul>
-<li>**<code>std::lock_guard</code>**：管理锁的生命周期，防止忘记解锁。</li>
-<li>**<code>mtx.lock()</code> 和 <code>mtx.unlock()</code>**：手动加锁和解锁，但可能导致死锁，不推荐使用。</li>
-</ul>
-<hr>
-<h3 id="2-条件变量（std-condition-variable）"><a href="#2-条件变量（std-condition-variable）" class="headerlink" title="2) 条件变量（std::condition_variable）"></a><strong>2) 条件变量（<code>std::condition_variable</code>）</strong></h3><p>条件变量用于实现线程间的协调，例如一个线程等待某个条件成立时再执行。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line">std::condition_variable cv;</span><br><span class="line"><span class="type">bool</span> ready = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">worker</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">    cv.<span class="built_in">wait</span>(lock, [] &#123; <span class="keyword">return</span> ready; &#125;); <span class="comment">// 等待条件成立</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Worker thread is running!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">notify</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        ready = <span class="literal">true</span>; <span class="comment">// 修改条件</span></span><br><span class="line">    &#125;</span><br><span class="line">    cv.<span class="built_in">notify_one</span>(); <span class="comment">// 通知一个等待线程</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(worker)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(notify)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h3 id="3-原子操作（std-atomic）"><a href="#3-原子操作（std-atomic）" class="headerlink" title="3) 原子操作（std::atomic）"></a><strong>3) 原子操作（<code>std::atomic</code>）</strong></h3><p><strong>原子操作</strong>用于多线程中对单个变量的操作，避免数据竞争。</p>
-<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">counter</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i) &#123;</span><br><span class="line">        ++counter; <span class="comment">// 原子操作，线程安全</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(increment)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(increment)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Final counter: &quot;</span> &lt;&lt; counter &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<hr>
-<h2 id="4-注意事项"><a href="#4-注意事项" class="headerlink" title="4. 注意事项"></a><strong>4. 注意事项</strong></h2><ol>
-<li><strong>数据竞争</strong>：多个线程同时修改共享资源可能导致错误，需要使用同步机制。</li>
-<li><strong>死锁</strong>：多个线程互相等待资源，导致程序无法继续。</li>
-<li><strong>分离线程的风险</strong>：主线程结束时，分离的线程未完成可能会导致崩溃。</li>
-<li><strong>性能开销</strong>：线程切换会带来一定的系统开销。</li>
+</li>
 </ol>
-<hr>
-<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a><strong>5. 总结</strong></h2><ul>
-<li><strong>线程创建</strong>：<code>std::thread</code> 提供简单易用的接口。</li>
-<li><strong>线程同步</strong>：使用 <code>std::mutex</code>、<code>std::condition_variable</code> 等工具保护共享数据。</li>
-<li><strong>线程安全</strong>：推荐使用 <code>std::atomic</code> 或其他同步机制避免数据竞争。</li>
+<h3 id="常见的-emplace-使用场景"><a href="#常见的-emplace-使用场景" class="headerlink" title="常见的 emplace 使用场景"></a>常见的 <code>emplace</code> 使用场景</h3><ul>
+<li><p>**<code>emplace_back</code>**：用于 <code>std::vector</code> 等容器，在容器的末尾构造元素。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::vector&lt;std::pair&lt;<span class="type">int</span>, std::string&gt;&gt; vec;</span><br><span class="line">vec.<span class="built_in">emplace_back</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);  <span class="comment">// 直接构造元素</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>**<code>emplace</code>**：对于 <code>std::map</code>、<code>std::unordered_map</code> 等关联容器，在指定位置构造元素。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::map&lt;<span class="type">int</span>, std::string&gt; m;</span><br><span class="line">m.<span class="built_in">emplace</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);  <span class="comment">// 直接在 map 中构造一个键值对</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>**<code>emplace_front</code>**：用于 <code>std::list</code> 等容器，在容器的前面构造元素。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::list&lt;<span class="type">int</span>&gt; lst;</span><br><span class="line">lst.<span class="built_in">emplace_front</span>(<span class="number">10</span>);  <span class="comment">// 在容器前面直接构造一个元素</span></span><br></pre></td></tr></table></figure></li>
 </ul>
-<p>线程是 C++ 中实现并发的核心工具，但需要小心处理共享资源和线程生命周期，确保程序的正确性和性能。</p>
+<h3 id="emplace-示例代码"><a href="#emplace-示例代码" class="headerlink" title="emplace 示例代码"></a><code>emplace</code> 示例代码</h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;map&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 使用 emplace_back 在 vector 中插入元素</span></span><br><span class="line">    std::vector&lt;<span class="type">int</span>&gt; vec;</span><br><span class="line">    vec.<span class="built_in">emplace_back</span>(<span class="number">10</span>);  <span class="comment">// 直接构造元素</span></span><br><span class="line">    vec.<span class="built_in">emplace_back</span>(<span class="number">20</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; val : vec) &#123;</span><br><span class="line">        std::cout &lt;&lt; val &lt;&lt; <span class="string">&quot; &quot;</span>;  <span class="comment">// 输出: 10 20</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 使用 emplace 在 map 中插入元素</span></span><br><span class="line">    std::map&lt;<span class="type">int</span>, std::string&gt; m;</span><br><span class="line">    m.<span class="built_in">emplace</span>(<span class="number">1</span>, <span class="string">&quot;apple&quot;</span>);</span><br><span class="line">    m.<span class="built_in">emplace</span>(<span class="number">2</span>, <span class="string">&quot;banana&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (<span class="type">const</span> <span class="keyword">auto</span>&amp; pair : m) &#123;</span><br><span class="line">        std::cout &lt;&lt; pair.first &lt;&lt; <span class="string">&quot;: &quot;</span> &lt;&lt; pair.second &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 输出:</span></span><br><span class="line">    <span class="comment">// 1: apple</span></span><br><span class="line">    <span class="comment">// 2: banana</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><code>emplace</code> 提供了比 <code>insert</code> 更高效的方式来插入元素，因为它避免了不必要的对象构造、拷贝或移动操作。</li>
+<li><code>emplace</code> 通过传递构造元素所需的参数，直接在容器内构造元素，而不是先创建元素再插入。</li>
+<li>常见的 <code>emplace</code> 变种有 <code>emplace_back</code>（用于 <code>std::vector</code>）、<code>emplace</code>（用于 <code>std::map</code>, <code>std::unordered_map</code> 等）以及 <code>emplace_front</code>（用于 <code>std::list</code>）。</li>
+</ul>
+<p>使用 <code>emplace</code> 可以让你的程序更加高效，尤其是在需要频繁插入复杂对象时。</p>
 ]]></content>
       <categories>
-        <category>经验</category>
+        <category>思考</category>
       </categories>
       <tags>
         <tag>c++</tag>
+        <tag>c++11</tag>
+        <tag>STL</tag>
       </tags>
   </entry>
   <entry>
@@ -635,6 +559,82 @@
         <tag>数据结构与算法</tag>
         <tag>图</tag>
         <tag>拓扑排序</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title>c++中的线程</title>
+    <url>/2025/01/12/c++%E4%B8%AD%E7%9A%84%E7%BA%BF%E7%A8%8B/</url>
+    <content><![CDATA[<p>在 C++ 中，线程是用来实现并发编程的重要工具，它允许程序同时执行多个任务。C++11 标准引入了多线程支持，主要通过 <strong><code>&lt;thread&gt;</code></strong> 标头文件提供相关功能，包括线程创建、管理和同步等。</p>
+<hr>
+<h2 id="1-基本概念"><a href="#1-基本概念" class="headerlink" title="1. 基本概念"></a><strong>1. 基本概念</strong></h2><ul>
+<li><strong>线程</strong>是程序执行的基本单位，一个程序可以包含多个线程。</li>
+<li><strong>多线程</strong>可以提高程序效率，特别是在多核 CPU 上，每个线程可以在不同的核上运行。</li>
+<li>C++ 提供的多线程功能包括：<ul>
+<li>线程的创建与管理（<code>std::thread</code>）。</li>
+<li>同步机制（如互斥锁 <code>std::mutex</code>、条件变量 <code>std::condition_variable</code> 等）。</li>
+<li>数据保护（如线程安全的操作）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="2-创建和管理线程"><a href="#2-创建和管理线程" class="headerlink" title="2. 创建和管理线程"></a><strong>2. 创建和管理线程</strong></h2><h3 id="1-创建线程"><a href="#1-创建线程" class="headerlink" title="1) 创建线程"></a><strong>1) 创建线程</strong></h3><p>线程可以通过 <strong><code>std::thread</code></strong> 创建，并且可以使用函数、lambda 表达式或可调用对象作为线程入口。</p>
+<h4 id="a-使用普通函数"><a href="#a-使用普通函数" class="headerlink" title="(a) 使用普通函数"></a><strong>(a) 使用普通函数</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">threadFunction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread is running...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(threadFunction)</span></span>; <span class="comment">// 创建线程</span></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程执行完毕</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>**<code>std::thread t(threadFunction)</code>**：创建线程并执行 <code>threadFunction</code>。</li>
+<li>**<code>t.join()</code>**：主线程等待 <code>t</code> 线程执行完成。</li>
+</ul>
+<hr>
+<h4 id="b-使用-lambda-表达式"><a href="#b-使用-lambda-表达式" class="headerlink" title="(b) 使用 lambda 表达式"></a><strong>(b) 使用 lambda 表达式</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">([] &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">        std::cout &lt;&lt; <span class="string">&quot;Thread running with lambda!&quot;</span> &lt;&lt; std::endl;</span></span></span><br><span class="line"><span class="params"><span class="function">    &#125;)</span></span>;</span><br><span class="line"></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程结束</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h4 id="c-使用类的成员函数"><a href="#c-使用类的成员函数" class="headerlink" title="(c) 使用类的成员函数"></a><strong>(c) 使用类的成员函数</strong></h4><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Worker</span> &#123;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">operator</span><span class="params">()</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Thread running with functor!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Worker worker;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(worker)</span></span>; <span class="comment">// 创建线程并执行 Worker 的重载函数</span></span><br><span class="line">    t.<span class="built_in">join</span>(); <span class="comment">// 等待线程结束</span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="2-分离线程（detach）"><a href="#2-分离线程（detach）" class="headerlink" title="2) 分离线程（detach）"></a><strong>2) 分离线程（<code>detach</code>）</strong></h3><p>分离线程允许主线程与新线程独立运行。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">threadFunction</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">2</span>));</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Detached thread completed!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(threadFunction)</span></span>;</span><br><span class="line">    t.<span class="built_in">detach</span>(); <span class="comment">// 分离线程</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Main thread continues...&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    std::this_thread::<span class="built_in">sleep_for</span>(std::chrono::<span class="built_in">seconds</span>(<span class="number">3</span>));</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>注意</strong>：分离的线程在程序结束前需要完成，否则会出现未定义行为。</p>
+<hr>
+<h3 id="3-获取线程-ID"><a href="#3-获取线程-ID" class="headerlink" title="3) 获取线程 ID"></a><strong>3) 获取线程 ID</strong></h3><figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line">std::thread::id id = std::this_thread::<span class="built_in">get_id</span>();</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Thread ID: &quot;</span> &lt;&lt; id &lt;&lt; std::endl;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-线程同步"><a href="#3-线程同步" class="headerlink" title="3. 线程同步"></a><strong>3. 线程同步</strong></h2><p>由于线程是并发执行的，因此多个线程访问共享资源时可能会导致数据竞争（Race Condition）。C++ 提供了多种同步工具来避免这种问题。</p>
+<h3 id="1-互斥锁（std-mutex）"><a href="#1-互斥锁（std-mutex）" class="headerlink" title="1) 互斥锁（std::mutex）"></a><strong>1) 互斥锁（<code>std::mutex</code>）</strong></h3><p><strong>互斥锁</strong>用于保证只有一个线程可以访问共享资源。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">printMessage</span><span class="params">(<span class="type">const</span> std::string&amp; message)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>; <span class="comment">// 自动加锁和解锁</span></span><br><span class="line">    std::cout &lt;&lt; message &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(printMessage, <span class="string">&quot;Thread 1: Hello&quot;</span>)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(printMessage, <span class="string">&quot;Thread 2: World&quot;</span>)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>**<code>std::lock_guard</code>**：管理锁的生命周期，防止忘记解锁。</li>
+<li>**<code>mtx.lock()</code> 和 <code>mtx.unlock()</code>**：手动加锁和解锁，但可能导致死锁，不推荐使用。</li>
+</ul>
+<hr>
+<h3 id="2-条件变量（std-condition-variable）"><a href="#2-条件变量（std-condition-variable）" class="headerlink" title="2) 条件变量（std::condition_variable）"></a><strong>2) 条件变量（<code>std::condition_variable</code>）</strong></h3><p>条件变量用于实现线程间的协调，例如一个线程等待某个条件成立时再执行。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;condition_variable&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line">std::condition_variable cv;</span><br><span class="line"><span class="type">bool</span> ready = <span class="literal">false</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">worker</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">    cv.<span class="built_in">wait</span>(lock, [] &#123; <span class="keyword">return</span> ready; &#125;); <span class="comment">// 等待条件成立</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Worker thread is running!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">notify</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>;</span><br><span class="line">        ready = <span class="literal">true</span>; <span class="comment">// 修改条件</span></span><br><span class="line">    &#125;</span><br><span class="line">    cv.<span class="built_in">notify_one</span>(); <span class="comment">// 通知一个等待线程</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(worker)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(notify)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="3-原子操作（std-atomic）"><a href="#3-原子操作（std-atomic）" class="headerlink" title="3) 原子操作（std::atomic）"></a><strong>3) 原子操作（<code>std::atomic</code>）</strong></h3><p><strong>原子操作</strong>用于多线程中对单个变量的操作，避免数据竞争。</p>
+<figure class="highlight cpp"><table><tr><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">counter</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i) &#123;</span><br><span class="line">        ++counter; <span class="comment">// 原子操作，线程安全</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(increment)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(increment)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Final counter: &quot;</span> &lt;&lt; counter &lt;&lt; std::endl;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-注意事项"><a href="#4-注意事项" class="headerlink" title="4. 注意事项"></a><strong>4. 注意事项</strong></h2><ol>
+<li><strong>数据竞争</strong>：多个线程同时修改共享资源可能导致错误，需要使用同步机制。</li>
+<li><strong>死锁</strong>：多个线程互相等待资源，导致程序无法继续。</li>
+<li><strong>分离线程的风险</strong>：主线程结束时，分离的线程未完成可能会导致崩溃。</li>
+<li><strong>性能开销</strong>：线程切换会带来一定的系统开销。</li>
+</ol>
+<hr>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a><strong>5. 总结</strong></h2><ul>
+<li><strong>线程创建</strong>：<code>std::thread</code> 提供简单易用的接口。</li>
+<li><strong>线程同步</strong>：使用 <code>std::mutex</code>、<code>std::condition_variable</code> 等工具保护共享数据。</li>
+<li><strong>线程安全</strong>：推荐使用 <code>std::atomic</code> 或其他同步机制避免数据竞争。</li>
+</ul>
+<p>线程是 C++ 中实现并发的核心工具，但需要小心处理共享资源和线程生命周期，确保程序的正确性和性能。</p>
+]]></content>
+      <categories>
+        <category>经验</category>
+      </categories>
+      <tags>
+        <tag>c++</tag>
       </tags>
   </entry>
   <entry>
@@ -1477,8 +1477,8 @@
         <category>日志</category>
       </categories>
       <tags>
-        <tag>c++</tag>
         <tag>数据结构与算法</tag>
+        <tag>c++</tag>
         <tag>leetcode</tag>
       </tags>
   </entry>
