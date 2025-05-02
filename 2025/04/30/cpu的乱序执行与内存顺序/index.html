@@ -1,0 +1,324 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>cpu的乱序执行与内存顺序 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="乱序执行是现代高性能处理器（CPU）中一种非常重要的性能优化技术。它的核心思想是：CPU 不严格按照程序代码中指令的顺序来执行它们，而是根据指令是否“准备好”来决定执行顺序，但最终要保证程序的结果与按顺序执行时一致。 为什么需要乱序执行？ 传统的 CPU 执行模式是**顺序执行 (In-Order Execution)**：CPU 严格按照程序代码的指令顺序一条接一条地执行。然而，这种方式效率不高">
+<meta property="og:type" content="article">
+<meta property="og:title" content="cpu的乱序执行与内存顺序">
+<meta property="og:url" content="https://cmzcc.github.io/2025/04/30/cpu%E7%9A%84%E4%B9%B1%E5%BA%8F%E6%89%A7%E8%A1%8C%E4%B8%8E%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="乱序执行是现代高性能处理器（CPU）中一种非常重要的性能优化技术。它的核心思想是：CPU 不严格按照程序代码中指令的顺序来执行它们，而是根据指令是否“准备好”来决定执行顺序，但最终要保证程序的结果与按顺序执行时一致。 为什么需要乱序执行？ 传统的 CPU 执行模式是**顺序执行 (In-Order Execution)**：CPU 严格按照程序代码的指令顺序一条接一条地执行。然而，这种方式效率不高">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover2.jpg">
+<meta property="article:published_time" content="2025-04-30T03:35:12.000Z">
+<meta property="article:modified_time" content="2025-04-30T03:45:12.737Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="c++11">
+<meta property="article:tag" content="多线程">
+<meta property="article:tag" content="计算机架构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover2.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/04/30/cpu%E7%9A%84%E4%B9%B1%E5%BA%8F%E6%89%A7%E8%A1%8C%E4%B8%8E%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'cpu的乱序执行与内存顺序',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-04-30 11:45:12'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">38</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">48</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover2.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">cpu的乱序执行与内存顺序</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">cpu的乱序执行与内存顺序</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-04-30T03:35:12.000Z" title="Created 2025-04-30 11:35:12">2025-04-30</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-04-30T03:45:12.737Z" title="Updated 2025-04-30 11:45:12">2025-04-30</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%80%9D%E8%80%83/">思考</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>乱序执行是现代高性能处理器（CPU）中一种非常重要的<strong>性能优化技术</strong>。它的核心思想是：<strong>CPU 不严格按照程序代码中指令的顺序来执行它们，而是根据指令是否“准备好”来决定执行顺序，但最终要保证程序的结果与按顺序执行时一致。</strong></p>
+<p><strong>为什么需要乱序执行？</strong></p>
+<p>传统的 CPU 执行模式是**顺序执行 (In-Order Execution)**：CPU 严格按照程序代码的指令顺序一条接一条地执行。然而，这种方式效率不高，原因在于：</p>
+<ol>
+<li><p><strong>指令依赖 (Instruction Dependencies):</strong> 后一条指令可能需要等待前一条指令的结果才能执行。例如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">ADD R1, R2, R3   ; R1 = R2 + R3</span><br><span class="line">SUB R4, R1, R5   ; R4 = R1 - R5  (需要等待 ADD 指令的结果 R1)</span><br></pre></td></tr></table></figure>
+<p>在顺序执行中，SUB 指令必须等待 ADD 指令完成后才能开始。这会造成 CPU 的执行单元（如算术逻辑单元 ALU）在这段时间内处于空闲状态，浪费了计算资源。</p>
+</li>
+<li><p><strong>内存延迟 (Memory Latency):</strong> 从内存中读取数据通常比执行算术运算慢得多。如果一条指令需要从内存加载数据，CPU 可能需要等待几十甚至几百个时钟周期。在顺序执行中，CPU 会一直等待，直到数据加载完成才能继续执行下一条指令，导致整个流水线停顿。</p>
+</li>
+</ol>
+<p>乱序执行就是为了解决这些问题，通过<strong>提高 CPU 执行单元的利用率</strong>和<strong>隐藏延迟</strong>来提升性能。</p>
+<p><strong>乱序执行是如何工作的？</strong></p>
+<p>现代支持乱序执行的 CPU 通常包含以下关键组件和流程（简化版）：</p>
+<ol>
+<li><strong>指令预取 (Instruction Fetch):</strong> CPU 仍然会按照程序顺序从内存中预取指令，并放入一个缓冲区。</li>
+<li><strong>指令解码 (Instruction Decode):</strong> 预取的指令被解码，识别出它们的操作类型、操作数等。</li>
+<li><strong>指令分发&#x2F;发射 (Instruction Dispatch&#x2F;Issue):</strong> 解码后的指令被放入一个<strong>指令窗口 (Instruction Window)</strong> 或<strong>重排序缓冲区 (Reorder Buffer - ROB)<strong>。CPU 会在这个窗口中扫描，寻找那些</strong>操作数已经准备好</strong>并且<strong>所需的执行单元空闲</strong>的指令。找到后，就将这些“准备好”的指令分发到相应的执行单元。<ul>
+<li>注意：这里的关键是，分发出去的指令顺序可能与它们进入窗口的顺序不同，这就是“乱序执行”的体现。</li>
+</ul>
+</li>
+<li><strong>指令执行 (Instruction Execution):</strong> 被分发到执行单元的指令开始执行。不同的执行单元可以并行工作（例如，一个 ALU 在做加法，一个浮点单元 FPU 在做乘法，一个加载&#x2F;存储单元 L&#x2F;S Unit 在从内存加载数据）。</li>
+<li><strong>结果写回 (Result Write-back):</strong> 指令执行完成后，结果会被临时保存在一个地方（例如，重排序缓冲区或寄存器文件）。</li>
+<li><strong>指令提交&#x2F;退休 (Instruction Commit&#x2F;Retirement):</strong> 这是乱序执行中最关键的一步，用于保证程序的正确性。CPU 会按照<strong>原始程序顺序</strong>来提交指令的结果。只有当一条指令在原始程序顺序中排在它前面的所有指令都已成功提交后，它才能提交其结果。提交意味着将最终结果写入到架构寄存器或主内存中，使其对后续指令和外部世界可见。<ul>
+<li>这个“按序提交”的过程确保了即使执行是乱序的，程序的状态变化（如寄存器值、内存内容）看起来仍然像是按顺序发生的。这对于处理异常、中断以及保证多线程程序的正确性至关重要。</li>
+</ul>
+</li>
+</ol>
+<p><strong>核心思想总结：</strong></p>
+<ul>
+<li><strong>取指和提交是顺序的 (In-Order Fetch and Commit)。</strong></li>
+<li><strong>执行是乱序的 (Out-of-Order Execution)。</strong></li>
+</ul>
+<p><strong>乱序执行带来的好处：</strong></p>
+<ul>
+<li><strong>提高指令级并行性 (Instruction-Level Parallelism - ILP):</strong> CPU 可以同时执行多个独立的指令。</li>
+<li><strong>隐藏延迟:</strong> 当一条指令因为等待内存数据而停顿时，CPU 可以去执行窗口中其他不依赖该数据的指令，从而避免流水线停顿。</li>
+<li><strong>提高执行单元利用率:</strong> 保持 CPU 的各个执行单元尽可能地忙碌。</li>
+<li><strong>提升整体程序执行速度。</strong></li>
+</ul>
+<p><strong>乱序执行的挑战：</strong></p>
+<ul>
+<li><strong>硬件设计的复杂性:</strong> 需要复杂的逻辑来跟踪指令依赖、管理重排序缓冲区、实现寄存器重命名等。</li>
+<li><strong>保持程序正确性:</strong> 必须精确地处理异常、中断，并确保内存操作的可见性（尤其在多处理器系统中，需要内存屏障等机制来保证内存一致性）。</li>
+<li><strong>分支预测的依赖:</strong> 乱序执行通常与分支预测结合使用，预测错误会导致大量投机执行的工作被丢弃，影响效率。</li>
+<li><strong>安全漏洞:</strong> 近年来发现的 Spectre 和 Meltdown 等安全漏洞就与乱序执行和投机执行（Speculative Execution，乱序执行的一个重要组成部分，CPU 预测未来可能执行的路径并提前执行指令）有关，可能导致敏感信息泄露。</li>
+</ul>
+<p><strong>简单类比：</strong></p>
+<p>想象一个厨师要做几道菜。如果他严格按照每道菜的步骤一步一步做完一道再做下一道（顺序执行），效率会很低。而一个经验丰富的厨师会同时处理多道菜：先把需要炖的肉下锅（长时间操作），然后去切另一道菜的菜，同时看看烤箱里的蛋糕，再回来翻炒第一道菜的配料（乱序执行）。但他最终上菜（提交）时，仍然会按照客人点的顺序或菜单的顺序一道一道上。</p>
+<p>总而言之，乱序执行是现代 CPU 为了榨取更多性能而采用的一种复杂但高效的技术，它通过打破指令的原始顺序来执行，但在结果上保持与顺序执行一致，从而显著提高了处理器的吞吐量。</p>
+<h3 id="乱序执行的多线程挑战"><a href="#乱序执行的多线程挑战" class="headerlink" title="乱序执行的多线程挑战"></a>乱序执行的多线程挑战</h3><p>在多线程环境中，乱序执行可能来自：</p>
+<ol>
+<li><strong>编译器优化</strong>：编译器可能重排无关的内存操作以优化性能。</li>
+<li><strong>CPU 乱序执行</strong>：处理器可能将指令重新排序以提高流水线效率。</li>
+<li><strong>缓存一致性延迟</strong>：一个线程的写入可能停留在本地缓存中，延迟对其他线程可见。</li>
+</ol>
+<p>这些行为可能导致线程观察到的共享变量状态不符合程序员预期。例如：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x = <span class="number">0</span>, y = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread1</span><span class="params">()</span> </span>&#123; x = <span class="number">1</span>; y = <span class="number">1</span>; &#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread2</span><span class="params">()</span> </span>&#123; <span class="keyword">if</span> (y == <span class="number">1</span>) <span class="built_in">assert</span>(x == <span class="number">1</span>); &#125;</span><br></pre></td></tr></table></figure>
+<p>直觉上，线程 2 看到 <code>y == 1</code> 时，<code>x</code> 应为 1，但由于乱序，线程 2 可能看到 <code>y = 1</code> 而 <code>x</code> 仍为 0。</p>
+<h3 id="C-内存模型应对乱序"><a href="#C-内存模型应对乱序" class="headerlink" title="C++ 内存模型应对乱序"></a>C++ 内存模型应对乱序</h3><p>C++11 引入的内存模型通过 <code>std::atomic</code> 和 <code>std::memory_order</code> 提供工具，控制内存操作的顺序和可见性：</p>
+<ol>
+<li><p>**<code>std::atomic</code>**：</p>
+<ul>
+<li>保证操作的原子性，防止线程间操作撕裂。</li>
+<li>示例：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;<span class="type">int</span>&gt; x&#123;<span class="number">0</span>&#125;, y&#123;<span class="number">0</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread1</span><span class="params">()</span> </span>&#123; x.<span class="built_in">store</span>(<span class="number">1</span>, std::memory_order_relaxed); y.<span class="built_in">store</span>(<span class="number">1</span>, std::memory_order_release); &#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread2</span><span class="params">()</span> </span>&#123; <span class="keyword">while</span> (y.<span class="built_in">load</span>(std::memory_order_acquire) != <span class="number">1</span>); <span class="built_in">assert</span>(x.<span class="built_in">load</span>(std::memory_order_relaxed) == <span class="number">1</span>); &#125;</span><br></pre></td></tr></table></figure></li>
+<li>这里，<code>release</code> 和 <code>acquire</code> 确保线程 2 看到 <code>y = 1</code> 时，<code>x = 1</code> 已可见。</li>
+</ul>
+</li>
+<li><p>**内存顺序 (<code>std::memory_order</code>)**：</p>
+<ul>
+<li><p><code>memory_order_seq_cst</code>：默认，提供全局一致的顺序，最严格但开销较高。</p>
+</li>
+<li><p><code>memory_order_acquire</code>：确保后续操作看到 <code>release</code> 前的写入。</p>
+</li>
+<li><p><code>memory_order_release</code>：确保前面的写入在 <code>release</code> 后对 <code>acquire</code> 线程可见。</p>
+</li>
+<li><p><code>memory_order_acp_rel</code>：acquire+release</p>
+</li>
+<li><p><code>memory_order_relaxed</code>：仅保证原子性，允许最大乱序，适用于无需同步的场景（如计数器）。</p>
+</li>
+<li><p><strong>配对形成同步</strong>：<code>release</code> 保证生产者线程在设置标志前，所有写入（比如数据）都完成并对其他线程“可见”；<code>acquire</code> 保证消费者线程在看到标志后，能看到生产者 <code>release</code> 前的所有写入。两者一起工作，就像主厨和服务员通过牌子协调，确保菜做好了才端上桌。</p>
+</li>
+<li><p><strong>内存顺序保证</strong>：<code>release</code> 防止生产者线程的写入被重排到标志设置之后；<code>acquire</code> 防止消费者线程的读取被重排到标志检查之前。这种“半场屏障”组合确保了正确的因果顺序。</p>
+</li>
+</ul>
+</li>
+<li><p><strong>同步原语</strong>：</p>
+<ul>
+<li>**互斥锁 (<code>std::mutex</code>)**：自动引入内存屏障，强制内存操作按锁的获取&#x2F;释放顺序。<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">std::mutex mtx;</span><br><span class="line"><span class="type">int</span> x = <span class="number">0</span>;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread1</span><span class="params">()</span> </span>&#123; <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>; x = <span class="number">1</span>; &#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">thread2</span><span class="params">()</span> </span>&#123; <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mtx)</span></span>; <span class="built_in">assert</span>(x == <span class="number">1</span>); &#125;</span><br></pre></td></tr></table></figure></li>
+<li>**条件变量 (<code>std::condition_variable</code>)**：与锁配合，确保信号传递和数据同步。</li>
+<li>这些原语在底层使用内存屏障（如 <code>mfence</code> 或平台特定的指令），限制乱序。</li>
+</ul>
+</li>
+</ol>
+<h3 id="优化与权衡"><a href="#优化与权衡" class="headerlink" title="优化与权衡"></a>优化与权衡</h3><ul>
+<li><strong>选择合适的内存顺序</strong>：<ul>
+<li>使用 <code>seq_cst</code> 简单但可能牺牲性能。</li>
+<li><code>acquire</code>&#x2F;<code>release</code> 适合生产者-消费者模式，效率更高。</li>
+<li><code>relaxed</code> 用于无需严格同步的场景，如性能敏感的计数器。</li>
+</ul>
+</li>
+<li><strong>避免过度同步</strong>：过多屏障会降低性能。例如，过多使用 <code>seq_cst</code> 或锁可能导致线程争用和性能瓶颈。</li>
+<li><strong>调试复杂性</strong>：乱序问题难以复现，建议使用工具（如 ThreadSanitizer）检测数据竞争。</li>
+</ul>
+<h3 id="实际应用"><a href="#实际应用" class="headerlink" title="实际应用"></a>实际应用</h3><p>在高性能多线程程序（如服务器、游戏引擎）中，合理使用 <code>std::atomic</code> 和 <code>memory_order</code> 能显著提高效率。例如，无锁队列常使用 <code>acquire</code>&#x2F;<code>release</code> 语义实现高效同步：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">std::atomic&lt;Node*&gt; head&#123;<span class="literal">nullptr</span>&#125;;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">push</span><span class="params">(Node* node)</span> </span>&#123;</span><br><span class="line">    Node* old_head = head.<span class="built_in">load</span>(std::memory_order_relaxed);</span><br><span class="line">    <span class="keyword">do</span> &#123;</span><br><span class="line">        node-&gt;next = old_head;</span><br><span class="line">    &#125; <span class="keyword">while</span> (!head.<span class="built_in">compare_exchange_weak</span>(old_head, node, std::memory_order_release));</span><br><span class="line">&#125;</span><br><span class="line"><span class="function">Node* <span class="title">pop</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Node* node = head.<span class="built_in">load</span>(std::memory_order_acquire);</span><br><span class="line">    <span class="keyword">while</span> (node &amp;&amp; !head.<span class="built_in">compare_exchange_weak</span>(node, node-&gt;next, std::memory_order_acquire));</span><br><span class="line">    <span class="keyword">return</span> node;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/04/30/cpu%E7%9A%84%E4%B9%B1%E5%BA%8F%E6%89%A7%E8%A1%8C%E4%B8%8E%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F/">https://cmzcc.github.io/2025/04/30/cpu%E7%9A%84%E4%B9%B1%E5%BA%8F%E6%89%A7%E8%A1%8C%E4%B8%8E%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/c-11/">c++11</a><a class="post-meta__tags" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E6%9E%B6%E6%9E%84/">计算机架构</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover2.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2025/05/02/%E5%8F%8B%E5%85%83%E5%87%BD%E6%95%B0/" title="友元与友元函数"><img class="cover" src="/img/text-cover1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">友元与友元函数</div></div></a><a class="next-post pull-right" href="/2025/04/28/inline%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8/" title="inline内联函数的使用"><img class="cover" src="/img/text-cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">inline内联函数的使用</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a href="/2024/11/25/c++11%E6%96%B0%E7%89%B9%E6%80%A7%E4%B9%8Bemplace/" title="c++11新特性之emplace"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++11新特性之emplace</div></div></a><a href="/2024/11/25/c++%E4%B8%AD%E7%9A%84IO%E6%B5%81/" title="c++中的I&#x2F;O流"><img class="cover" src="/img/text-cover1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++中的I&#x2F;O流</div></div></a><a href="/2024/11/19/c++%E4%B8%AD%E7%9A%84%E5%9B%9B%E7%A7%8D%E5%91%BD%E5%90%8D%E7%9A%84%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" title="c++中的四种命名的强制类型转换"><img class="cover" src="/img/text-cover1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-19</div><div class="title">c++中的四种命名的强制类型转换</div></div></a><a href="/2025/02/27/c++%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%86%99%E6%97%B6%E5%A4%8D%E5%88%B6/" title="c++中的多线程写时复制"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-27</div><div class="title">c++中的多线程写时复制</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">38</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">48</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">向游戏开发工程师进军中，unity客户端和c++服务端均有涉猎(c++学的头秃ing)</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B9%B1%E5%BA%8F%E6%89%A7%E8%A1%8C%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E6%8C%91%E6%88%98"><span class="toc-number">1.</span> <span class="toc-text">乱序执行的多线程挑战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E5%BA%94%E5%AF%B9%E4%B9%B1%E5%BA%8F"><span class="toc-number">2.</span> <span class="toc-text">C++ 内存模型应对乱序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E5%8C%96%E4%B8%8E%E6%9D%83%E8%A1%A1"><span class="toc-number">3.</span> <span class="toc-text">优化与权衡</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E9%99%85%E5%BA%94%E7%94%A8"><span class="toc-number">4.</span> <span class="toc-text">实际应用</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/05/02/%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD%E4%B8%8E%E5%8F%8B%E5%85%83%E5%87%BD%E6%95%B0/" title="运算符重载与友元函数"><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="运算符重载与友元函数"/></a><div class="content"><a class="title" href="/2025/05/02/%E8%BF%90%E7%AE%97%E7%AC%A6%E9%87%8D%E8%BD%BD%E4%B8%8E%E5%8F%8B%E5%85%83%E5%87%BD%E6%95%B0/" title="运算符重载与友元函数">运算符重载与友元函数</a><time datetime="2025-05-02T05:12:46.000Z" title="Created 2025-05-02 13:12:46">2025-05-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/05/02/%E5%8F%8B%E5%85%83%E5%87%BD%E6%95%B0/" title="友元与友元函数"><img src="/img/text-cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="友元与友元函数"/></a><div class="content"><a class="title" href="/2025/05/02/%E5%8F%8B%E5%85%83%E5%87%BD%E6%95%B0/" title="友元与友元函数">友元与友元函数</a><time datetime="2025-05-02T05:06:00.000Z" title="Created 2025-05-02 13:06:00">2025-05-02</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/30/cpu%E7%9A%84%E4%B9%B1%E5%BA%8F%E6%89%A7%E8%A1%8C%E4%B8%8E%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F/" title="cpu的乱序执行与内存顺序"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="cpu的乱序执行与内存顺序"/></a><div class="content"><a class="title" href="/2025/04/30/cpu%E7%9A%84%E4%B9%B1%E5%BA%8F%E6%89%A7%E8%A1%8C%E4%B8%8E%E5%86%85%E5%AD%98%E9%A1%BA%E5%BA%8F/" title="cpu的乱序执行与内存顺序">cpu的乱序执行与内存顺序</a><time datetime="2025-04-30T03:35:12.000Z" title="Created 2025-04-30 11:35:12">2025-04-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/04/28/inline%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8/" title="inline内联函数的使用"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="inline内联函数的使用"/></a><div class="content"><a class="title" href="/2025/04/28/inline%E5%86%85%E8%81%94%E5%87%BD%E6%95%B0%E7%9A%84%E4%BD%BF%E7%94%A8/" title="inline内联函数的使用">inline内联函数的使用</a><time datetime="2025-04-28T08:52:55.000Z" title="Created 2025-04-28 16:52:55">2025-04-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/02/27/c++%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%86%99%E6%97%B6%E5%A4%8D%E5%88%B6/" title="c++中的多线程写时复制"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c++中的多线程写时复制"/></a><div class="content"><a class="title" href="/2025/02/27/c++%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%86%99%E6%97%B6%E5%A4%8D%E5%88%B6/" title="c++中的多线程写时复制">c++中的多线程写时复制</a><time datetime="2025-02-27T11:38:07.000Z" title="Created 2025-02-27 19:38:07">2025-02-27</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
