@@ -1,0 +1,454 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>mysql中的索引 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="最近有点摆烂，两门考试和六级压力有点大。没怎么更新，唉，还有就是女人（）。 胡乱投了简历，也约上面试了，开始女娲补天呜呜呜。公司是图数据库方面的，所以主播恶补一下mysql。 众所周知，数据库中的数据是按照表的形式存储的，可以想象成excel表，那么为了方便查询，我们给我们要查询的列，叫做索引，常见的索引一般是id,比如我们就查询id为1的人的姓名，年龄等，比较方便，更可以将id设置为主键（唯一且">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mysql中的索引">
+<meta property="og:url" content="https://cmzcc.github.io/2025/06/05/mysql%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="最近有点摆烂，两门考试和六级压力有点大。没怎么更新，唉，还有就是女人（）。 胡乱投了简历，也约上面试了，开始女娲补天呜呜呜。公司是图数据库方面的，所以主播恶补一下mysql。 众所周知，数据库中的数据是按照表的形式存储的，可以想象成excel表，那么为了方便查询，我们给我们要查询的列，叫做索引，常见的索引一般是id,比如我们就查询id为1的人的姓名，年龄等，比较方便，更可以将id设置为主键（唯一且">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover1.jpg">
+<meta property="article:published_time" content="2025-06-05T03:27:23.000Z">
+<meta property="article:modified_time" content="2025-06-05T08:38:03.366Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="mysql">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover1.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/06/05/mysql%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'mysql中的索引',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-06-05 16:38:03'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">43</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">mysql中的索引</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">mysql中的索引</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-06-05T03:27:23.000Z" title="Created 2025-06-05 11:27:23">2025-06-05</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-06-05T08:38:03.366Z" title="Updated 2025-06-05 16:38:03">2025-06-05</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E7%BB%8F%E9%AA%8C/">经验</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>最近有点摆烂，两门考试和六级压力有点大。没怎么更新，唉，还有就是女人（）。</p>
+<p>胡乱投了简历，也约上面试了，开始女娲补天呜呜呜。公司是图数据库方面的，所以主播恶补一下mysql。</p>
+<p>众所周知，数据库中的数据是按照表的形式存储的，可以想象成excel表，那么为了方便查询，我们给我们要查询的列，叫做索引，常见的索引一般是id,比如我们就查询id为1的人的姓名，年龄等，比较方便，更可以将id设置为主键（唯一且不为空）</p>
+<h2 id="1-聚簇索引-Clustered-Index"><a href="#1-聚簇索引-Clustered-Index" class="headerlink" title="1. 聚簇索引 (Clustered Index)"></a>1. 聚簇索引 (Clustered Index)</h2><ul>
+<li><strong>定义</strong>：聚簇索引是表数据的物理存储顺序与索引顺序一致的索引。每个表只能有一个聚簇索引，通常由主键定义。</li>
+<li>就是按照索引的顺序存放数据，id从0到1000，数据就这么存放，不看其他的列</li>
+<li><strong>特点</strong>：<ul>
+<li>表数据按聚簇索引的键值物理排序存储。</li>
+<li>数据和索引存储在同一结构中（通常是B+树）。</li>
+<li>查询效率高，尤其是范围查询和主键查找。</li>
+</ul>
+</li>
+<li><strong>用途</strong>：用于快速检索数据，适合频繁查询的列（如主键）。</li>
+<li><strong>示例</strong>：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> users (id <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY, name <span class="type">VARCHAR</span>(<span class="number">50</span>));</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：<code>id</code>列的索引是聚簇索引，表数据按<code>id</code>排序存储。</li>
+</ul>
+</li>
+<li><strong>注意</strong>：InnoDB引擎默认创建聚簇索引（基于主键）；若无主键，则选择第一个非空唯一索引，或生成隐式RowID。</li>
+</ul>
+<hr>
+<h2 id="2-主键索引-Primary-Key-Index"><a href="#2-主键索引-Primary-Key-Index" class="headerlink" title="2. 主键索引 (Primary Key Index)"></a>2. 主键索引 (Primary Key Index)</h2><ul>
+<li><strong>定义</strong>：主键索引是定义在表的主键列上的特殊索引，确保每行数据的唯一性，且不能为NULL。</li>
+<li>其实就是聚簇索引，不过要求索引是主键</li>
+<li><strong>特点</strong>：<ul>
+<li>自动创建聚簇索引（在InnoDB中）。</li>
+<li>每表只能有一个主键索引。</li>
+<li>强制唯一性和非空约束。</li>
+</ul>
+</li>
+<li><strong>用途</strong>：保证数据唯一性，加速主键查询。</li>
+<li><strong>示例</strong>：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> students (id <span class="type">INT</span> <span class="keyword">PRIMARY</span> KEY, name <span class="type">VARCHAR</span>(<span class="number">50</span>));</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：<code>id</code>列的主键索引确保每个<code>id</code>唯一，且数据按<code>id</code>物理排序。</li>
+</ul>
+</li>
+<li><strong>注意</strong>：主键索引是聚簇索引的子集，但术语上常分开讨论。</li>
+</ul>
+<hr>
+<h2 id="3-二级索引-Secondary-Index"><a href="#3-二级索引-Secondary-Index" class="headerlink" title="3. 二级索引 (Secondary Index)"></a>3. 二级索引 (Secondary Index)</h2><ul>
+<li><p><strong>定义</strong>：二级索引是非聚簇索引，存储索引键值和指向表数据的指针（通常是主键值）。</p>
+</li>
+<li><p>单独给某一列再设一个索引，方便where,group by等命令的优化，mysql自动调用</p>
+</li>
+<li><p><strong>特点</strong>：</p>
+<ul>
+<li>与聚簇索引分离，数据存储顺序与索引无关。</li>
+<li>查询可能需要“回表”（通过主键查找实际数据）。</li>
+<li>允许多个二级索引。</li>
+</ul>
+</li>
+<li><p><strong>用途</strong>：优化非主键列的查询，如WHERE、JOIN条件中的列。</p>
+</li>
+<li><p><strong>示例</strong>：</p>
+<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX idx_name <span class="keyword">ON</span> users(name);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：<code>name</code>列上的二级索引加速<code>WHERE name = &#39;Alice&#39;</code>查询。</li>
+</ul>
+</li>
+<li><p><strong>注意</strong>：二级索引占用额外存储空间，更新数据时需同步维护。</p>
+</li>
+</ul>
+<hr>
+<h2 id="4-普通索引-Normal-Index"><a href="#4-普通索引-Normal-Index" class="headerlink" title="4. 普通索引 (Normal Index)"></a>4. 普通索引 (Normal Index)</h2><ul>
+<li><strong>定义</strong>：普通索引是基本的非唯一索引，用于加速查询，不强制唯一性或非空约束。</li>
+<li><strong>特点</strong>：<ul>
+<li>属于二级索引，存储键值和主键指针。</li>
+<li>不限制列值重复或NULL。</li>
+</ul>
+</li>
+<li><strong>用途</strong>：提高常用查询列的性能，如频繁出现在WHERE或ORDER BY中的列。</li>
+<li><strong>示例</strong>：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX idx_age <span class="keyword">ON</span> users(age);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：<code>age</code>列的普通索引优化<code>SELECT * FROM users WHERE age &gt; 30</code>。</li>
+</ul>
+</li>
+<li><strong>注意</strong>：普通索引适合高选择性的列（重复值少）。</li>
+</ul>
+<hr>
+<h2 id="5-唯一索引-Unique-Index"><a href="#5-唯一索引-Unique-Index" class="headerlink" title="5. 唯一索引 (Unique Index)"></a>5. 唯一索引 (Unique Index)</h2><ul>
+<li><strong>定义</strong>：唯一索引确保索引列的值唯一，允许NULL（在InnoDB中，NULL视为不同值）。</li>
+<li><strong>特点</strong>：<ul>
+<li>属于二级索引，但强制唯一性约束。</li>
+<li>可包含NULL，但每个NULL值视为唯一。</li>
+<li>每表可有多个唯一索引。</li>
+</ul>
+</li>
+<li><strong>用途</strong>：确保数据唯一性（如邮箱、身份证号），并加速查询。</li>
+<li><strong>示例</strong>：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">UNIQUE</span> INDEX idx_email <span class="keyword">ON</span> users(email);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：<code>email</code>列的唯一索引防止重复邮箱值。</li>
+</ul>
+</li>
+<li><strong>注意</strong>：与主键索引不同，唯一索引允许NULL，且不一定是聚簇索引。</li>
+</ul>
+<hr>
+<h2 id="6-Hash索引"><a href="#6-Hash索引" class="headerlink" title="6. Hash索引"></a>6. Hash索引</h2><ul>
+<li><strong>定义</strong>：Hash索引基于哈希表实现，通过哈希函数将键值映射到固定位置。</li>
+<li><strong>特点</strong>：<ul>
+<li>仅支持等值查询（如<code>=</code>、<code>IN</code>），不支持范围查询（如<code>&gt;</code>、<code>&lt;</code>）。</li>
+<li>查找速度极快（O(1)复杂度），但不适合排序或范围操作。</li>
+<li>Memory引擎支持Hash索引，InnoDB仅在特定场景（如自适应哈希索引）使用。</li>
+</ul>
+</li>
+<li><strong>用途</strong>：适合高频等值查询的场景，如内存表中的键值查找。</li>
+<li><strong>示例</strong>：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> <span class="keyword">TABLE</span> mem_table (id <span class="type">INT</span>, name <span class="type">VARCHAR</span>(<span class="number">50</span>), INDEX <span class="keyword">USING</span> HASH (name))</span><br><span class="line">ENGINE <span class="operator">=</span> MEMORY;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：<code>name</code>列使用Hash索引，优化<code>SELECT * FROM mem_table WHERE name = &#39;Alice&#39;</code>。</li>
+</ul>
+</li>
+<li><strong>注意</strong>：Hash索引占用空间较小，但功能受限，InnoDB不默认支持。</li>
+</ul>
+<hr>
+<h2 id="7-B-树索引"><a href="#7-B-树索引" class="headerlink" title="7. B+树索引"></a>7. B+树索引</h2><ul>
+<li><strong>定义</strong>：B+树索引是MySQL中最常用的索引结构，基于B+树数据结构存储索引。</li>
+<li><strong>特点</strong>：<ul>
+<li>所有非叶子节点仅存储键值，叶子节点存储键值和数据指针（或数据本身）。</li>
+<li>支持等值查询、范围查询、排序和分组操作。</li>
+<li>InnoDB和MyISAM引擎默认使用B+树索引。</li>
+<li>叶子节点通过双向链表连接，适合顺序扫描。</li>
+</ul>
+</li>
+<li><strong>用途</strong>：广泛用于主键索引、唯一索引、普通索引和二级索引，适合大多数查询场景。</li>
+<li><strong>示例</strong>：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">CREATE</span> INDEX idx_city <span class="keyword">ON</span> users(city);</span><br></pre></td></tr></table></figure>
+<ul>
+<li>说明：<code>city</code>列的B+树索引优化<code>SELECT * FROM users WHERE city = &#39;Beijing&#39; ORDER BY city</code>。</li>
+</ul>
+</li>
+<li><strong>注意</strong>：B+树索引适合高选择性列，范围查询效率高，但插入&#x2F;更新可能导致树分裂，影响性能。</li>
+</ul>
+<hr>
+<h2 id="8-区别与联系"><a href="#8-区别与联系" class="headerlink" title="8. 区别与联系"></a>8. 区别与联系</h2><table>
+<thead>
+<tr>
+<th>索引类型</th>
+<th>是否聚簇</th>
+<th>唯一性</th>
+<th>允许NULL</th>
+<th>支持查询类型</th>
+<th>存储结构</th>
+<th>适用引擎</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>聚簇索引</td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+<td>等值、范围、排序</td>
+<td>B+树</td>
+<td>InnoDB</td>
+</tr>
+<tr>
+<td>主键索引</td>
+<td>是</td>
+<td>是</td>
+<td>否</td>
+<td>等值、范围、排序</td>
+<td>B+树</td>
+<td>InnoDB, MyISAM</td>
+</tr>
+<tr>
+<td>二级索引</td>
+<td>否</td>
+<td>可选</td>
+<td>是</td>
+<td>等值、范围、排序</td>
+<td>B+树</td>
+<td>InnoDB, MyISAM</td>
+</tr>
+<tr>
+<td>普通索引</td>
+<td>否</td>
+<td>否</td>
+<td>是</td>
+<td>等值、范围、排序</td>
+<td>B+树</td>
+<td>InnoDB, MyISAM</td>
+</tr>
+<tr>
+<td>唯一索引</td>
+<td>否</td>
+<td>是</td>
+<td>是</td>
+<td>等值、范围、排序</td>
+<td>B+树</td>
+<td>InnoDB, MyISAM</td>
+</tr>
+<tr>
+<td>Hash索引</td>
+<td>否</td>
+<td>可选</td>
+<td>是</td>
+<td>等值</td>
+<td>哈希表</td>
+<td>Memory, InnoDB*</td>
+</tr>
+<tr>
+<td>B+树索引</td>
+<td>可选</td>
+<td>可选</td>
+<td>可选</td>
+<td>等值、范围、排序</td>
+<td>B+树</td>
+<td>InnoDB, MyISAM</td>
+</tr>
+</tbody></table>
+<p>*注：InnoDB的自适应哈希索引由引擎自动管理，用户无法直接创建。</p>
+<hr>
+<h2 id="9-使用场景与优化建议"><a href="#9-使用场景与优化建议" class="headerlink" title="9. 使用场景与优化建议"></a>9. 使用场景与优化建议</h2><ul>
+<li><strong>聚簇索引</strong>：优先用于主键或高频查询的列，保持主键递增（如自增ID）以减少分裂。</li>
+<li><strong>主键索引</strong>：选择短且唯一的列（如INT型ID），避免过长字符串。</li>
+<li><strong>二级索引</strong>：为WHERE、JOIN、ORDER BY中常用的列创建，注意覆盖索引优化回表。</li>
+<li><strong>普通索引</strong>：适合高选择性列，避免在低选择性列（如性别）上创建。</li>
+<li><strong>唯一索引</strong>：用于业务上要求唯一性的列，如用户名或邮箱。</li>
+<li><strong>Hash索引</strong>：适合内存表或等值查询场景，避免范围查询。</li>
+<li><strong>B+树索引</strong>：通用选择，适合大多数查询场景，定期优化索引（<code>OPTIMIZE TABLE</code>）。</li>
+</ul>
+<hr>
+<h2 id="10-注意事项"><a href="#10-注意事项" class="headerlink" title="10. 注意事项"></a>10. 注意事项</h2><ul>
+<li><strong>索引维护成本</strong>：添加索引会增加存储空间和更新开销，需权衡查询与写入性能。</li>
+<li><strong>覆盖索引</strong>：通过索引直接返回所需列，避免回表：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">SELECT</span> name <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> name <span class="operator">=</span> <span class="string">&#x27;Alice&#x27;</span>;</span><br></pre></td></tr></table></figure>
+<ul>
+<li>若<code>name</code>有索引，可直接从索引获取数据。</li>
+</ul>
+</li>
+<li><strong>索引选择性</strong>：高选择性列（重复值少）更适合建索引。</li>
+<li><strong>分析性能</strong>：使用<code>EXPLAIN</code>检查索引使用情况：<figure class="highlight sql"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">EXPLAIN <span class="keyword">SELECT</span> <span class="operator">*</span> <span class="keyword">FROM</span> users <span class="keyword">WHERE</span> city <span class="operator">=</span> <span class="string">&#x27;Beijing&#x27;</span>;</span><br></pre></td></tr></table></figure></li>
+<li><strong>碎片整理</strong>：定期运行<code>OPTIMIZE TABLE</code>清理索引碎片。</li>
+</ul>
+<hr>
+<h2 id="11-总结"><a href="#11-总结" class="headerlink" title="11. 总结"></a>11. 总结</h2><p>MySQL的索引类型各有特点，聚簇索引和主键索引决定数据存储方式，二级索引和普通索引优化查询，唯一索引保证数据约束，Hash索引适合等值查询，B+树索引是默认高效结构。选择合适的索引类型需根据查询模式、数据分布和引擎特性综合考虑。</p>
+<p>如果您需要更具体的索引创建示例、优化案例或对某类索引的深入分析，请告诉我！</p>
+<p><strong>参考文献</strong>：  </p>
+<ul>
+<li>MySQL官方文档（索引部分）  </li>
+<li>InnoDB存储引擎索引实现  </li>
+<li>B+树与Hash索引的性能对比</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/06/05/mysql%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/">https://cmzcc.github.io/2025/06/05/mysql%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/mysql/">mysql</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover1.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/05/12/%E8%BF%AD%E4%BB%A3%E5%99%A8/" title="迭代器"><img class="cover" src="/img/text-cover5.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">迭代器</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">43</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">54</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">向游戏开发工程师进军中，unity客户端和c++服务端均有涉猎(c++学的头秃ing)</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E8%81%9A%E7%B0%87%E7%B4%A2%E5%BC%95-Clustered-Index"><span class="toc-number">1.</span> <span class="toc-text">1. 聚簇索引 (Clustered Index)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E4%B8%BB%E9%94%AE%E7%B4%A2%E5%BC%95-Primary-Key-Index"><span class="toc-number">2.</span> <span class="toc-text">2. 主键索引 (Primary Key Index)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E4%BA%8C%E7%BA%A7%E7%B4%A2%E5%BC%95-Secondary-Index"><span class="toc-number">3.</span> <span class="toc-text">3. 二级索引 (Secondary Index)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E6%99%AE%E9%80%9A%E7%B4%A2%E5%BC%95-Normal-Index"><span class="toc-number">4.</span> <span class="toc-text">4. 普通索引 (Normal Index)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%94%AF%E4%B8%80%E7%B4%A2%E5%BC%95-Unique-Index"><span class="toc-number">5.</span> <span class="toc-text">5. 唯一索引 (Unique Index)</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-Hash%E7%B4%A2%E5%BC%95"><span class="toc-number">6.</span> <span class="toc-text">6. Hash索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-B-%E6%A0%91%E7%B4%A2%E5%BC%95"><span class="toc-number">7.</span> <span class="toc-text">7. B+树索引</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E5%8C%BA%E5%88%AB%E4%B8%8E%E8%81%94%E7%B3%BB"><span class="toc-number">8.</span> <span class="toc-text">8. 区别与联系</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF%E4%B8%8E%E4%BC%98%E5%8C%96%E5%BB%BA%E8%AE%AE"><span class="toc-number">9.</span> <span class="toc-text">9. 使用场景与优化建议</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">10.</span> <span class="toc-text">10. 注意事项</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E6%80%BB%E7%BB%93"><span class="toc-number">11.</span> <span class="toc-text">11. 总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/mysql%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/" title="mysql中的索引"><img src="/img/text-cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mysql中的索引"/></a><div class="content"><a class="title" href="/2025/06/05/mysql%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/" title="mysql中的索引">mysql中的索引</a><time datetime="2025-06-05T03:27:23.000Z" title="Created 2025-06-05 11:27:23">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/05/12/%E8%BF%AD%E4%BB%A3%E5%99%A8/" title="迭代器"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="迭代器"/></a><div class="content"><a class="title" href="/2025/05/12/%E8%BF%AD%E4%BB%A3%E5%99%A8/" title="迭代器">迭代器</a><time datetime="2025-05-12T13:26:49.000Z" title="Created 2025-05-12 21:26:49">2025-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/05/11/%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/" title="完美转发"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="完美转发"/></a><div class="content"><a class="title" href="/2025/05/11/%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/" title="完美转发">完美转发</a><time datetime="2025-05-11T09:23:13.000Z" title="Created 2025-05-11 17:23:13">2025-05-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/05/11/%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E7%9A%84%E6%96%B9%E6%96%B9%E9%9D%A2%E9%9D%A2/" title="移动语义的方方面面"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="移动语义的方方面面"/></a><div class="content"><a class="title" href="/2025/05/11/%E7%A7%BB%E5%8A%A8%E8%AF%AD%E4%B9%89%E7%9A%84%E6%96%B9%E6%96%B9%E9%9D%A2%E9%9D%A2/" title="移动语义的方方面面">移动语义的方方面面</a><time datetime="2025-05-11T09:23:04.000Z" title="Created 2025-05-11 17:23:04">2025-05-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/05/02/%E6%89%8B%E6%92%95vector/" title="手撕vector"><img src="/img/text-cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="手撕vector"/></a><div class="content"><a class="title" href="/2025/05/02/%E6%89%8B%E6%92%95vector/" title="手撕vector">手撕vector</a><time datetime="2025-05-02T09:19:43.000Z" title="Created 2025-05-02 17:19:43">2025-05-02</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
