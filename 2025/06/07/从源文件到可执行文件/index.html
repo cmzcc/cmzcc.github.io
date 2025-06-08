@@ -1,0 +1,285 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Ciallo～(∠・ω&lt; )⌒☆               ccのblog | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="从源文件到可执行文件(编译之路)被面试官狠狠拷打的亡羊补牢罢了 编译过程C++程序从源代码到可执行文件需要经过四个主要阶段：  预处理（Preprocess) 编译(Compilation) 汇编(Assembly) 链接(Linking)  预处理（Preprocess）这一步由预处理器完成，对源程序中的伪指令（以#开头的指令）和特殊符号进行处理。主要工作包括：  将所有的#define删除，并">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:url" content="https://cmzcc.github.io/2025/06/07/%E4%BB%8E%E6%BA%90%E6%96%87%E4%BB%B6%E5%88%B0%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="从源文件到可执行文件(编译之路)被面试官狠狠拷打的亡羊补牢罢了 编译过程C++程序从源代码到可执行文件需要经过四个主要阶段：  预处理（Preprocess) 编译(Compilation) 汇编(Assembly) 链接(Linking)  预处理（Preprocess）这一步由预处理器完成，对源程序中的伪指令（以#开头的指令）和特殊符号进行处理。主要工作包括：  将所有的#define删除，并">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover1.jpg">
+<meta property="article:published_time" content="2025-06-07T08:40:10.345Z">
+<meta property="article:modified_time" content="2025-06-08T13:26:34.785Z">
+<meta property="article:author" content="cmz">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover1.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/06/07/%E4%BB%8E%E6%BA%90%E6%96%87%E4%BB%B6%E5%88%B0%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Ciallo～(∠・ω< )⌒☆               ccのblog',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-06-08 21:26:34'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">45</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">55</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Untitled</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-06-07T08:40:10.345Z" title="Created 2025-06-07 16:40:10">2025-06-07</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-06-08T13:26:34.785Z" title="Updated 2025-06-08 21:26:34">2025-06-08</time></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="从源文件到可执行文件-编译之路"><a href="#从源文件到可执行文件-编译之路" class="headerlink" title="从源文件到可执行文件(编译之路)"></a>从源文件到可执行文件(编译之路)</h1><p>被面试官狠狠拷打的亡羊补牢罢了</p>
+<h2 id="编译过程"><a href="#编译过程" class="headerlink" title="编译过程"></a>编译过程</h2><p>C++程序从源代码到可执行文件需要经过四个主要阶段：</p>
+<ol>
+<li>预处理（Preprocess)</li>
+<li>编译(Compilation)</li>
+<li>汇编(Assembly)</li>
+<li>链接(Linking)</li>
+</ol>
+<h2 id="预处理（Preprocess）"><a href="#预处理（Preprocess）" class="headerlink" title="预处理（Preprocess）"></a>预处理（Preprocess）</h2><p>这一步由预处理器完成，对源程序中的伪指令（以#开头的指令）和特殊符号进行处理。主要工作包括：</p>
+<ul>
+<li>将所有的<code>#define</code>删除，并进行宏展开</li>
+<li>处理所有条件编译指令，如<code>#if</code>、<code>#ifdef</code>、<code>#ifndef</code>、<code>#else</code>、<code>#elif</code>、<code>#endif</code>等</li>
+<li>处理<code>#include</code>预编译指令，将被包含的头文件内容插入该位置，递归处理多重包含</li>
+<li>处理其他宏指令，包括<code>#error</code>、<code>#warning</code>、<code>#line</code>、<code>#pragma</code></li>
+<li>删除所有注释（C++的<code>//</code>，C语言的<code>/**/</code>），通常用空格替代</li>
+<li>添加行号和文件标识，便于调试和错误定位</li>
+<li>保留所有的<code>#pragma</code>编译器指令</li>
+<li>处理预定义的宏：如<code>__DATE__</code>、<code>__FILE__</code>等</li>
+</ul>
+<p>预处理后的文件通常有<code>.i</code>或<code>.ii</code>(C++)扩展名，可以通过<code>g++ -E source.cpp -o source.i</code>命令查看预处理结果。</p>
+<h2 id="编译（Compilation）"><a href="#编译（Compilation）" class="headerlink" title="编译（Compilation）"></a>编译（Compilation）</h2><p>这一步由编译器完成，对预处理后的文件进行分析并生成汇编代码：</p>
+<ul>
+<li><p><strong>语法分析</strong>：在词法分析的基础上将单词序列组合成各类语法短语，如”程序”、”语句”、”表达式”等，判断源程序在结构上是否正确。</p>
+</li>
+<li><p><strong>语义分析：对结构正确的源程序进行上下文相关性质的审查，进行类型检查并报告错误。</strong></p>
+</li>
+<li><p><strong>中间代码生成</strong>：编译器生成平台无关的中间表示(IR)，如LLVM IR或GCC的GIMPLE。</p>
+</li>
+<li><p><strong>代码优化：对中间代码进行优化，如常量折叠、死代码消除、循环优化、内联函数、尾递归优化等。</strong></p>
+</li>
+<li><p><strong>目标代码生成</strong>：将优化后的中间代码转换为特定平台的汇编代码。</p>
+</li>
+</ul>
+<p>编译后生成的汇编文件通常有<code>.s</code>扩展名，可以使用<code>g++ -S source.cpp -o source.s</code>命令生成。</p>
+<h2 id="汇编（Assembly）"><a href="#汇编（Assembly）" class="headerlink" title="汇编（Assembly）"></a>汇编（Assembly）</h2><p>由汇编器完成，将汇编代码转变成机器可执行的二进制代码，并生成目标文件。汇编器执行的具体工作包括：</p>
+<ul>
+<li>将汇编指令的助记符转换为操作码</li>
+<li>将标签转换为地址</li>
+<li>生成符号表和重定位信息</li>
+<li>为各段分配空间</li>
+</ul>
+<p>目标文件通常采用ELF格式(Linux)或PE格式(Windows)，包含：</p>
+<ul>
+<li>代码段(<code>.text</code>)：存放程序指令</li>
+<li>数据段(<code>.data</code>)：存放已初始化的全局变量和静态变量</li>
+<li>BSS段(<code>.bss</code>)：存放未初始化的全局变量和静态变量</li>
+</ul>
+<p>可以使用<code>g++ -c source.cpp -o source.o</code>命令生成目标文件，目标文件是二进制格式，可以用<code>objdump -d source.o</code>查看反汇编内容。</p>
+<h2 id="链接（Linking）"><a href="#链接（Linking）" class="headerlink" title="链接（Linking）"></a>链接（Linking）</h2><p>由链接器完成，主要解决多个文件之间符号引用的问题。编译时编译器只对单个文件进行处理，如果该文件引用了其他文件中的符号（如全局变量或库函数），这些符号的地址无法确定，需要链接器将所有目标文件链接在一起才能确定最终地址。</p>
+<p>链接器执行的具体工作：</p>
+<ul>
+<li>**符号解析(Symbol Resolution)**：将每个符号引用与其定义匹配</li>
+<li>**重定位(Relocation)**：调整代码中的地址引用，使其指向正确的最终位置</li>
+<li><strong>处理弱符号和强符号</strong></li>
+<li><strong>合并各个段</strong>：将所有目标文件的相同段合并</li>
+</ul>
+<p>链接分为两种方式：</p>
+<ul>
+<li><strong>静态链接</strong>：库代码直接复制到可执行文件中，生成独立但较大的可执行文件</li>
+<li><strong>动态链接</strong>：可执行文件仅包含对共享库的引用，运行时加载库，节省空间但依赖库文件</li>
+</ul>
+<p>常见链接错误：</p>
+<ul>
+<li>未定义引用(Undefined reference)</li>
+<li>重复定义(Multiple definition)</li>
+<li>符号版本不匹配</li>
+</ul>
+<h2 id="实用命令示例"><a href="#实用命令示例" class="headerlink" title="实用命令示例"></a>实用命令示例</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 一步完成所有阶段</span></span><br><span class="line">g++ source.cpp -o program</span><br><span class="line"></span><br><span class="line"><span class="comment"># 分步执行每个阶段</span></span><br><span class="line">g++ -E source.cpp -o source.i    <span class="comment"># 预处理</span></span><br><span class="line">g++ -S source.i -o source.s      <span class="comment"># 编译</span></span><br><span class="line">g++ -c source.s -o source.o      <span class="comment"># 汇编</span></span><br><span class="line">g++ source.o -o program          <span class="comment"># 链接</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 编译优化选项</span></span><br><span class="line">g++ -O0 source.cpp -o program    <span class="comment"># 无优化(调试用)</span></span><br><span class="line">g++ -O2 source.cpp -o program    <span class="comment"># 常用优化级别</span></span><br><span class="line">g++ -O3 source.cpp -o program    <span class="comment"># 最高优化级别</span></span><br></pre></td></tr></table></figure>
+
+<p>之所以要经过预处理、编译、汇编这么一系列步骤才生成目标文件，是因为在每一阶段都有相应的优化技术，只有在各个阶段分别优化才能生成最高效的机器指令。如果直接从源程序生成目标文件，可能会失去很多代码优化的机会。</p>
+<p>无论采用静态链接还是动态链接，最终都会生成一个可以在计算机上执行的可执行程序。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/06/07/%E4%BB%8E%E6%BA%90%E6%96%87%E4%BB%B6%E5%88%B0%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/">https://cmzcc.github.io/2025/06/07/%E4%BB%8E%E6%BA%90%E6%96%87%E4%BB%B6%E5%88%B0%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/text-cover1.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/06/07/%E4%BB%80%E4%B9%88%E6%98%AFplacement-new%EF%BC%9F/" title="什么是placement_new？"><img class="cover" src="/img/text-cover2.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">什么是placement_new？</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">45</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">55</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">向游戏开发工程师进军中，unity客户端和c++服务端均有涉猎(c++学的头秃ing)</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E4%BB%8E%E6%BA%90%E6%96%87%E4%BB%B6%E5%88%B0%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6-%E7%BC%96%E8%AF%91%E4%B9%8B%E8%B7%AF"><span class="toc-number">1.</span> <span class="toc-text">从源文件到可执行文件(编译之路)</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E8%BF%87%E7%A8%8B"><span class="toc-number">1.1.</span> <span class="toc-text">编译过程</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%A2%84%E5%A4%84%E7%90%86%EF%BC%88Preprocess%EF%BC%89"><span class="toc-number">1.2.</span> <span class="toc-text">预处理（Preprocess）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%EF%BC%88Compilation%EF%BC%89"><span class="toc-number">1.3.</span> <span class="toc-text">编译（Compilation）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%B1%87%E7%BC%96%EF%BC%88Assembly%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">汇编（Assembly）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E9%93%BE%E6%8E%A5%EF%BC%88Linking%EF%BC%89"><span class="toc-number">1.5.</span> <span class="toc-text">链接（Linking）</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E7%94%A8%E5%91%BD%E4%BB%A4%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.6.</span> <span class="toc-text">实用命令示例</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/07/%E4%BB%8E%E6%BA%90%E6%96%87%E4%BB%B6%E5%88%B0%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/" title="Untitled"><img src="/img/text-cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Untitled"/></a><div class="content"><a class="title" href="/2025/06/07/%E4%BB%8E%E6%BA%90%E6%96%87%E4%BB%B6%E5%88%B0%E5%8F%AF%E6%89%A7%E8%A1%8C%E6%96%87%E4%BB%B6/" title="Untitled">Untitled</a><time datetime="2025-06-07T08:40:10.345Z" title="Created 2025-06-07 16:40:10">2025-06-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/07/%E4%BB%80%E4%B9%88%E6%98%AFplacement-new%EF%BC%9F/" title="什么是placement_new？"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="什么是placement_new？"/></a><div class="content"><a class="title" href="/2025/06/07/%E4%BB%80%E4%B9%88%E6%98%AFplacement-new%EF%BC%9F/" title="什么是placement_new？">什么是placement_new？</a><time datetime="2025-06-07T08:39:16.000Z" title="Created 2025-06-07 16:39:16">2025-06-07</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/05/mysql%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/" title="mysql中的索引"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="mysql中的索引"/></a><div class="content"><a class="title" href="/2025/06/05/mysql%E4%B8%AD%E7%9A%84%E7%B4%A2%E5%BC%95/" title="mysql中的索引">mysql中的索引</a><time datetime="2025-06-05T03:27:23.000Z" title="Created 2025-06-05 11:27:23">2025-06-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/05/12/%E8%BF%AD%E4%BB%A3%E5%99%A8/" title="迭代器"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="迭代器"/></a><div class="content"><a class="title" href="/2025/05/12/%E8%BF%AD%E4%BB%A3%E5%99%A8/" title="迭代器">迭代器</a><time datetime="2025-05-12T13:26:49.000Z" title="Created 2025-05-12 21:26:49">2025-05-12</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/05/11/%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/" title="完美转发"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="完美转发"/></a><div class="content"><a class="title" href="/2025/05/11/%E5%AE%8C%E7%BE%8E%E8%BD%AC%E5%8F%91/" title="完美转发">完美转发</a><time datetime="2025-05-11T09:23:13.000Z" title="Created 2025-05-11 17:23:13">2025-05-11</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
