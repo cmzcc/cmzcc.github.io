@@ -1,0 +1,347 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>死锁 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="死锁：定义、必要条件及避免方法蚂蚁一面没过QAQ,不知道是存储岗对学历要求比较高还是怎么样，唉，反正确实项目这一块回答的确实不好，等下周的腾讯和快手吧  1. 死锁的定义死锁（Deadlock）是指多个进程或线程因互相等待对方持有的资源而无法继续执行，导致所有相关进程&#x2F;线程永久阻塞的状态。  类比：类似多个线程在访问跳表或B+树时，各自持有部分节点锁并等待对方释放，形成循环等待。   2">
+<meta property="og:type" content="article">
+<meta property="og:title" content="死锁">
+<meta property="og:url" content="https://cmzcc.github.io/2025/06/20/%E6%AD%BB%E9%94%81/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="死锁：定义、必要条件及避免方法蚂蚁一面没过QAQ,不知道是存储岗对学历要求比较高还是怎么样，唉，反正确实项目这一块回答的确实不好，等下周的腾讯和快手吧  1. 死锁的定义死锁（Deadlock）是指多个进程或线程因互相等待对方持有的资源而无法继续执行，导致所有相关进程&#x2F;线程永久阻塞的状态。  类比：类似多个线程在访问跳表或B+树时，各自持有部分节点锁并等待对方释放，形成循环等待。   2">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover4.jpg">
+<meta property="article:published_time" content="2025-06-20T06:38:42.000Z">
+<meta property="article:modified_time" content="2025-06-20T06:44:38.006Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="操作系统">
+<meta property="article:tag" content="死锁">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover4.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/06/20/%E6%AD%BB%E9%94%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '死锁',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-06-20 14:44:38'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">68</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">80</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover4.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">死锁</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">死锁</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-06-20T06:38:42.000Z" title="Created 2025-06-20 14:38:42">2025-06-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-06-20T06:44:38.006Z" title="Updated 2025-06-20 14:44:38">2025-06-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E8%AF%95%E9%A2%98/">面试题</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="死锁：定义、必要条件及避免方法"><a href="#死锁：定义、必要条件及避免方法" class="headerlink" title="死锁：定义、必要条件及避免方法"></a>死锁：定义、必要条件及避免方法</h1><p>蚂蚁一面没过QAQ,不知道是存储岗对学历要求比较高还是怎么样，唉，反正确实项目这一块回答的确实不好，等下周的腾讯和快手吧</p>
+<hr>
+<h2 id="1-死锁的定义"><a href="#1-死锁的定义" class="headerlink" title="1. 死锁的定义"></a>1. <strong>死锁的定义</strong></h2><p><strong>死锁（Deadlock）</strong>是指多个进程或线程因互相等待对方持有的资源而无法继续执行，导致所有相关进程&#x2F;线程永久阻塞的状态。</p>
+<ul>
+<li><strong>类比</strong>：类似多个线程在访问跳表或B+树时，各自持有部分节点锁并等待对方释放，形成循环等待。</li>
+</ul>
+<hr>
+<h2 id="2-死锁产生的四个必要条件"><a href="#2-死锁产生的四个必要条件" class="headerlink" title="2. 死锁产生的四个必要条件"></a>2. <strong>死锁产生的四个必要条件</strong></h2><p>死锁发生需要以下四个条件同时满足（缺一不可）：</p>
+<ol>
+<li><p><strong>互斥条件（Mutual Exclusion）</strong>：</p>
+<ul>
+<li>资源（如锁、文件）一次只能被一个进程&#x2F;线程独占。</li>
+<li><strong>示例</strong>：互斥锁（Mutex，上下文回答）保护跳表节点，同一时间仅一个线程可操作。</li>
+<li><strong>类比</strong>：B+树节点加锁，禁止并发修改。</li>
+</ul>
+</li>
+<li><p><strong>持有并等待条件（Hold and Wait）</strong>：</p>
+<ul>
+<li>进程&#x2F;线程持有至少一个资源，同时等待其他进程&#x2F;线程持有的资源。</li>
+<li><strong>示例</strong>：线程A持有跳表节点1的锁，等待节点2的锁；线程B持有节点2的锁，等待节点1的锁。</li>
+<li><strong>类比</strong>：进程持有数据库连接，等待另一个进程的连接池资源。</li>
+</ul>
+</li>
+<li><p><strong>不可抢占条件（No Preemption）</strong>：</p>
+<ul>
+<li>资源不能被强制抢占，只能由持有者主动释放。</li>
+<li><strong>示例</strong>：Mutex锁只能由持有线程释放，操作系统无法强制解锁。</li>
+<li><strong>类比</strong>：B+树节点锁在分裂完成前无法被其他线程抢占。</li>
+</ul>
+</li>
+<li><p><strong>循环等待条件（Circular Wait）</strong>：</p>
+<ul>
+<li>进程&#x2F;线程形成闭合的资源等待链，每个进程&#x2F;线程等待下一个持有的资源。</li>
+<li><strong>示例</strong>：线程A等待线程B的资源，线程B等待线程C的资源，线程C等待线程A的资源。</li>
+<li><strong>类比</strong>：跳表多线程插入时，节点锁形成循环依赖。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h2 id="3-如何避免死锁"><a href="#3-如何避免死锁" class="headerlink" title="3. 如何避免死锁"></a>3. <strong>如何避免死锁</strong></h2><p>避免死锁的核心是破坏上述四个必要条件之一。以下是具体方法：</p>
+<h3 id="破坏互斥条件"><a href="#破坏互斥条件" class="headerlink" title="破坏互斥条件"></a><strong>破坏互斥条件</strong></h3><ul>
+<li><strong>方法</strong>：尽量使用共享资源代替独占资源。</li>
+<li><strong>适用场景</strong>：读多写少场景使用读写锁（RWLock，上下文回答），允许多线程并发读。</li>
+<li><strong>局限性</strong>：许多资源（如文件、数据库记录）本质上需要互斥，难以完全破坏。</li>
+<li><strong>类比</strong>：B+树查询使用读锁，减少独占需求。</li>
+</ul>
+<h3 id="破坏持有并等待条件"><a href="#破坏持有并等待条件" class="headerlink" title="破坏持有并等待条件"></a><strong>破坏持有并等待条件</strong></h3><ul>
+<li><strong>方法</strong>：<ul>
+<li><strong>一次性获取所有资源</strong>：线程在开始前申请所有所需资源，失败则不持有任何资源。</li>
+<li><strong>释放已持有资源</strong>：申请新资源失败时，释放已持有的资源后重试。</li>
+</ul>
+</li>
+<li><strong>实现</strong>：在代码中检查资源可用性，或使用事务机制。</li>
+<li><strong>示例</strong>：线程更新跳表前，检查所有节点锁是否可用，否则回滚。</li>
+<li><strong>类比</strong>：数据库事务确保所有资源可用后再执行。</li>
+</ul>
+<h3 id="破坏不可抢占条件"><a href="#破坏不可抢占条件" class="headerlink" title="破坏不可抢占条件"></a><strong>破坏不可抢占条件</strong></h3><ul>
+<li><strong>方法</strong>：允许操作系统或程序强制抢占资源。</li>
+<li><strong>实现</strong>：<ul>
+<li>设置超时机制，超时后释放资源。</li>
+<li>使用可中断锁（如Java的<code>Lock.tryLock()</code>）。</li>
+</ul>
+</li>
+<li><strong>示例</strong>：线程尝试获取Mutex失败后，超时释放已有锁。</li>
+<li><strong>类比</strong>：B+树分裂时，超时释放节点锁，允许其他线程介入。</li>
+<li><strong>局限性</strong>：抢占可能导致数据不一致，需额外恢复机制。</li>
+</ul>
+<h3 id="破坏循环等待条件"><a href="#破坏循环等待条件" class="headerlink" title="破坏循环等待条件"></a><strong>破坏循环等待条件</strong></h3><ul>
+<li><strong>方法</strong>：对资源编号，强制按序获取资源（如按资源ID从小到大）。</li>
+<li><strong>实现</strong>：<ul>
+<li>定义全局资源顺序，所有线程按相同顺序申请锁。</li>
+<li><strong>伪代码</strong>：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 按资源ID顺序获取锁</span></span><br><span class="line"><span class="built_in">lock</span>(resource[min_id]);</span><br><span class="line"><span class="built_in">lock</span>(resource[max_id]);</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+<li><strong>示例</strong>：跳表节点按内存地址或索引排序，线程按序加锁。</li>
+<li><strong>类比</strong>：B+树节点按键值顺序加锁，防止循环。</li>
+<li><strong>优势</strong>：简单有效，广泛用于数据库和并发系统。</li>
+</ul>
+<h3 id="其他通用方法"><a href="#其他通用方法" class="headerlink" title="其他通用方法"></a><strong>其他通用方法</strong></h3><ul>
+<li><strong>死锁检测与恢复</strong>：<ul>
+<li>使用资源分配图检测循环等待。</li>
+<li>恢复方式：终止部分进程&#x2F;线程，或回滚操作。</li>
+<li><strong>类比</strong>：跳表并发插入时，检测锁依赖图，终止冲突线程。</li>
+</ul>
+</li>
+<li><strong>使用高级同步机制</strong>：<ul>
+<li>条件变量（上下文回答）协调线程，避免忙等待。</li>
+<li>信号量（上下文回答）限制资源访问，减少竞争。</li>
+</ul>
+</li>
+<li><strong>无锁编程</strong>：<ul>
+<li>使用原子操作（如CAS，上下文回答中的跳表实现）替代锁。</li>
+<li><strong>类比</strong>：跳表无锁插入，减少死锁可能性。</li>
+</ul>
+</li>
+<li><strong>线程池&#x2F;协程</strong>：<ul>
+<li>减少线程数，使用线程池（如上下文中的线程池优化）或协程，降低资源竞争。</li>
+<li><strong>类比</strong>：B+树操作使用固定线程池，限制并发。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="4-结合上下文"><a href="#4-结合上下文" class="headerlink" title="4. 结合上下文"></a>4. <strong>结合上下文</strong></h2><ul>
+<li><strong>与同步机制</strong>：<ul>
+<li><strong>Mutex</strong>：易导致死锁（如线程A、B互相等待Mutex）。</li>
+<li><strong>RWLock</strong>：读写分离降低死锁概率，但写锁仍可能循环等待。</li>
+<li><strong>条件变量</strong>：通过等待&#x2F;通知避免忙等，减少死锁（如生产者-消费者）。</li>
+<li><strong>信号量</strong>：限制并发线程，降低资源竞争导致的死锁。</li>
+</ul>
+</li>
+<li><strong>与跳表&#x2F;B+树</strong>：<ul>
+<li>跳表插入&#x2F;删除需锁节点，易形成循环等待，建议按节点地址排序加锁。</li>
+<li>B+树分裂&#x2F;合并涉及多节点锁，使用读写锁或按键值顺序加锁避免死锁。</li>
+</ul>
+</li>
+<li><strong>与上下文切换</strong>：死锁增加线程阻塞，上下文切换开销（上下文回答，1-10μs）累积，影响性能。</li>
+</ul>
+<hr>
+<h2 id="5-总结"><a href="#5-总结" class="headerlink" title="5. 总结"></a>5. <strong>总结</strong></h2><ul>
+<li><strong>定义</strong>：死锁是多进程&#x2F;线程因互相等待资源而永久阻塞。</li>
+<li><strong>四个必要条件</strong>：互斥、持有并等待、不可抢占、循环等待。</li>
+<li><strong>避免方法</strong>：<ul>
+<li>破坏互斥：使用读写锁。</li>
+<li>破坏持有并等待：一次性获取或释放资源。</li>
+<li>破坏不可抢占：超时或可中断锁。</li>
+<li>破坏循环等待：按序加锁。</li>
+<li>其他：死锁检测、无锁编程、线程池。</li>
+</ul>
+</li>
+<li><strong>建议</strong>：优先使用按序加锁（简单高效），结合无锁机制（如CAS）或条件变量优化高并发场景（如跳表&#x2F;B+树）。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/06/20/%E6%AD%BB%E9%94%81/">https://cmzcc.github.io/2025/06/20/%E6%AD%BB%E9%94%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a><a class="post-meta__tags" href="/tags/%E6%AD%BB%E9%94%81/">死锁</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover4.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2025/06/20/%E5%87%A0%E7%A7%8D%E6%8E%92%E5%BA%8F/" title="几种排序"><img class="cover" src="/img/text-cover2.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">几种排序</div></div></a><a class="next-post pull-right" href="/2025/06/20/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" title="线程池"><img class="cover" src="/img/text-cover4.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">线程池</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">68</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">80</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">向游戏开发工程师进军中，unity客户端和c++服务端均有涉猎(c++学的头秃ing)</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%AD%BB%E9%94%81%EF%BC%9A%E5%AE%9A%E4%B9%89%E3%80%81%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6%E5%8F%8A%E9%81%BF%E5%85%8D%E6%96%B9%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">死锁：定义、必要条件及避免方法</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E6%AD%BB%E9%94%81%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.</span> <span class="toc-text">1. 死锁的定义</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-%E6%AD%BB%E9%94%81%E4%BA%A7%E7%94%9F%E7%9A%84%E5%9B%9B%E4%B8%AA%E5%BF%85%E8%A6%81%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.2.</span> <span class="toc-text">2. 死锁产生的四个必要条件</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E6%AD%BB%E9%94%81"><span class="toc-number">1.3.</span> <span class="toc-text">3. 如何避免死锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A0%B4%E5%9D%8F%E4%BA%92%E6%96%A5%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.3.1.</span> <span class="toc-text">破坏互斥条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A0%B4%E5%9D%8F%E6%8C%81%E6%9C%89%E5%B9%B6%E7%AD%89%E5%BE%85%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.3.2.</span> <span class="toc-text">破坏持有并等待条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A0%B4%E5%9D%8F%E4%B8%8D%E5%8F%AF%E6%8A%A2%E5%8D%A0%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.3.3.</span> <span class="toc-text">破坏不可抢占条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A0%B4%E5%9D%8F%E5%BE%AA%E7%8E%AF%E7%AD%89%E5%BE%85%E6%9D%A1%E4%BB%B6"><span class="toc-number">1.3.4.</span> <span class="toc-text">破坏循环等待条件</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%85%B6%E4%BB%96%E9%80%9A%E7%94%A8%E6%96%B9%E6%B3%95"><span class="toc-number">1.3.5.</span> <span class="toc-text">其他通用方法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-%E7%BB%93%E5%90%88%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">1.4.</span> <span class="toc-text">4. 结合上下文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E6%80%BB%E7%BB%93"><span class="toc-number">1.5.</span> <span class="toc-text">5. 总结</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" title="进程与线程"><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="进程与线程"/></a><div class="content"><a class="title" href="/2025/06/24/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" title="进程与线程">进程与线程</a><time datetime="2025-06-24T01:32:13.000Z" title="Created 2025-06-24 09:32:13">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/tls-ssl%E6%8F%A1%E6%89%8B/" title="tls/ssl握手"><img src="/img/text-cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="tls/ssl握手"/></a><div class="content"><a class="title" href="/2025/06/24/tls-ssl%E6%8F%A1%E6%89%8B/" title="tls/ssl握手">tls/ssl握手</a><time datetime="2025-06-24T00:53:24.000Z" title="Created 2025-06-24 08:53:24">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/http-https/" title="http/https"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="http/https"/></a><div class="content"><a class="title" href="/2025/06/24/http-https/" title="http/https">http/https</a><time datetime="2025-06-24T00:52:14.000Z" title="Created 2025-06-24 08:52:14">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/%E4%BB%8E%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5url%E5%B9%B6%E6%8C%89%E4%B8%8B%E5%9B%9E%E8%BD%A6%E4%B9%8B%E5%90%8E/" title="从浏览器输入url并按下回车之后..."><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从浏览器输入url并按下回车之后..."/></a><div class="content"><a class="title" href="/2025/06/24/%E4%BB%8E%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5url%E5%B9%B6%E6%8C%89%E4%B8%8B%E5%9B%9E%E8%BD%A6%E4%B9%8B%E5%90%8E/" title="从浏览器输入url并按下回车之后...">从浏览器输入url并按下回车之后...</a><time datetime="2025-06-24T00:35:16.000Z" title="Created 2025-06-24 08:35:16">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/22/TCP%E5%92%8CUDP/" title="TCP和UDP"><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="TCP和UDP"/></a><div class="content"><a class="title" href="/2025/06/22/TCP%E5%92%8CUDP/" title="TCP和UDP">TCP和UDP</a><time datetime="2025-06-22T09:00:45.000Z" title="Created 2025-06-22 17:00:45">2025-06-22</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

@@ -1,0 +1,342 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>select,poll,epoll | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="1. 阻塞与非阻塞 (Blocking vs Non-Blocking) **阻塞 (Blocking)**：  操作在完成之前会暂停调用者的执行。例如，在阻塞I&#x2F;O中，调用read()或write()时，线程会等待直到操作完成或超时。 特点：简单但效率较低，适合单线程或低并发场景。 示例：阻塞socket的recv()调用会等待数据到达。   **非阻塞 (Non-Blocking)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="select,poll,epoll">
+<meta property="og:url" content="https://cmzcc.github.io/2025/06/20/select-poll-epoll/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="1. 阻塞与非阻塞 (Blocking vs Non-Blocking) **阻塞 (Blocking)**：  操作在完成之前会暂停调用者的执行。例如，在阻塞I&#x2F;O中，调用read()或write()时，线程会等待直到操作完成或超时。 特点：简单但效率较低，适合单线程或低并发场景。 示例：阻塞socket的recv()调用会等待数据到达。   **非阻塞 (Non-Blocking)">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover5.jpg">
+<meta property="article:published_time" content="2025-06-20T05:45:59.000Z">
+<meta property="article:modified_time" content="2025-06-20T06:02:36.868Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="epoll">
+<meta property="article:tag" content="IO复用">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover5.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/06/20/select-poll-epoll/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'select,poll,epoll',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-06-20 14:02:36'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">68</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">80</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover5.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">select,poll,epoll</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">select,poll,epoll</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-06-20T05:45:59.000Z" title="Created 2025-06-20 13:45:59">2025-06-20</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-06-20T06:02:36.868Z" title="Updated 2025-06-20 14:02:36">2025-06-20</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E8%AF%95%E9%A2%98/">面试题</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><hr>
+<h3 id="1-阻塞与非阻塞-Blocking-vs-Non-Blocking"><a href="#1-阻塞与非阻塞-Blocking-vs-Non-Blocking" class="headerlink" title="1. 阻塞与非阻塞 (Blocking vs Non-Blocking)"></a>1. 阻塞与非阻塞 (Blocking vs Non-Blocking)</h3><ul>
+<li><p>**阻塞 (Blocking)**：</p>
+<ul>
+<li>操作在完成之前会暂停调用者的执行。例如，在阻塞I&#x2F;O中，调用<code>read()</code>或<code>write()</code>时，线程会等待直到操作完成或超时。</li>
+<li>特点：简单但效率较低，适合单线程或低并发场景。</li>
+<li>示例：阻塞socket的<code>recv()</code>调用会等待数据到达。</li>
+</ul>
+</li>
+<li><p>**非阻塞 (Non-Blocking)**：</p>
+<ul>
+<li>操作立即返回，无论是否完成。如果数据或资源不可用，通常返回错误码（如<code>EAGAIN</code>）或部分结果。</li>
+<li>特点：适合高并发场景，但需要开发者处理未完成的情况。</li>
+<li>示例：非阻塞socket的<code>recv()</code>会立即返回，若无数据则返回错误码。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="2-异步与同步-Asynchronous-vs-Synchronous"><a href="#2-异步与同步-Asynchronous-vs-Synchronous" class="headerlink" title="2. 异步与同步 (Asynchronous vs Synchronous)"></a>2. 异步与同步 (Asynchronous vs Synchronous)</h3><ul>
+<li><p>**同步 (Synchronous)**：</p>
+<ul>
+<li>调用者发起操作后，必须等待操作完成才能继续执行后续代码。</li>
+<li>阻塞和非阻塞都可以是同步的。例如，阻塞I&#x2F;O是同步的（等待完成），非阻塞I&#x2F;O也是同步的（立即返回但需要轮询）。</li>
+<li>特点：逻辑简单，但可能导致线程空闲或频繁检查。</li>
+</ul>
+</li>
+<li><p>**异步 (Asynchronous)**：</p>
+<ul>
+<li>调用者发起操作后无需等待操作完成，系统通过回调、事件循环或Future&#x2F;Promise通知调用者结果。</li>
+<li>通常与非阻塞结合使用，适合高并发场景。</li>
+<li>示例：异步I&#x2F;O（如Linux的<code>io_uring</code>或JavaScript的<code>async/await</code>）在操作完成时触发回调。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="3-水平触发与边缘触发-Level-Triggered-vs-Edge-Triggered"><a href="#3-水平触发与边缘触发-Level-Triggered-vs-Edge-Triggered" class="headerlink" title="3. 水平触发与边缘触发 (Level-Triggered vs Edge-Triggered)"></a>3. 水平触发与边缘触发 (Level-Triggered vs Edge-Triggered)</h3><p>这些概念主要出现在事件驱动的I&#x2F;O多路复用机制中（如<code>select</code>、<code>poll</code>、<code>epoll</code>）。</p>
+<ul>
+<li><p>**水平触发 (Level-Triggered)**：</p>
+<ul>
+<li>事件触发条件基于状态（level）。只要文件描述符（fd）的状态满足条件（例如有数据可读），事件就会持续触发。</li>
+<li>特点：需要处理所有就绪的数据，否则会反复触发。适合简单场景。</li>
+<li>示例：在<code>select</code>或<code>poll</code>中，如果socket有数据未读，每次检查都会报告可读。</li>
+</ul>
+</li>
+<li><p>**边缘触发 (Edge-Triggered)**：</p>
+<ul>
+<li>事件触发条件基于状态变化（edge）。仅在文件描述符状态发生变化时触发一次（如从无数据到有数据）。</li>
+<li>特点：效率高，但需要开发者一次性处理所有数据，否则可能丢失事件。常用于高性能场景。</li>
+<li>示例：Linux的<code>epoll</code>在<code>EPOLLET</code>模式下，仅在数据到达时触发一次。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="总结与对比"><a href="#总结与对比" class="headerlink" title="总结与对比"></a>总结与对比</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th>阻塞</th>
+<th>非阻塞</th>
+<th>同步</th>
+<th>异步</th>
+<th>水平触发</th>
+<th>边缘触发</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>等待行为</strong></td>
+<td>等待操作完成</td>
+<td>立即返回</td>
+<td>等待或轮询</td>
+<td>不等待，回调通知</td>
+<td>持续触发（状态满足）</td>
+<td>仅状态变化时触发</td>
+</tr>
+<tr>
+<td><strong>效率</strong></td>
+<td>低（线程阻塞）</td>
+<td>高（需轮询或管理）</td>
+<td>较低（需主动检查）</td>
+<td>高（事件驱动）</td>
+<td>较低（反复通知）</td>
+<td>高（单次通知）</td>
+</tr>
+<tr>
+<td><strong>复杂度</strong></td>
+<td>简单</td>
+<td>较复杂</td>
+<td>简单</td>
+<td>较复杂</td>
+<td>简单</td>
+<td>复杂</td>
+</tr>
+<tr>
+<td><strong>典型场景</strong></td>
+<td>简单程序</td>
+<td>高并发服务器</td>
+<td>传统I&#x2F;O</td>
+<td>事件循环（如Node.js）</td>
+<td><code>select</code>&#x2F;<code>poll</code></td>
+<td><code>epoll</code>&#x2F;<code>kqueue</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="示例场景"><a href="#示例场景" class="headerlink" title="示例场景"></a>示例场景</h3><p>假设你正在开发一个网络服务器：</p>
+<ul>
+<li><strong>阻塞 + 同步</strong>：每个客户端连接分配一个线程，线程调用阻塞<code>read()</code>等待数据。简单但线程开销大。</li>
+<li><strong>非阻塞 + 同步</strong>：单线程使用<code>select</code>或<code>poll</code>轮询多个socket，检查哪些有数据。效率较高但需要手动管理。</li>
+<li><strong>非阻塞 + 异步</strong>：使用<code>epoll</code>（边缘触发）或<code>io_uring</code>，数据到达时通过回调或事件循环处理，适合高并发。</li>
+<li><strong>水平触发 vs 边缘触发</strong>：在<code>epoll</code>中，水平触发下未读完的数据会反复通知；边缘触发下只通知一次，需确保读完所有数据。</li>
+</ul>
+<h2 id="select-poll的缺点"><a href="#select-poll的缺点" class="headerlink" title="select,poll的缺点"></a>select,poll的缺点</h2><p>1.select采用位图进行文件描述符，能监视的连接数量有上限，一般是1024，poll采用链表存储，但都是通过轮询来访问监视连接，监视数量越大，性能越差</p>
+<p>2.select和poll都需要拷贝大量句柄数据结构在用户态和内核态之间切换，产生巨大的开销</p>
+<p>3.select和poll都是返回一个包含所有句柄的数组，应用程序仍需要遍历才能知道哪些句柄发生了事件</p>
+<p>4.只支持水平触发，</p>
+<h2 id="epoll的优点"><a href="#epoll的优点" class="headerlink" title="epoll的优点"></a>epoll的优点</h2><ul>
+<li>支持<strong>水平触发</strong>（默认）和<strong>边缘触发</strong>（<code>EPOLLET</code> 模式）。</li>
+<li>高效<ul>
+<li>内核使用红黑树管理 fd，添加&#x2F;删除复杂度为 O(log n)。</li>
+<li>就绪事件通过事件列表返回，仅包含就绪 fd，复杂度为 O(1)。</li>
+<li>避免用户态和内核态频繁拷贝整个 fd 集合。</li>
+</ul>
+</li>
+<li><strong>扩展性</strong>：支持大量 fd（仅受内存限制）。</li>
+<li><strong>边缘触发优势</strong>：仅在状态变化时通知，适合高性能服务器，但需确保处理所有数据。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/06/20/select-poll-epoll/">https://cmzcc.github.io/2025/06/20/select-poll-epoll/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/c/">c++</a><a class="post-meta__tags" href="/tags/epoll/">epoll</a><a class="post-meta__tags" href="/tags/IO%E5%A4%8D%E7%94%A8/">IO复用</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover5.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2025/06/20/%E7%BA%BF%E7%A8%8B%E6%B1%A0/" title="线程池"><img class="cover" src="/img/text-cover4.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">线程池</div></div></a><a class="next-post pull-right" href="/2025/06/17/c-17-20%E6%96%B0%E7%89%B9%E6%80%A7/" title="c++17/20新特性"><img class="cover" src="/img/text-cover2.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">c++17/20新特性</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a href="/2025/01/12/Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="Lambda表达式"><img class="cover" src="/img/text-cover1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-12</div><div class="title">Lambda表达式</div></div></a><a href="/2024/11/25/c++11%E6%96%B0%E7%89%B9%E6%80%A7%E4%B9%8Bemplace/" title="c++11新特性之emplace"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++11新特性之emplace</div></div></a><a href="/2024/09/17/c++%E4%B8%AD%E5%85%B3%E4%BA%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E9%87%8D%E8%BD%BD%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E6%80%9D%E8%80%83/" title="c++中关于深拷贝与重载赋值运算符的思考"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-17</div><div class="title">c++中关于深拷贝与重载赋值运算符的思考</div></div></a><a href="/2024/11/25/c++%E4%B8%AD%E7%9A%84IO%E6%B5%81/" title="c++中的I&#x2F;O流"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++中的I&#x2F;O流</div></div></a><a href="/2024/11/19/c++%E4%B8%AD%E7%9A%84%E5%9B%9B%E7%A7%8D%E5%91%BD%E5%90%8D%E7%9A%84%E5%BC%BA%E5%88%B6%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2/" title="c++中的四种命名的强制类型转换"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-19</div><div class="title">c++中的四种命名的强制类型转换</div></div></a><a href="/2025/02/27/c++%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%86%99%E6%97%B6%E5%A4%8D%E5%88%B6/" title="c++中的多线程写时复制"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-27</div><div class="title">c++中的多线程写时复制</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">68</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">80</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">向游戏开发工程师进军中，unity客户端和c++服务端均有涉猎(c++学的头秃ing)</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E9%98%BB%E5%A1%9E%E4%B8%8E%E9%9D%9E%E9%98%BB%E5%A1%9E-Blocking-vs-Non-Blocking"><span class="toc-number">1.</span> <span class="toc-text">1. 阻塞与非阻塞 (Blocking vs Non-Blocking)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%BC%82%E6%AD%A5%E4%B8%8E%E5%90%8C%E6%AD%A5-Asynchronous-vs-Synchronous"><span class="toc-number">2.</span> <span class="toc-text">2. 异步与同步 (Asynchronous vs Synchronous)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%B0%B4%E5%B9%B3%E8%A7%A6%E5%8F%91%E4%B8%8E%E8%BE%B9%E7%BC%98%E8%A7%A6%E5%8F%91-Level-Triggered-vs-Edge-Triggered"><span class="toc-number">3.</span> <span class="toc-text">3. 水平触发与边缘触发 (Level-Triggered vs Edge-Triggered)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93%E4%B8%8E%E5%AF%B9%E6%AF%94"><span class="toc-number">4.</span> <span class="toc-text">总结与对比</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%E5%9C%BA%E6%99%AF"><span class="toc-number">5.</span> <span class="toc-text">示例场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#select-poll%E7%9A%84%E7%BC%BA%E7%82%B9"><span class="toc-number"></span> <span class="toc-text">select,poll的缺点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#epoll%E7%9A%84%E4%BC%98%E7%82%B9"><span class="toc-number"></span> <span class="toc-text">epoll的优点</span></a></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" title="进程与线程"><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="进程与线程"/></a><div class="content"><a class="title" href="/2025/06/24/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" title="进程与线程">进程与线程</a><time datetime="2025-06-24T01:32:13.000Z" title="Created 2025-06-24 09:32:13">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/tls-ssl%E6%8F%A1%E6%89%8B/" title="tls/ssl握手"><img src="/img/text-cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="tls/ssl握手"/></a><div class="content"><a class="title" href="/2025/06/24/tls-ssl%E6%8F%A1%E6%89%8B/" title="tls/ssl握手">tls/ssl握手</a><time datetime="2025-06-24T00:53:24.000Z" title="Created 2025-06-24 08:53:24">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/http-https/" title="http/https"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="http/https"/></a><div class="content"><a class="title" href="/2025/06/24/http-https/" title="http/https">http/https</a><time datetime="2025-06-24T00:52:14.000Z" title="Created 2025-06-24 08:52:14">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/%E4%BB%8E%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5url%E5%B9%B6%E6%8C%89%E4%B8%8B%E5%9B%9E%E8%BD%A6%E4%B9%8B%E5%90%8E/" title="从浏览器输入url并按下回车之后..."><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="从浏览器输入url并按下回车之后..."/></a><div class="content"><a class="title" href="/2025/06/24/%E4%BB%8E%E6%B5%8F%E8%A7%88%E5%99%A8%E8%BE%93%E5%85%A5url%E5%B9%B6%E6%8C%89%E4%B8%8B%E5%9B%9E%E8%BD%A6%E4%B9%8B%E5%90%8E/" title="从浏览器输入url并按下回车之后...">从浏览器输入url并按下回车之后...</a><time datetime="2025-06-24T00:35:16.000Z" title="Created 2025-06-24 08:35:16">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/22/TCP%E5%92%8CUDP/" title="TCP和UDP"><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="TCP和UDP"/></a><div class="content"><a class="title" href="/2025/06/22/TCP%E5%92%8CUDP/" title="TCP和UDP">TCP和UDP</a><time datetime="2025-06-22T09:00:45.000Z" title="Created 2025-06-22 17:00:45">2025-06-22</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
