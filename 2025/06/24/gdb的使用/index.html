@@ -1,0 +1,379 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>gdb的使用 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="使用 GDB 调试 C++ 程序GDB（GNU Debugger）是 Linux 环境下强大的调试工具，可用于调试程序崩溃、多线程程序以及检测内存泄漏。以下是详细的 GDB 调试方法，涵盖程序崩溃、多线程调试和内存泄漏检测，格式为 Markdown。  1. 基本 GDB 使用编译程序以启用调试要使用 GDB 调试，需在编译时添加 -g 标志以包含调试信息： 1g++ -g -o myprogra">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gdb的使用">
+<meta property="og:url" content="https://cmzcc.github.io/2025/06/24/gdb%E7%9A%84%E4%BD%BF%E7%94%A8/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="使用 GDB 调试 C++ 程序GDB（GNU Debugger）是 Linux 环境下强大的调试工具，可用于调试程序崩溃、多线程程序以及检测内存泄漏。以下是详细的 GDB 调试方法，涵盖程序崩溃、多线程调试和内存泄漏检测，格式为 Markdown。  1. 基本 GDB 使用编译程序以启用调试要使用 GDB 调试，需在编译时添加 -g 标志以包含调试信息： 1g++ -g -o myprogra">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover5.jpg">
+<meta property="article:published_time" content="2025-06-24T06:43:25.000Z">
+<meta property="article:modified_time" content="2025-06-24T06:47:56.924Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="gdb">
+<meta property="article:tag" content="调试">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover5.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/06/24/gdb%E7%9A%84%E4%BD%BF%E7%94%A8/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'gdb的使用',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-06-24 14:47:56'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">70</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">83</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover5.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">gdb的使用</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">gdb的使用</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-06-24T06:43:25.000Z" title="Created 2025-06-24 14:43:25">2025-06-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-06-24T06:47:56.924Z" title="Updated 2025-06-24 14:47:56">2025-06-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E8%AF%95%E9%A2%98/">面试题</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h3 id="使用-GDB-调试-C-程序"><a href="#使用-GDB-调试-C-程序" class="headerlink" title="使用 GDB 调试 C++ 程序"></a>使用 GDB 调试 C++ 程序</h3><p><strong>GDB</strong>（GNU Debugger）是 Linux 环境下强大的调试工具，可用于调试程序崩溃、多线程程序以及检测内存泄漏。以下是详细的 GDB 调试方法，涵盖程序崩溃、多线程调试和内存泄漏检测，格式为 Markdown。</p>
+<hr>
+<h3 id="1-基本-GDB-使用"><a href="#1-基本-GDB-使用" class="headerlink" title="1. 基本 GDB 使用"></a>1. 基本 GDB 使用</h3><h4 id="编译程序以启用调试"><a href="#编译程序以启用调试" class="headerlink" title="编译程序以启用调试"></a>编译程序以启用调试</h4><p>要使用 GDB 调试，需在编译时添加 <code>-g</code> 标志以包含调试信息：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -g -o myprogram myprogram.cpp</span><br></pre></td></tr></table></figure>
+
+<h4 id="启动-GDB"><a href="#启动-GDB" class="headerlink" title="启动 GDB"></a>启动 GDB</h4><p>启动 GDB 并加载程序：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./myprogram</span><br></pre></td></tr></table></figure>
+
+<h4 id="常用-GDB-命令"><a href="#常用-GDB-命令" class="headerlink" title="常用 GDB 命令"></a>常用 GDB 命令</h4><ul>
+<li><code>run</code>（或 <code>r</code>）：运行程序。</li>
+<li><code>break &lt;位置&gt;</code>（或 <code>b</code>）：设置断点，如 <code>break main</code> 或 <code>break myprogram.cpp:10</code>。</li>
+<li><code>next</code>（或 <code>n</code>）：单步执行（不进入函数）。</li>
+<li><code>step</code>（或 <code>s</code>）：单步执行（进入函数）。</li>
+<li><code>continue</code>（或 <code>c</code>）：继续运行至下一个断点。</li>
+<li><code>print &lt;变量&gt;</code>（或 <code>p</code>）：打印变量值，如 <code>print x</code>。</li>
+<li><code>backtrace</code>（或 <code>bt</code>）：显示调用栈。</li>
+<li><code>quit</code>（或 <code>q</code>）：退出 GDB。</li>
+</ul>
+<hr>
+<h3 id="2-调试程序崩溃"><a href="#2-调试程序崩溃" class="headerlink" title="2. 调试程序崩溃"></a>2. 调试程序崩溃</h3><p>当程序崩溃（例如段错误，Segmentation Fault），GDB 可帮助定位问题。</p>
+<h4 id="步骤"><a href="#步骤" class="headerlink" title="步骤"></a>步骤</h4><ol>
+<li><p><strong>编译带调试信息</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -g -o myprogram myprogram.cpp</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>启动 GDB 并运行程序</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gdb ./myprogram</span><br><span class="line">(gdb) run</span><br></pre></td></tr></table></figure>
+<p>如果程序崩溃，GDB 会停在崩溃点，并显示错误信息，如：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Program received signal SIGSEGV, Segmentation fault.</span><br><span class="line">0x00005555555551c3 in main () at myprogram.cpp:10</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>分析崩溃原因</strong>：</p>
+<ul>
+<li>使用 <code>backtrace</code> 查看调用栈：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) bt</span><br></pre></td></tr></table></figure>
+输出调用栈，显示崩溃前的函数调用链。</li>
+<li>使用 <code>frame &lt;n&gt;</code> 切换到特定栈帧，检查变量：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(gdb) frame 0</span><br><span class="line">(gdb) print *ptr</span><br></pre></td></tr></table></figure>
+检查指针是否为空（如 <code>ptr = nullptr</code>）或访问非法内存。</li>
+<li>使用 <code>info locals</code> 和 <code>info args</code> 查看局部变量和函数参数。</li>
+</ul>
+</li>
+<li><p><strong>设置断点定位问题</strong>：</p>
+<ul>
+<li>在可疑代码处设置断点：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) break myprogram.cpp:10</span><br></pre></td></tr></table></figure></li>
+<li>运行程序并逐步检查变量状态。</li>
+</ul>
+</li>
+<li><p><strong>启用核心转储（Core Dump）</strong>：<br>如果程序崩溃但未在 GDB 中运行，可分析核心转储文件：</p>
+<ul>
+<li>启用核心转储：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">ulimit</span> -c unlimited</span><br></pre></td></tr></table></figure></li>
+<li>运行程序，崩溃后生成 <code>core</code> 文件。</li>
+<li>使用 GDB 加载核心转储：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">gdb ./myprogram core</span><br></pre></td></tr></table></figure></li>
+<li>使用 <code>bt</code> 查看崩溃时的调用栈。</li>
+</ul>
+</li>
+</ol>
+<h4 id="示例：调试段错误"><a href="#示例：调试段错误" class="headerlink" title="示例：调试段错误"></a>示例：调试段错误</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span>* ptr = <span class="literal">nullptr</span>;</span><br><span class="line">    *ptr = <span class="number">42</span>; <span class="comment">// 段错误</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Never reached\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调试过程：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">g++ -g -o crash crash.cpp</span><br><span class="line">gdb ./crash</span><br><span class="line">(gdb) run</span><br><span class="line">Program received signal SIGSEGV, Segmentation fault.</span><br><span class="line">0x00005555555551c3 <span class="keyword">in</span> main () at crash.cpp:4</span><br><span class="line">4           *ptr = 42;</span><br><span class="line">(gdb) <span class="built_in">print</span> ptr</span><br><span class="line"><span class="variable">$1</span> = (int *) 0x0</span><br><span class="line">(gdb) bt</span><br><span class="line"><span class="comment">#0  main () at crash.cpp:4</span></span><br></pre></td></tr></table></figure>
+<p>问题：<code>ptr</code> 为空导致解引用失败。</p>
+<hr>
+<h3 id="3-多线程-GDB-调试"><a href="#3-多线程-GDB-调试" class="headerlink" title="3. 多线程 GDB 调试"></a>3. 多线程 GDB 调试</h3><p>多线程程序可能因竞争条件、死锁或线程特定错误导致问题。GDB 提供多线程调试支持。</p>
+<h4 id="步骤-1"><a href="#步骤-1" class="headerlink" title="步骤"></a>步骤</h4><ol>
+<li><p><strong>编译带调试信息和线程支持</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -g -pthread -o myprogram myprogram.cpp</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>启动 GDB 并运行</strong>：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gdb ./myprogram</span><br><span class="line">(gdb) run</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>线程相关命令</strong>：</p>
+<ul>
+<li><code>info threads</code>：列出所有线程及其状态。<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">(gdb) info threads</span><br><span class="line">Id   Target Id         Frame</span><br><span class="line">* 1    Thread 0x7ffff7fc4740 (LWP 1234) main () at myprogram.cpp:10</span><br><span class="line">  2    Thread 0x7ffff75c3700 (LWP 1235) worker () at myprogram.cpp:20</span><br></pre></td></tr></table></figure></li>
+<li><code>thread &lt;id&gt;</code>：切换到指定线程（如 <code>thread 2</code>）。</li>
+<li><code>break &lt;位置&gt; thread &lt;id&gt;</code>：为特定线程设置断点，如：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) break myprogram.cpp:20 thread 2</span><br></pre></td></tr></table></figure></li>
+<li><code>thread apply all &lt;命令&gt;</code>：对所有线程执行命令，如：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) thread apply all bt</span><br></pre></td></tr></table></figure>
+显示所有线程的调用栈。</li>
+<li><code>set scheduler-locking on</code>：锁定调度，仅运行当前线程（便于调试特定线程）。</li>
+</ul>
+</li>
+<li><p><strong>调试死锁或竞争条件</strong>：</p>
+<ul>
+<li>设置断点在共享资源访问点（如锁操作）。</li>
+<li>使用 <code>watch &lt;变量&gt;</code> 设置观察点，监控共享变量变化：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(gdb) watch shared_data</span><br></pre></td></tr></table></figure></li>
+<li>检查线程状态，分析是否因锁未释放导致死锁。</li>
+</ul>
+</li>
+</ol>
+<h4 id="示例：调试多线程程序"><a href="#示例：调试多线程程序" class="headerlink" title="示例：调试多线程程序"></a>示例：调试多线程程序</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line"><span class="type">int</span> shared_data = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">worker</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    mtx.<span class="built_in">lock</span>();</span><br><span class="line">    shared_data++; <span class="comment">// 可能引发竞争</span></span><br><span class="line">    mtx.<span class="built_in">unlock</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Thread &quot;</span> &lt;&lt; id &lt;&lt; <span class="string">&quot; incremented to &quot;</span> &lt;&lt; shared_data &lt;&lt; <span class="string">&#x27;\n&#x27;</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(worker, <span class="number">1</span>)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(worker, <span class="number">2</span>)</span></span>;</span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>调试：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">g++ -g -pthread -o threads threads.cpp</span><br><span class="line">gdb ./threads</span><br><span class="line">(gdb) <span class="built_in">break</span> worker</span><br><span class="line">(gdb) run</span><br><span class="line">(gdb) info threads</span><br><span class="line">(gdb) thread 2</span><br><span class="line">(gdb) next</span><br><span class="line">(gdb) <span class="built_in">print</span> shared_data</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="4-检测内存泄漏"><a href="#4-检测内存泄漏" class="headerlink" title="4. 检测内存泄漏"></a>4. 检测内存泄漏</h3><p>GDB 本身不直接检测内存泄漏，但可结合工具（如 <strong>Valgrind</strong> 或 <strong>AddressSanitizer</strong>）分析内存问题。以下是方法：</p>
+<h4 id="使用-GDB-辅助分析"><a href="#使用-GDB-辅助分析" class="headerlink" title="使用 GDB 辅助分析"></a>使用 GDB 辅助分析</h4><ol>
+<li><p><strong>检查指针和分配</strong>：</p>
+<ul>
+<li>在分配内存处设置断点（如 <code>malloc</code> 或 <code>new</code>）：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">(gdb) break malloc</span><br><span class="line">(gdb) break operator new</span><br></pre></td></tr></table></figure></li>
+<li>使用 <code>print</code> 检查分配的指针是否被正确释放。</li>
+<li>使用 <code>watch</code> 监控指针是否被覆盖或未释放。</li>
+</ul>
+</li>
+<li><p><strong>调用栈分析</strong>：</p>
+<ul>
+<li>如果怀疑内存泄漏，使用 <code>bt</code> 检查分配和释放的调用路径。</li>
+</ul>
+</li>
+</ol>
+<h4 id="使用-Valgrind（推荐）"><a href="#使用-Valgrind（推荐）" class="headerlink" title="使用 Valgrind（推荐）"></a>使用 Valgrind（推荐）</h4><p>Valgrind 的 <code>memcheck</code> 工具可检测内存泄漏：</p>
+<ol>
+<li>编译带调试信息：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -g -o myprogram myprogram.cpp</span><br></pre></td></tr></table></figure></li>
+<li>运行 Valgrind：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">valgrind --leak-check=full ./myprogram</span><br></pre></td></tr></table></figure></li>
+<li>分析输出：<ul>
+<li>Valgrind 报告未释放的内存块及其分配位置。</li>
+<li>示例输出：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">==1234== 40 bytes in 1 blocks are definitely lost in loss record 1 of 1</span><br><span class="line">==1234==    at 0x4C2DB8D: malloc (vg_replace_malloc.c:299)</span><br><span class="line">==1234==    by 0x4005B3: main (myprogram.cpp:10)</span><br></pre></td></tr></table></figure></li>
+</ul>
+</li>
+</ol>
+<h4 id="使用-AddressSanitizer（ASan）"><a href="#使用-AddressSanitizer（ASan）" class="headerlink" title="使用 AddressSanitizer（ASan）"></a>使用 AddressSanitizer（ASan）</h4><ol>
+<li>编译时启用 ASan：<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">g++ -g -fsanitize=address -o myprogram myprogram.cpp</span><br></pre></td></tr></table></figure></li>
+<li>运行程序，ASan 自动报告内存泄漏：<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">==5678==ERROR: LeakSanitizer: detected memory leaks</span><br><span class="line">Direct leak of 40 byte(s) in 1 object(s) allocated from:</span><br><span class="line">    #0 0x7f8b6c4b7a90 in operator new</span><br><span class="line">    #1 0x4005b3 in main myprogram.cpp:10</span><br></pre></td></tr></table></figure></li>
+</ol>
+<h4 id="示例：检测内存泄漏"><a href="#示例：检测内存泄漏" class="headerlink" title="示例：检测内存泄漏"></a>示例：检测内存泄漏</h4><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="type">int</span>* ptr = <span class="keyword">new</span> <span class="type">int</span>[<span class="number">10</span>]; <span class="comment">// 未释放</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Allocated memory\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>使用 Valgrind：</p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">g++ -g -o leak leak.cpp</span><br><span class="line">valgrind --leak-check=full ./leak</span><br></pre></td></tr></table></figure>
+<p>输出显示 40 字节未释放，定位到 <code>new</code> 调用。</p>
+<hr>
+<h3 id="注意事项"><a href="#注意事项" class="headerlink" title="注意事项"></a>注意事项</h3><ol>
+<li><strong>调试信息</strong>：始终使用 <code>-g</code> 编译，确保 GDB 能显示行号和变量信息。</li>
+<li><strong>优化级别</strong>：避免高优化（如 <code>-O2</code>），可能导致调试信息不准确。</li>
+<li><strong>多线程调试</strong>：<ul>
+<li>使用 <code>info threads</code> 和 <code>thread apply all</code> 管理复杂线程场景。</li>
+<li>注意竞争条件，结合锁或 <code>scheduler-locking</code> 隔离线程。</li>
+</ul>
+</li>
+<li><strong>内存泄漏</strong>：<ul>
+<li>Valgrind 和 ASan 比 GDB 更适合检测内存问题。</li>
+<li>对于复杂程序，定期检查分配和释放匹配。</li>
+</ul>
+</li>
+<li><strong>性能</strong>：<ul>
+<li>GDB 调试可能影响程序性能，生产环境中谨慎使用。</li>
+<li>Valgrind 和 ASan 运行时开销较大，适合开发阶段。</li>
+</ul>
+</li>
+</ol>
+<hr>
+<h3 id="数学表示"><a href="#数学表示" class="headerlink" title="数学表示"></a>数学表示</h3><ul>
+<li><strong>时间复杂度</strong>：<ul>
+<li>GDB 断点设置&#x2F;单步执行：( O(1) )（依赖硬件支持）。</li>
+<li>Valgrind 内存检查：( O(n) )，其中 ( n ) 为内存操作数，运行时显著慢于原程序。</li>
+</ul>
+</li>
+<li><strong>空间复杂度</strong>：<ul>
+<li>GDB：仅占用调试符号表，约为 ( O(1) )。</li>
+<li>Valgrind&#x2F;ASan：额外内存开销，约为 ( O(m) )，其中 ( m ) 为分配的内存大小。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong>程序崩溃</strong>：用 GDB 的 <code>bt</code>、<code>print</code> 和核心转储定位问题。</li>
+<li><strong>多线程调试</strong>：用 <code>info threads</code>、<code>thread</code> 和 <code>watch</code> 分析线程行为。</li>
+<li><strong>内存泄漏</strong>：结合 Valgrind 或 ASan 检测未释放内存，GDB 辅助定位分配点。</li>
+<li><strong>建议</strong>：熟悉 GDB 基本命令，结合 Valgrind&#x2F;ASan 提高调试效率。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/06/24/gdb%E7%9A%84%E4%BD%BF%E7%94%A8/">https://cmzcc.github.io/2025/06/24/gdb%E7%9A%84%E4%BD%BF%E7%94%A8/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/c/">c++</a><a class="post-meta__tags" href="/tags/gdb/">gdb</a><a class="post-meta__tags" href="/tags/%E8%B0%83%E8%AF%95/">调试</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover5.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/06/24/%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="共享内存"><img class="cover" src="/img/text-cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">共享内存</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a href="/2025/01/12/Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="Lambda表达式"><img class="cover" src="/img/text-cover1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-12</div><div class="title">Lambda表达式</div></div></a><a href="/2025/01/27/bind%E5%92%8C%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB/" title="bind和回调函数的关系"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-27</div><div class="title">bind和回调函数的关系</div></div></a><a href="/2024/11/25/c++11%E6%96%B0%E7%89%B9%E6%80%A7%E4%B9%8Bemplace/" title="c++11新特性之emplace"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++11新特性之emplace</div></div></a><a href="/2024/09/17/c++%E4%B8%AD%E5%85%B3%E4%BA%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E9%87%8D%E8%BD%BD%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E6%80%9D%E8%80%83/" title="c++中关于深拷贝与重载赋值运算符的思考"><img class="cover" src="/img/text-cover4.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-17</div><div class="title">c++中关于深拷贝与重载赋值运算符的思考</div></div></a><a href="/2024/11/25/c++%E4%B8%AD%E7%9A%84IO%E6%B5%81/" title="c++中的I&#x2F;O流"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++中的I&#x2F;O流</div></div></a><a href="/2025/02/27/c++%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%86%99%E6%97%B6%E5%A4%8D%E5%88%B6/" title="c++中的多线程写时复制"><img class="cover" src="/img/text-cover4.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-27</div><div class="title">c++中的多线程写时复制</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">70</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">83</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">向游戏开发工程师进军中，unity客户端和c++服务端均有涉猎(c++学的头秃ing)</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-GDB-%E8%B0%83%E8%AF%95-C-%E7%A8%8B%E5%BA%8F"><span class="toc-number">1.</span> <span class="toc-text">使用 GDB 调试 C++ 程序</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%9F%BA%E6%9C%AC-GDB-%E4%BD%BF%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">1. 基本 GDB 使用</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%BC%96%E8%AF%91%E7%A8%8B%E5%BA%8F%E4%BB%A5%E5%90%AF%E7%94%A8%E8%B0%83%E8%AF%95"><span class="toc-number">2.1.</span> <span class="toc-text">编译程序以启用调试</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%90%AF%E5%8A%A8-GDB"><span class="toc-number">2.2.</span> <span class="toc-text">启动 GDB</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B8%B8%E7%94%A8-GDB-%E5%91%BD%E4%BB%A4"><span class="toc-number">2.3.</span> <span class="toc-text">常用 GDB 命令</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%B0%83%E8%AF%95%E7%A8%8B%E5%BA%8F%E5%B4%A9%E6%BA%83"><span class="toc-number">3.</span> <span class="toc-text">2. 调试程序崩溃</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4"><span class="toc-number">3.1.</span> <span class="toc-text">步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A%E8%B0%83%E8%AF%95%E6%AE%B5%E9%94%99%E8%AF%AF"><span class="toc-number">3.2.</span> <span class="toc-text">示例：调试段错误</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%A4%9A%E7%BA%BF%E7%A8%8B-GDB-%E8%B0%83%E8%AF%95"><span class="toc-number">4.</span> <span class="toc-text">3. 多线程 GDB 调试</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A5%E9%AA%A4-1"><span class="toc-number">4.1.</span> <span class="toc-text">步骤</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A%E8%B0%83%E8%AF%95%E5%A4%9A%E7%BA%BF%E7%A8%8B%E7%A8%8B%E5%BA%8F"><span class="toc-number">4.2.</span> <span class="toc-text">示例：调试多线程程序</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%A3%80%E6%B5%8B%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">5.</span> <span class="toc-text">4. 检测内存泄漏</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-GDB-%E8%BE%85%E5%8A%A9%E5%88%86%E6%9E%90"><span class="toc-number">5.1.</span> <span class="toc-text">使用 GDB 辅助分析</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-Valgrind%EF%BC%88%E6%8E%A8%E8%8D%90%EF%BC%89"><span class="toc-number">5.2.</span> <span class="toc-text">使用 Valgrind（推荐）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8-AddressSanitizer%EF%BC%88ASan%EF%BC%89"><span class="toc-number">5.3.</span> <span class="toc-text">使用 AddressSanitizer（ASan）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%A4%BA%E4%BE%8B%EF%BC%9A%E6%A3%80%E6%B5%8B%E5%86%85%E5%AD%98%E6%B3%84%E6%BC%8F"><span class="toc-number">5.4.</span> <span class="toc-text">示例：检测内存泄漏</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">6.</span> <span class="toc-text">注意事项</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%95%B0%E5%AD%A6%E8%A1%A8%E7%A4%BA"><span class="toc-number">7.</span> <span class="toc-text">数学表示</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">8.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/gdb%E7%9A%84%E4%BD%BF%E7%94%A8/" title="gdb的使用"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="gdb的使用"/></a><div class="content"><a class="title" href="/2025/06/24/gdb%E7%9A%84%E4%BD%BF%E7%94%A8/" title="gdb的使用">gdb的使用</a><time datetime="2025-06-24T06:43:25.000Z" title="Created 2025-06-24 14:43:25">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="共享内存"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="共享内存"/></a><div class="content"><a class="title" href="/2025/06/24/%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98/" title="共享内存">共享内存</a><time datetime="2025-06-24T06:32:04.000Z" title="Created 2025-06-24 14:32:04">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" title="进程与线程"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="进程与线程"/></a><div class="content"><a class="title" href="/2025/06/24/%E8%BF%9B%E7%A8%8B%E4%B8%8E%E7%BA%BF%E7%A8%8B/" title="进程与线程">进程与线程</a><time datetime="2025-06-24T01:32:13.000Z" title="Created 2025-06-24 09:32:13">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/tls-ssl%E6%8F%A1%E6%89%8B/" title="tls/ssl握手"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="tls/ssl握手"/></a><div class="content"><a class="title" href="/2025/06/24/tls-ssl%E6%8F%A1%E6%89%8B/" title="tls/ssl握手">tls/ssl握手</a><time datetime="2025-06-24T00:53:24.000Z" title="Created 2025-06-24 08:53:24">2025-06-24</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/24/http-https/" title="http/https"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="http/https"/></a><div class="content"><a class="title" href="/2025/06/24/http-https/" title="http/https">http/https</a><time datetime="2025-06-24T00:52:14.000Z" title="Created 2025-06-24 08:52:14">2025-06-24</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
