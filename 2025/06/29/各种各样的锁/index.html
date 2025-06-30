@@ -1,0 +1,550 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>各种各样的锁~ | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="各种锁的介绍在并发编程中，锁是用于保护共享资源、防止数据竞争和确保线程安全的机制。以下是对你提到的各种锁（mutex、lock_guard、shared_lock、unique_lock、分布式锁、自旋锁、悲观锁、乐观锁）的详细介绍，涵盖定义、用途、实现原理、优缺点及适用场景。由于你提到自旋锁两次，我会将其合并处理，并结合 C++ 上下文（基于之前的线程池讨论）进行讲解。  1. 互斥锁（std:">
+<meta property="og:type" content="article">
+<meta property="og:title" content="各种各样的锁~">
+<meta property="og:url" content="https://cmzcc.github.io/2025/06/29/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84%E9%94%81/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="各种锁的介绍在并发编程中，锁是用于保护共享资源、防止数据竞争和确保线程安全的机制。以下是对你提到的各种锁（mutex、lock_guard、shared_lock、unique_lock、分布式锁、自旋锁、悲观锁、乐观锁）的详细介绍，涵盖定义、用途、实现原理、优缺点及适用场景。由于你提到自旋锁两次，我会将其合并处理，并结合 C++ 上下文（基于之前的线程池讨论）进行讲解。  1. 互斥锁（std:">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover1.jpg">
+<meta property="article:published_time" content="2025-06-29T13:49:16.000Z">
+<meta property="article:modified_time" content="2025-06-29T14:01:59.614Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="锁">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover1.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/06/29/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84%E9%94%81/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '各种各样的锁~',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-06-29 22:01:59'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">94</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">各种各样的锁~</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">各种各样的锁~</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-06-29T13:49:16.000Z" title="Created 2025-06-29 21:49:16">2025-06-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-06-29T14:01:59.614Z" title="Updated 2025-06-29 22:01:59">2025-06-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E8%AF%95%E9%A2%98/">面试题</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h1 id="各种锁的介绍"><a href="#各种锁的介绍" class="headerlink" title="各种锁的介绍"></a>各种锁的介绍</h1><p>在并发编程中，锁是用于保护共享资源、防止数据竞争和确保线程安全的机制。以下是对你提到的各种锁（<code>mutex</code>、<code>lock_guard</code>、<code>shared_lock</code>、<code>unique_lock</code>、分布式锁、自旋锁、悲观锁、乐观锁）的详细介绍，涵盖定义、用途、实现原理、优缺点及适用场景。由于你提到自旋锁两次，我会将其合并处理，并结合 C++ 上下文（基于之前的线程池讨论）进行讲解。</p>
+<hr>
+<h2 id="1-互斥锁（std-mutex）"><a href="#1-互斥锁（std-mutex）" class="headerlink" title="1. 互斥锁（std::mutex）"></a>1. <strong>互斥锁（<code>std::mutex</code>）</strong></h2><h3 id="定义"><a href="#定义" class="headerlink" title="定义"></a><strong>定义</strong></h3><p><code>std::mutex</code> 是 C++11 提供的互斥锁（Mutual Exclusion Lock），用于保护共享资源，确保同一时间只有一个线程可以访问临界区。</p>
+<h3 id="用途"><a href="#用途" class="headerlink" title="用途"></a><strong>用途</strong></h3><ul>
+<li>防止多个线程同时访问共享资源（如线程池中的任务队列）。</li>
+<li>实现线程同步，确保数据一致性。</li>
+</ul>
+<h3 id="实现原理"><a href="#实现原理" class="headerlink" title="实现原理"></a><strong>实现原理</strong></h3><ul>
+<li><code>std::mutex</code> 提供 <code>lock()</code> 和 <code>unlock()</code> 方法，锁定和释放互斥量。</li>
+<li>线程尝试获取锁时，若锁已被占用，线程会阻塞（进入休眠）直到锁可用。</li>
+<li>操作系统底层通常通过原子操作和内核调度实现。</li>
+</ul>
+<h3 id="代码示例"><a href="#代码示例" class="headerlink" title="代码示例"></a><strong>代码示例</strong></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line"><span class="type">int</span> shared_data = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i) &#123;</span><br><span class="line">        mtx.<span class="built_in">lock</span>();</span><br><span class="line">        ++shared_data;</span><br><span class="line">        mtx.<span class="built_in">unlock</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(increment)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(increment)</span></span>;</span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Shared data: &quot;</span> &lt;&lt; shared_data &lt;&lt; std::endl; <span class="comment">// 应输出 2000</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="优缺点"><a href="#优缺点" class="headerlink" title="优缺点"></a><strong>优缺点</strong></h3><ul>
+<li><strong>优点</strong>：<ul>
+<li>简单易用，适合保护临界区。</li>
+<li>提供强一致性保证。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>手动调用 <code>lock</code>&#x2F;<code>unlock</code> 易出错（忘记解锁会导致死锁）。</li>
+<li>阻塞线程可能导致性能开销（上下文切换）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="适用场景"><a href="#适用场景" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h3><ul>
+<li>保护共享数据（如计数器、队列）。</li>
+<li>需要简单、强一致性的同步场景。</li>
+</ul>
+<hr>
+<h2 id="2-std-lock-guard"><a href="#2-std-lock-guard" class="headerlink" title="2. std::lock_guard"></a>2. <strong><code>std::lock_guard</code></strong></h2><h3 id="定义-1"><a href="#定义-1" class="headerlink" title="定义"></a><strong>定义</strong></h3><p><code>std::lock_guard</code> 是 C++11 提供的 RAII（资源获取即初始化）类模板，用于自动管理 <code>std::mutex</code> 的锁定和解锁，防止忘记解锁导致死锁。</p>
+<h3 id="用途-1"><a href="#用途-1" class="headerlink" title="用途"></a><strong>用途</strong></h3><ul>
+<li>简化 <code>std::mutex</code> 的使用，确保锁在作用域结束时自动释放。</li>
+<li>用于短生命周期的临界区保护。</li>
+</ul>
+<h3 id="实现原理-1"><a href="#实现原理-1" class="headerlink" title="实现原理"></a><strong>实现原理</strong></h3><ul>
+<li>构造时调用 <code>mutex.lock()</code>，析构时调用 <code>mutex.unlock()</code>。</li>
+<li>使用 RAII 机制，绑定锁的生命周期到作用域。</li>
+</ul>
+<h3 id="代码示例-1"><a href="#代码示例-1" class="headerlink" title="代码示例"></a><strong>代码示例</strong></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::mutex mtx;</span><br><span class="line"><span class="type">int</span> shared_data = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i) &#123;</span><br><span class="line">        <span class="function">std::lock_guard&lt;std::mutex&gt; <span class="title">guard</span><span class="params">(mtx)</span></span>; <span class="comment">// 自动加锁</span></span><br><span class="line">        ++shared_data;</span><br><span class="line">    &#125; <span class="comment">// 离开作用域，自动解锁</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(increment)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(increment)</span></span>;</span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Shared data: &quot;</span> &lt;&lt; shared_data &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="优缺点-1"><a href="#优缺点-1" class="headerlink" title="优缺点"></a><strong>优缺点</strong></h3><ul>
+<li><strong>优点</strong>：<ul>
+<li>自动管理锁，防止忘记解锁。</li>
+<li>代码简洁，安全性高。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>不支持灵活的锁管理（如中途解锁或条件变量）。</li>
+<li>仅适用于简单场景。</li>
+</ul>
+</li>
+</ul>
+<h3 id="适用场景-1"><a href="#适用场景-1" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h3><ul>
+<li>需要简单、自动化的互斥锁管理。</li>
+<li>保护短临界区（如单次数据操作）。</li>
+</ul>
+<hr>
+<h2 id="3-std-shared-mutex-shared-lock"><a href="#3-std-shared-mutex-shared-lock" class="headerlink" title="3. std::shared_mutex/shared_lock"></a>3. <strong><code>std::shared_mutex/shared_lock</code></strong></h2><h3 id="定义-2"><a href="#定义-2" class="headerlink" title="定义"></a><strong>定义</strong></h3><p><code>std::shared_lock</code> 是 C++14 引入的 RAII 类模板，用于管理共享锁（<code>std::shared_mutex</code> 或 <code>std::shared_timed_mutex</code>），支持读写锁模式（多读单写）。</p>
+<h3 id="用途-2"><a href="#用途-2" class="headerlink" title="用途"></a><strong>用途</strong></h3><ul>
+<li>允许多个线程同时读取共享资源（共享锁），但写操作独占（独占锁）。</li>
+<li>用于读多写少的场景，提高并发性能。</li>
+</ul>
+<h3 id="实现原理-2"><a href="#实现原理-2" class="headerlink" title="实现原理"></a><strong>实现原理</strong></h3><p><code>std::shared_mutex</code> 支持两种锁模式：</p>
+<ul>
+<li><ul>
+<li><strong>共享锁</strong>（<code>lock_shared()</code>）：多个线程可同时获取，适合读操作。</li>
+<li><strong>独占锁</strong>（<code>lock()</code>）：仅一个线程可获取，适合写操作。</li>
+</ul>
+</li>
+<li><code>std::shared_lock</code> 在构造时调用 <code>lock_shared()</code>，析构时调用 <code>unlock_shared()</code>。</li>
+</ul>
+<h3 id="代码示例-2"><a href="#代码示例-2" class="headerlink" title="代码示例"></a><strong>代码示例</strong></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;shared_mutex&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line">std::shared_mutex smtx;</span><br><span class="line"><span class="type">int</span> shared_data = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">read_data</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123;</span><br><span class="line">    <span class="function">std::shared_lock&lt;std::shared_mutex&gt; <span class="title">lock</span><span class="params">(smtx)</span></span>; <span class="comment">// 共享锁</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Reader &quot;</span> &lt;&lt; id &lt;&lt; <span class="string">&quot; reads: &quot;</span> &lt;&lt; shared_data &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">write_data</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::shared_mutex&gt; <span class="title">lock</span><span class="params">(smtx)</span></span>; <span class="comment">// 独占锁</span></span><br><span class="line">    ++shared_data;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Writer updated data to: &quot;</span> &lt;&lt; shared_data &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::thread readers[<span class="number">3</span>];</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">3</span>; ++i) &#123;</span><br><span class="line">        readers[i] = std::<span class="built_in">thread</span>(read_data, i);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function">std::thread <span class="title">writer</span><span class="params">(write_data)</span></span>;</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">auto</span>&amp; r : readers) r.<span class="built_in">join</span>();</span><br><span class="line">    writer.<span class="built_in">join</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="优缺点-2"><a href="#优缺点-2" class="headerlink" title="优缺点"></a><strong>优缺点</strong></h3><ul>
+<li><strong>优点</strong>：<ul>
+<li>支持读写分离，提高读操作并发性。</li>
+<li>RAII 机制，自动管理锁。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>实现复杂度高于 <code>std::mutex</code>。</li>
+<li>写操作可能饥饿（读操作过多时）。</li>
+</ul>
+</li>
+</ul>
+<h3 id="适用场景-2"><a href="#适用场景-2" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h3><ul>
+<li>读多写少的场景（如数据库查询、缓存访问）。</li>
+<li>需要高并发读操作的系统。</li>
+</ul>
+<hr>
+<h2 id="4-std-unique-lock"><a href="#4-std-unique-lock" class="headerlink" title="4. std::unique_lock"></a>4. <strong><code>std::unique_lock</code></strong></h2><h3 id="定义-3"><a href="#定义-3" class="headerlink" title="定义"></a><strong>定义</strong></h3><p><code>std::unique_lock</code> 是 C++11 提供的 RAII 类模板，用于管理 <code>std::mutex</code>（或类似互斥量），比 <code>std::lock_guard</code> 更灵活，支持延迟加锁、条件变量等。</p>
+<h3 id="用途-3"><a href="#用途-3" class="headerlink" title="用途"></a><strong>用途</strong></h3><ul>
+<li>提供灵活的锁管理（如手动加锁&#x2F;解锁、与条件变量配合）。</li>
+<li>用于复杂同步场景（如线程池中的任务等待）。</li>
+</ul>
+<h3 id="实现原理-3"><a href="#实现原理-3" class="headerlink" title="实现原理"></a><strong>实现原理</strong></h3><ul>
+<li>类似 <code>std::lock_guard</code>，但支持：<ul>
+<li>延迟加锁（<code>std::unique_lock(mutex, std::defer_lock)</code>）。</li>
+<li>手动解锁（<code>unlock()</code>）。</li>
+<li>转移锁所有权（<code>std::move</code>）。</li>
+</ul>
+</li>
+<li>与 <code>std::condition_variable</code> 配合，<code>wait</code> 时自动释放锁，唤醒时重新加锁。</li>
+</ul>
+<h3 id="代码示例-3"><a href="#代码示例-3" class="headerlink" title="代码示例"></a><strong>代码示例</strong></h3><p>结合线程池中的条件变量（参考之前的线程池代码）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">std::mutex mutex_;</span><br><span class="line">std::condition_variable condition_;</span><br><span class="line">std::queue&lt;std::function&lt;<span class="type">void</span>()&gt;&gt; tasks;</span><br><span class="line"><span class="type">bool</span> stop;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">worker</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">while</span> (<span class="literal">true</span>) &#123;</span><br><span class="line">        std::function&lt;<span class="type">void</span>()&gt; task;</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(mutex_)</span></span>;</span><br><span class="line">            condition_.<span class="built_in">wait</span>(lock, [<span class="keyword">this</span>] &#123; <span class="keyword">return</span> stop || !tasks.<span class="built_in">empty</span>(); &#125;);</span><br><span class="line">            <span class="keyword">if</span> (stop &amp;&amp; tasks.<span class="built_in">empty</span>()) <span class="keyword">return</span>;</span><br><span class="line">            task = std::<span class="built_in">move</span>(tasks.<span class="built_in">front</span>());</span><br><span class="line">            tasks.<span class="built_in">pop</span>();</span><br><span class="line">        &#125; <span class="comment">// 锁自动释放</span></span><br><span class="line">        <span class="built_in">task</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="优缺点-3"><a href="#优缺点-3" class="headerlink" title="优缺点"></a><strong>优缺点</strong></h3><ul>
+<li><strong>优点</strong>：<ul>
+<li>灵活性高，支持条件变量、延迟加锁等。</li>
+<li>RAII 机制，自动管理锁。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>比 <code>std::lock_guard</code> 略高开销（因功能更复杂）。</li>
+<li>使用复杂，需小心管理锁状态。</li>
+</ul>
+</li>
+</ul>
+<h3 id="适用场景-3"><a href="#适用场景-3" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h3><ul>
+<li>需要条件变量的场景（如线程池的任务等待）。</li>
+<li>复杂同步逻辑（如动态加锁&#x2F;解锁）。</li>
+</ul>
+<hr>
+<h2 id="5-分布式锁"><a href="#5-分布式锁" class="headerlink" title="5. 分布式锁"></a>5. <strong>分布式锁</strong></h2><h3 id="定义-4"><a href="#定义-4" class="headerlink" title="定义"></a><strong>定义</strong></h3><p>分布式锁是跨多个进程或节点（通常在分布式系统中）的锁机制，用于协调不同机器上的共享资源访问。</p>
+<h3 id="用途-4"><a href="#用途-4" class="headerlink" title="用途"></a><strong>用途</strong></h3><ul>
+<li>在分布式系统中保护共享资源（如数据库、文件系统）。</li>
+<li>实现分布式任务调度、分布式事务等。</li>
+</ul>
+<h3 id="实现原理-4"><a href="#实现原理-4" class="headerlink" title="实现原理"></a><strong>实现原理</strong></h3><ul>
+<li>通常基于分布式协调服务（如 ZooKeeper、Redis、etcd）实现。</li>
+<li><strong>Redis 实现</strong>：<ul>
+<li>使用 <code>SETNX</code>（set if not exists）命令创建锁。</li>
+<li>设置锁的过期时间（防止死锁）。</li>
+<li>释放锁通过删除键。</li>
+</ul>
+</li>
+<li><strong>ZooKeeper 实现</strong>：<ul>
+<li>使用临时节点和顺序节点创建锁。</li>
+<li>节点删除或断开连接自动释放锁。</li>
+</ul>
+</li>
+</ul>
+<h3 id="代码示例（Redis-分布式锁）"><a href="#代码示例（Redis-分布式锁）" class="headerlink" title="代码示例（Redis 分布式锁）"></a><strong>代码示例（Redis 分布式锁）</strong></h3><p>使用 C++ Redis 客户端（如 <code>cpp_redis</code>）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;cpp_redis/cpp_redis&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;chrono&gt;</span></span></span><br><span class="line"></span><br><span class="line">cpp_redis::client redis_client;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">bool</span> <span class="title">acquire_lock</span><span class="params">(<span class="type">const</span> std::string&amp; lock_key, <span class="type">int</span> timeout_ms)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> expire = std::chrono::<span class="built_in">milliseconds</span>(timeout_ms).<span class="built_in">count</span>();</span><br><span class="line">    <span class="keyword">return</span> redis_client.<span class="built_in">setnx</span>(lock_key, <span class="string">&quot;locked&quot;</span>) &amp;&amp; redis_client.<span class="built_in">pexpire</span>(lock_key, expire);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">release_lock</span><span class="params">(<span class="type">const</span> std::string&amp; lock_key)</span> </span>&#123;</span><br><span class="line">    redis_client.<span class="built_in">del</span>(&#123;lock_key&#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="优缺点-4"><a href="#优缺点-4" class="headerlink" title="优缺点"></a><strong>优缺点</strong></h3><ul>
+<li><strong>优点</strong>：<ul>
+<li>支持跨节点同步，适用于分布式系统。</li>
+<li>可实现高可用性（如 Redis 集群）。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>依赖外部服务，增加系统复杂性。</li>
+<li>网络延迟可能影响性能。</li>
+<li>实现复杂，需处理锁超时、脑裂等问题。</li>
+</ul>
+</li>
+</ul>
+<h3 id="适用场景-4"><a href="#适用场景-4" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h3><ul>
+<li>分布式系统中的资源协调（如分布式任务调度）。</li>
+<li>跨节点的共享资源访问（如分布式数据库）。</li>
+</ul>
+<hr>
+<h2 id="6-自旋锁（Spinlock）"><a href="#6-自旋锁（Spinlock）" class="headerlink" title="6. 自旋锁（Spinlock）"></a>6. <strong>自旋锁（Spinlock）</strong></h2><h3 id="定义-5"><a href="#定义-5" class="headerlink" title="定义"></a><strong>定义</strong></h3><p>自旋锁是一种非阻塞锁，线程在获取锁失败时不会休眠，而是通过循环（“自旋”）不断尝试获取锁，直到成功。</p>
+<h3 id="用途-5"><a href="#用途-5" class="headerlink" title="用途"></a><strong>用途</strong></h3><ul>
+<li>适合临界区非常短的场景，减少上下文切换开销。</li>
+<li>高性能场景（如实时系统、内核编程）。</li>
+</ul>
+<h3 id="实现原理-5"><a href="#实现原理-5" class="headerlink" title="实现原理"></a><strong>实现原理</strong></h3><ul>
+<li>使用原子操作（如 <code>std::atomic_flag</code>）检查锁状态。</li>
+<li>如果锁被占用，线程循环检查，直到锁可用。</li>
+</ul>
+<h3 id="代码示例-4"><a href="#代码示例-4" class="headerlink" title="代码示例"></a><strong>代码示例</strong></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">class</span> <span class="title class_">Spinlock</span> &#123;</span><br><span class="line">    std::atomic_flag flag = ATOMIC_FLAG_INIT;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">lock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">while</span> (flag.<span class="built_in">test_and_set</span>(std::memory_order_acquire)) &#123;</span><br><span class="line">            <span class="comment">// 自旋等待</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">unlock</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        flag.<span class="built_in">clear</span>(std::memory_order_release);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">Spinlock spinlock;</span><br><span class="line"><span class="type">int</span> shared_data = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i) &#123;</span><br><span class="line">        spinlock.<span class="built_in">lock</span>();</span><br><span class="line">        ++shared_data;</span><br><span class="line">        spinlock.<span class="built_in">unlock</span>();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(increment)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(increment)</span></span>;</span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Shared data: &quot;</span> &lt;&lt; shared_data &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="优缺点-5"><a href="#优缺点-5" class="headerlink" title="优缺点"></a><strong>优缺点</strong></h3><ul>
+<li><strong>优点</strong>：<ul>
+<li>避免上下文切换，适合短临界区。</li>
+<li>实现简单，适用于低延迟场景。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>自旋浪费 CPU 资源，长时间等待效率低。</li>
+<li>不适合长临界区或高争用场景。</li>
+</ul>
+</li>
+</ul>
+<h3 id="适用场景-5"><a href="#适用场景-5" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h3><ul>
+<li>短临界区（如内存分配、计数器更新）。</li>
+<li>实时系统或高性能计算。</li>
+</ul>
+<hr>
+<h2 id="7-悲观锁（Pessimistic-Lock）"><a href="#7-悲观锁（Pessimistic-Lock）" class="headerlink" title="7. 悲观锁（Pessimistic Lock）"></a>7. <strong>悲观锁（Pessimistic Lock）</strong></h2><h3 id="定义-6"><a href="#定义-6" class="headerlink" title="定义"></a><strong>定义</strong></h3><p>悲观锁假设并发操作会发生冲突，因此在访问共享资源前总是先加锁，确保独占访问。</p>
+<h3 id="用途-6"><a href="#用途-6" class="headerlink" title="用途"></a><strong>用途</strong></h3><ul>
+<li>确保数据一致性，适合写多读少的场景。</li>
+<li>防止数据竞争或冲突。</li>
+</ul>
+<h3 id="实现原理-6"><a href="#实现原理-6" class="headerlink" title="实现原理"></a><strong>实现原理</strong></h3><ul>
+<li>使用互斥锁（如 <code>std::mutex</code>）、读写锁等实现。</li>
+<li>线程获取锁后独占资源，其他线程阻塞等待。</li>
+</ul>
+<h3 id="代码示例-5"><a href="#代码示例-5" class="headerlink" title="代码示例"></a><strong>代码示例</strong></h3><p><code>std::mutex</code> 和 <code>std::lock_guard</code> 就是典型的悲观锁实现（见上述示例）。</p>
+<h3 id="优缺点-6"><a href="#优缺点-6" class="headerlink" title="优缺点"></a><strong>优缺点</strong></h3><ul>
+<li><strong>优点</strong>：<ul>
+<li>强一致性，适合高冲突场景。</li>
+<li>简单可靠，易于实现。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>阻塞线程，降低并发性能。</li>
+<li>不适合读多写少的场景。</li>
+</ul>
+</li>
+</ul>
+<h3 id="适用场景-6"><a href="#适用场景-6" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h3><ul>
+<li>写操作频繁的场景（如数据库事务）。</li>
+<li>需要强一致性的系统（如金融系统）。</li>
+</ul>
+<hr>
+<h2 id="8-乐观锁（Optimistic-Lock）"><a href="#8-乐观锁（Optimistic-Lock）" class="headerlink" title="8. 乐观锁（Optimistic Lock）"></a>8. <strong>乐观锁（Optimistic Lock）</strong></h2><h3 id="定义-7"><a href="#定义-7" class="headerlink" title="定义"></a><strong>定义</strong></h3><p>乐观锁假设冲突较少，允许线程先操作共享资源，提交时检查是否发生冲突，若有冲突则回滚重试。</p>
+<h3 id="用途-7"><a href="#用途-7" class="headerlink" title="用途"></a><strong>用途</strong></h3><ul>
+<li>适合读多写少的场景，提高并发性能。</li>
+<li>用于数据库（如 MVCC）、版本控制等。</li>
+</ul>
+<h3 id="实现原理-7"><a href="#实现原理-7" class="headerlink" title="实现原理"></a><strong>实现原理</strong></h3><ul>
+<li>通常基于版本号或比较交换（CAS，Compare-And-Swap）机制。</li>
+<li>线程读取数据时记录版本号，更新时检查版本号是否改变。</li>
+</ul>
+<h3 id="代码示例（基于-CAS）"><a href="#代码示例（基于-CAS）" class="headerlink" title="代码示例（基于 CAS）"></a><strong>代码示例（基于 CAS）</strong></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;atomic&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function">std::atomic&lt;<span class="type">int</span>&gt; <span class="title">shared_data</span><span class="params">(<span class="number">0</span>)</span></span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">1000</span>; ++i) &#123;</span><br><span class="line">        <span class="type">int</span> expected = shared_data.<span class="built_in">load</span>();</span><br><span class="line">        <span class="keyword">while</span> (!shared_data.<span class="built_in">compare_exchange_strong</span>(expected, expected + <span class="number">1</span>)) &#123;</span><br><span class="line">            <span class="comment">// CAS 失败，重试</span></span><br><span class="line">            expected = shared_data.<span class="built_in">load</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(increment)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(increment)</span></span>;</span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Shared data: &quot;</span> &lt;&lt; shared_data &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="优缺点-7"><a href="#优缺点-7" class="headerlink" title="优缺点"></a><strong>优缺点</strong></h3><ul>
+<li><strong>优点</strong>：<ul>
+<li>非阻塞，高并发性能。</li>
+<li>适合读多写少的场景。</li>
+</ul>
+</li>
+<li><strong>缺点</strong>：<ul>
+<li>冲突多时，重试开销大。</li>
+<li>实现复杂，需处理版本控制或 CAS。</li>
+</ul>
+</li>
+</ul>
+<h3 id="适用场景-7"><a href="#适用场景-7" class="headerlink" title="适用场景"></a><strong>适用场景</strong></h3><ul>
+<li>读多写少的场景（如数据库 MVCC）。</li>
+<li>高并发系统（如缓存更新）。</li>
+</ul>
+<hr>
+<h2 id="9-总结与对比"><a href="#9-总结与对比" class="headerlink" title="9. 总结与对比"></a>9. <strong>总结与对比</strong></h2><table>
+<thead>
+<tr>
+<th>锁类型</th>
+<th>阻塞&#x2F;非阻塞</th>
+<th>适用场景</th>
+<th>C++ 实现</th>
+<th>优缺点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>std::mutex</code></td>
+<td>阻塞</td>
+<td>简单共享资源保护</td>
+<td><code>lock</code>&#x2F;<code>unlock</code></td>
+<td>简单但需手动管理，易死锁</td>
+</tr>
+<tr>
+<td><code>std::lock_guard</code></td>
+<td>阻塞</td>
+<td>短临界区，自动管理锁</td>
+<td>RAII 管理 <code>mutex</code></td>
+<td>安全简单，但不灵活</td>
+</tr>
+<tr>
+<td><code>std::shared_lock</code></td>
+<td>阻塞</td>
+<td>读多写少</td>
+<td>配合 <code>std::shared_mutex</code></td>
+<td>高并发读，写可能饥饿</td>
+</tr>
+<tr>
+<td><code>std::unique_lock</code></td>
+<td>阻塞</td>
+<td>复杂同步（如条件变量）</td>
+<td>配合 <code>std::mutex</code></td>
+<td>灵活但稍复杂</td>
+</tr>
+<tr>
+<td>分布式锁</td>
+<td>阻塞&#x2F;非阻塞</td>
+<td>分布式系统资源协调</td>
+<td>Redis&#x2F;ZooKeeper</td>
+<td>跨节点同步，依赖外部服务</td>
+</tr>
+<tr>
+<td>自旋锁</td>
+<td>非阻塞</td>
+<td>短临界区，高性能</td>
+<td><code>std::atomic_flag</code></td>
+<td>低延迟但浪费 CPU</td>
+</tr>
+<tr>
+<td>悲观锁</td>
+<td>阻塞</td>
+<td>写多读少，强一致性</td>
+<td><code>std::mutex</code> 等</td>
+<td>简单可靠但并发性低</td>
+</tr>
+<tr>
+<td>乐观锁</td>
+<td>非阻塞</td>
+<td>读多写少，高并发</td>
+<td><code>std::atomic</code> CAS</td>
+<td>高并发但冲突多时效率低</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="10-结合线程池的上下文"><a href="#10-结合线程池的上下文" class="headerlink" title="10. 结合线程池的上下文"></a>10. <strong>结合线程池的上下文</strong></h2><p>在之前的线程池实现中：</p>
+<ul>
+<li>**<code>std::mutex</code> 和 <code>std::unique_lock</code>**：用于保护任务队列，<code>unique_lock</code> 与 <code>std::condition_variable</code> 配合实现线程等待&#x2F;通知。</li>
+<li><strong>适用性</strong>：线程池中任务队列的访问是典型悲观锁场景，<code>unique_lock</code> 提供灵活性支持条件变量。</li>
+<li><strong>扩展建议</strong>：<ul>
+<li>若任务队列访问时间极短，可尝试自旋锁优化。</li>
+<li>若线程池扩展到分布式系统，可引入分布式锁管理跨节点任务。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="11-注意事项"><a href="#11-注意事项" class="headerlink" title="11. 注意事项"></a>11. <strong>注意事项</strong></h2><ul>
+<li><strong>选择锁类型</strong>：根据临界区长度、读写比例、并发需求选择合适的锁。</li>
+<li><strong>死锁风险</strong>：避免多锁嵌套，使用 <code>std::lock</code> 或 RAII 工具。</li>
+<li><strong>性能权衡</strong>：阻塞锁适合长临界区，非阻塞锁（如自旋锁、乐观锁）适合短临界区或高并发。</li>
+</ul>
+<p>如果你对某类锁的实现细节（如分布式锁的 Redis 配置、自旋锁的优化）或在特定场景（如线程池）的应用有进一步疑问，请告诉我，我可以提供更深入的代码或分析！</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/06/29/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84%E9%94%81/">https://cmzcc.github.io/2025/06/29/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84%E9%94%81/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/c/">c++</a><a class="post-meta__tags" href="/tags/%E9%94%81/">锁</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover1.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2025/06/29/c-%E5%86%85%E5%AD%98%E7%AE%A1%E7%90%86/" title="c++内存管理"><img class="cover" src="/img/text-cover1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">c++内存管理</div></div></a><a class="next-post pull-right" href="/2025/06/29/%E6%A8%A1%E6%9D%BF%E5%85%83%E7%BC%96%E7%A8%8B/" title="模板元编程"><img class="cover" src="/img/text-cover1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">模板元编程</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a href="/2025/01/12/Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="Lambda表达式"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-12</div><div class="title">Lambda表达式</div></div></a><a href="/2025/06/30/atomic/" title="atomic"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-30</div><div class="title">atomic</div></div></a><a href="/2024/11/25/c++11%E6%96%B0%E7%89%B9%E6%80%A7%E4%B9%8Bemplace/" title="c++11新特性之emplace"><img class="cover" src="/img/text-cover4.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++11新特性之emplace</div></div></a><a href="/2025/01/27/bind%E5%92%8C%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB/" title="bind和回调函数的关系"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-27</div><div class="title">bind和回调函数的关系</div></div></a><a href="/2024/09/17/c++%E4%B8%AD%E5%85%B3%E4%BA%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E9%87%8D%E8%BD%BD%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E6%80%9D%E8%80%83/" title="c++中关于深拷贝与重载赋值运算符的思考"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-17</div><div class="title">c++中关于深拷贝与重载赋值运算符的思考</div></div></a><a href="/2024/11/25/c++%E4%B8%AD%E7%9A%84IO%E6%B5%81/" title="c++中的I&#x2F;O流"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++中的I&#x2F;O流</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">87</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">94</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">向游戏开发工程师进军中，unity客户端和c++服务端均有涉猎(c++学的头秃ing)</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%90%84%E7%A7%8D%E9%94%81%E7%9A%84%E4%BB%8B%E7%BB%8D"><span class="toc-number">1.</span> <span class="toc-text">各种锁的介绍</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#1-%E4%BA%92%E6%96%A5%E9%94%81%EF%BC%88std-mutex%EF%BC%89"><span class="toc-number">1.1.</span> <span class="toc-text">1. 互斥锁（std::mutex）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89"><span class="toc-number">1.1.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E9%80%94"><span class="toc-number">1.1.2.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86"><span class="toc-number">1.1.3.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B"><span class="toc-number">1.1.4.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9"><span class="toc-number">1.1.5.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">1.1.6.</span> <span class="toc-text">适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#2-std-lock-guard"><span class="toc-number">1.2.</span> <span class="toc-text">2. std::lock_guard</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-1"><span class="toc-number">1.2.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E9%80%94-1"><span class="toc-number">1.2.2.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-1"><span class="toc-number">1.2.3.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-1"><span class="toc-number">1.2.4.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9-1"><span class="toc-number">1.2.5.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-1"><span class="toc-number">1.2.6.</span> <span class="toc-text">适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#3-std-shared-mutex-shared-lock"><span class="toc-number">1.3.</span> <span class="toc-text">3. std::shared_mutex&#x2F;shared_lock</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-2"><span class="toc-number">1.3.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E9%80%94-2"><span class="toc-number">1.3.2.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-2"><span class="toc-number">1.3.3.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-2"><span class="toc-number">1.3.4.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9-2"><span class="toc-number">1.3.5.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-2"><span class="toc-number">1.3.6.</span> <span class="toc-text">适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#4-std-unique-lock"><span class="toc-number">1.4.</span> <span class="toc-text">4. std::unique_lock</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-3"><span class="toc-number">1.4.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E9%80%94-3"><span class="toc-number">1.4.2.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-3"><span class="toc-number">1.4.3.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-3"><span class="toc-number">1.4.4.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9-3"><span class="toc-number">1.4.5.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-3"><span class="toc-number">1.4.6.</span> <span class="toc-text">适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#5-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81"><span class="toc-number">1.5.</span> <span class="toc-text">5. 分布式锁</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-4"><span class="toc-number">1.5.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E9%80%94-4"><span class="toc-number">1.5.2.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-4"><span class="toc-number">1.5.3.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B%EF%BC%88Redis-%E5%88%86%E5%B8%83%E5%BC%8F%E9%94%81%EF%BC%89"><span class="toc-number">1.5.4.</span> <span class="toc-text">代码示例（Redis 分布式锁）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9-4"><span class="toc-number">1.5.5.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-4"><span class="toc-number">1.5.6.</span> <span class="toc-text">适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#6-%E8%87%AA%E6%97%8B%E9%94%81%EF%BC%88Spinlock%EF%BC%89"><span class="toc-number">1.6.</span> <span class="toc-text">6. 自旋锁（Spinlock）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-5"><span class="toc-number">1.6.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E9%80%94-5"><span class="toc-number">1.6.2.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-5"><span class="toc-number">1.6.3.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-4"><span class="toc-number">1.6.4.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9-5"><span class="toc-number">1.6.5.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-5"><span class="toc-number">1.6.6.</span> <span class="toc-text">适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#7-%E6%82%B2%E8%A7%82%E9%94%81%EF%BC%88Pessimistic-Lock%EF%BC%89"><span class="toc-number">1.7.</span> <span class="toc-text">7. 悲观锁（Pessimistic Lock）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-6"><span class="toc-number">1.7.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E9%80%94-6"><span class="toc-number">1.7.2.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-6"><span class="toc-number">1.7.3.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B-5"><span class="toc-number">1.7.4.</span> <span class="toc-text">代码示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9-6"><span class="toc-number">1.7.5.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-6"><span class="toc-number">1.7.6.</span> <span class="toc-text">适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#8-%E4%B9%90%E8%A7%82%E9%94%81%EF%BC%88Optimistic-Lock%EF%BC%89"><span class="toc-number">1.8.</span> <span class="toc-text">8. 乐观锁（Optimistic Lock）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9A%E4%B9%89-7"><span class="toc-number">1.8.1.</span> <span class="toc-text">定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%94%A8%E9%80%94-7"><span class="toc-number">1.8.2.</span> <span class="toc-text">用途</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%AE%9E%E7%8E%B0%E5%8E%9F%E7%90%86-7"><span class="toc-number">1.8.3.</span> <span class="toc-text">实现原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BB%A3%E7%A0%81%E7%A4%BA%E4%BE%8B%EF%BC%88%E5%9F%BA%E4%BA%8E-CAS%EF%BC%89"><span class="toc-number">1.8.4.</span> <span class="toc-text">代码示例（基于 CAS）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BC%98%E7%BC%BA%E7%82%B9-7"><span class="toc-number">1.8.5.</span> <span class="toc-text">优缺点</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF-7"><span class="toc-number">1.8.6.</span> <span class="toc-text">适用场景</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#9-%E6%80%BB%E7%BB%93%E4%B8%8E%E5%AF%B9%E6%AF%94"><span class="toc-number">1.9.</span> <span class="toc-text">9. 总结与对比</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#10-%E7%BB%93%E5%90%88%E7%BA%BF%E7%A8%8B%E6%B1%A0%E7%9A%84%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">1.10.</span> <span class="toc-text">10. 结合线程池的上下文</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#11-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">1.11.</span> <span class="toc-text">11. 注意事项</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/06/30/atomic/" title="atomic"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="atomic"/></a><div class="content"><a class="title" href="/2025/06/30/atomic/" title="atomic">atomic</a><time datetime="2025-06-30T01:04:46.000Z" title="Created 2025-06-30 09:04:46">2025-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/30/%E6%97%A0%E9%94%81%E5%BE%AA%E7%8E%AF%E9%98%9F%E5%88%97/" title="无锁循环队列"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="无锁循环队列"/></a><div class="content"><a class="title" href="/2025/06/30/%E6%97%A0%E9%94%81%E5%BE%AA%E7%8E%AF%E9%98%9F%E5%88%97/" title="无锁循环队列">无锁循环队列</a><time datetime="2025-06-29T16:24:22.000Z" title="Created 2025-06-30 00:24:22">2025-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/30/%E7%B1%BB%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93/" title="类和结构体"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="类和结构体"/></a><div class="content"><a class="title" href="/2025/06/30/%E7%B1%BB%E5%92%8C%E7%BB%93%E6%9E%84%E4%BD%93/" title="类和结构体">类和结构体</a><time datetime="2025-06-29T16:06:53.000Z" title="Created 2025-06-30 00:06:53">2025-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/30/OSI%E6%A8%A1%E5%9E%8B/" title="OSI模型"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="OSI模型"/></a><div class="content"><a class="title" href="/2025/06/30/OSI%E6%A8%A1%E5%9E%8B/" title="OSI模型">OSI模型</a><time datetime="2025-06-29T16:06:32.000Z" title="Created 2025-06-30 00:06:32">2025-06-30</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/06/30/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" title="构造函数"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="构造函数"/></a><div class="content"><a class="title" href="/2025/06/30/%E6%9E%84%E9%80%A0%E5%87%BD%E6%95%B0/" title="构造函数">构造函数</a><time datetime="2025-06-29T16:06:17.000Z" title="Created 2025-06-30 00:06:17">2025-06-30</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
