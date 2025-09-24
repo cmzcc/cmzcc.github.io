@@ -1,0 +1,314 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>enum和enum class | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、 enum (传统枚举 &#x2F; Unscoped Enum)enum 是 C 语言就有的特性，在 C++ 中也得到了支持。它定义了一组具名的整数常量。 特点：  作用域污染 (Scope Pollution)： enum 的枚举器（即具名常量）会泄露到定义它们的命名空间或全局作用域中。这意味着你不能在同一个作用域中定义同名的枚举器，即使它们属于不同的 enum 类型。 123456en">
+<meta property="og:type" content="article">
+<meta property="og:title" content="enum和enum class">
+<meta property="og:url" content="https://cmzcc.github.io/2025/09/23/enum%E5%92%8Cenum-class/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="一、 enum (传统枚举 &#x2F; Unscoped Enum)enum 是 C 语言就有的特性，在 C++ 中也得到了支持。它定义了一组具名的整数常量。 特点：  作用域污染 (Scope Pollution)： enum 的枚举器（即具名常量）会泄露到定义它们的命名空间或全局作用域中。这意味着你不能在同一个作用域中定义同名的枚举器，即使它们属于不同的 enum 类型。 123456en">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover3.jpg">
+<meta property="article:published_time" content="2025-09-23T13:01:52.000Z">
+<meta property="article:modified_time" content="2025-09-24T00:51:04.229Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="枚举">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover3.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/09/23/enum%E5%92%8Cenum-class/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'enum和enum class',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-09-24 08:51:04'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">95</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">104</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover3.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">enum和enum class</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">enum和enum class</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-09-23T13:01:52.000Z" title="Created 2025-09-23 21:01:52">2025-09-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-09-24T00:51:04.229Z" title="Updated 2025-09-24 08:51:04">2025-09-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/c/">c++</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><hr>
+<h3 id="一、-enum-传统枚举-Unscoped-Enum"><a href="#一、-enum-传统枚举-Unscoped-Enum" class="headerlink" title="一、 enum (传统枚举 &#x2F; Unscoped Enum)"></a>一、 <code>enum</code> (传统枚举 &#x2F; Unscoped Enum)</h3><p><code>enum</code> 是 C 语言就有的特性，在 C++ 中也得到了支持。它定义了一组具名的整数常量。</p>
+<p><strong>特点：</strong></p>
+<ol>
+<li><p><strong>作用域污染 (Scope Pollution)：</strong> <code>enum</code> 的枚举器（即具名常量）会<strong>泄露到定义它们的命名空间或全局作用域中</strong>。这意味着你不能在同一个作用域中定义同名的枚举器，即使它们属于不同的 <code>enum</code> 类型。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span> &#123; RED, GREEN, BLUE &#125;;</span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">TrafficLight</span> &#123; RED_LIGHT, YELLOW_LIGHT, GREEN_LIGHT &#125;; <span class="comment">// 编译错误：RED_LIGHT 与 Color::RED 冲突 (如果 RED_LIGHT 也叫 RED)</span></span><br><span class="line">                                                          <span class="comment">// 实际上这里不会冲突，因为名字不同。但如果 TrafficLight 也有一个叫 RED 的枚举器，就会冲突。</span></span><br><span class="line"><span class="comment">// 假设：</span></span><br><span class="line"><span class="comment">// enum Color &#123; RED, GREEN, BLUE &#125;;</span></span><br><span class="line"><span class="comment">// enum Feeling &#123; HAPPY, SAD, RED &#125;; // 编译错误：RED 重定义</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>隐式类型转换 (Implicit Conversion)：</strong> <code>enum</code> 的枚举器可以<strong>隐式转换为整数类型</strong>（如 <code>int</code>），也可以隐式地与其他整数类型进行比较或算术运算。这可能导致类型不安全的问题。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span> &#123; RED, GREEN, BLUE &#125;;</span><br><span class="line">Color c = RED;</span><br><span class="line"><span class="type">int</span> i = c; <span class="comment">// 隐式转换为 int，i = 0，合法</span></span><br><span class="line"><span class="keyword">if</span> (c == <span class="number">0</span>) &#123; <span class="comment">// 隐式比较，合法</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line">Color another_c = BLUE;</span><br><span class="line"><span class="keyword">if</span> (c == another_c) &#123; <span class="comment">// 合法</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>底层类型不确定 (Underlying Type)：</strong> 编译器会为 <code>enum</code> 选择一个合适的整数类型来存储枚举值（例如 <code>int</code>、<code>char</code> 等），这个类型是<strong>实现定义的</strong>，通常是能够容纳所有枚举器值的最小整数类型。你也可以显式指定底层类型（C++11 引入），但这在传统 <code>enum</code> 中不常见。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Color</span> &#123; RED, GREEN, BLUE &#125;;</span><br><span class="line"><span class="comment">// sizeof(Color) 可能是 4 (int)</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>默认值：</strong> 如果没有显式赋值，第一个枚举器的值为 <code>0</code>，后续枚举器的值在前一个的基础上递增 <code>1</code>。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Status</span> &#123;</span><br><span class="line">    OK,      <span class="comment">// 0</span></span><br><span class="line">    ERROR,   <span class="comment">// 1</span></span><br><span class="line">    WARNING = <span class="number">5</span>, <span class="comment">// 5</span></span><br><span class="line">    FATAL    <span class="comment">// 6</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>示例：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Direction</span> &#123;</span><br><span class="line">    NORTH, <span class="comment">// 0</span></span><br><span class="line">    EAST,  <span class="comment">// 1</span></span><br><span class="line">    SOUTH, <span class="comment">// 2</span></span><br><span class="line">    WEST   <span class="comment">// 3</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    DOG = <span class="number">10</span>,</span><br><span class="line">    CAT,   <span class="comment">// 11</span></span><br><span class="line">    BIRD   <span class="comment">// 12</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_direction</span><span class="params">(Direction d)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (d) &#123;</span><br><span class="line">        <span class="keyword">case</span> NORTH: std::cout &lt;&lt; <span class="string">&quot;North&quot;</span> &lt;&lt; std::endl; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> EAST:  std::cout &lt;&lt; <span class="string">&quot;East&quot;</span> &lt;&lt; std::endl;  <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> SOUTH: std::cout &lt;&lt; <span class="string">&quot;South&quot;</span> &lt;&lt; std::endl; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> WEST:  std::cout &lt;&lt; <span class="string">&quot;West&quot;</span> &lt;&lt; std::endl;  <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:    std::cout &lt;&lt; <span class="string">&quot;Unknown Direction&quot;</span> &lt;&lt; std::endl; <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Direction my_dir = NORTH;</span><br><span class="line">    <span class="built_in">print_direction</span>(my_dir);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 作用域污染：可以直接使用 NORTH，而不是 Direction::NORTH</span></span><br><span class="line">    <span class="keyword">if</span> (my_dir == NORTH) &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;It&#x27;s North!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 隐式转换：</span></span><br><span class="line">    <span class="type">int</span> dir_val = my_dir; <span class="comment">// OK, dir_val = 0</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Direction value: &quot;</span> &lt;&lt; dir_val &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 隐式比较：</span></span><br><span class="line">    <span class="keyword">if</span> (my_dir == <span class="number">0</span>) &#123; <span class="comment">// OK</span></span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;North is 0&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 类型不安全问题示例：</span></span><br><span class="line">    <span class="comment">// Animal a = NORTH; // 编译错误，因为类型不匹配。但如果 Direction 和 Animal 的底层类型相同，且值匹配，可能可以通过强制转换绕过。</span></span><br><span class="line">    <span class="comment">// int x = 1;</span></span><br><span class="line">    <span class="comment">// Direction d2 = static_cast&lt;Direction&gt;(x); // 允许将任意整数转换为枚举类型，可能得到无效值</span></span><br><span class="line">    <span class="comment">// print_direction(d2); // 如果 x=1，输出 East；如果 x=100，输出 Unknown Direction</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="二、-enum-class-枚举类-Scoped-Enum-C-11"><a href="#二、-enum-class-枚举类-Scoped-Enum-C-11" class="headerlink" title="二、 enum class (枚举类 &#x2F; Scoped Enum) (C++11)"></a>二、 <code>enum class</code> (枚举类 &#x2F; Scoped Enum) (C++11)</h3><p><code>enum class</code> 是 C++11 引入的，旨在解决传统 <code>enum</code> 的主要缺点：作用域污染和类型不安全。</p>
+<p><strong>特点：</strong></p>
+<ol>
+<li><p><strong>强作用域 (Strongly Scoped)：</strong> <code>enum class</code> 的枚举器只在其枚举类型的作用域内可见。你需要使用 <code>EnumTypeName::EnumeratorName</code> 的方式来引用它们。这完全消除了作用域污染问题。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum class</span> <span class="title class_">Color</span> &#123; RED, GREEN, BLUE &#125;;</span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">TrafficLight</span> &#123; RED, YELLOW, GREEN &#125;; <span class="comment">// 合法！两个 RED 不冲突</span></span><br><span class="line"></span><br><span class="line">Color c = Color::RED; <span class="comment">// 必须使用作用域限定符</span></span><br><span class="line"><span class="comment">// TrafficLight tl = RED; // 编译错误：RED 未定义</span></span><br><span class="line">TrafficLight tl = TrafficLight::RED; <span class="comment">// 合法</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>强类型 (Strongly Typed)：</strong> <code>enum class</code> 的枚举器不会隐式转换为整数类型。你也不能将整数隐式赋值给 <code>enum class</code> 类型。这大大提高了类型安全性，避免了许多潜在的错误。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum class</span> <span class="title class_">Color</span> &#123; RED, GREEN, BLUE &#125;;</span><br><span class="line">Color c = Color::RED;</span><br><span class="line"></span><br><span class="line"><span class="comment">// int i = c; // 编译错误：不能隐式转换为 int</span></span><br><span class="line"><span class="type">int</span> i = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(c); <span class="comment">// 必须显式转换</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// if (c == 0) &#123; // 编译错误：不能隐式比较</span></span><br><span class="line"><span class="comment">//     // ...</span></span><br><span class="line"><span class="comment">// &#125;</span></span><br><span class="line"><span class="keyword">if</span> (c == Color::RED) &#123; <span class="comment">// 合法，同类型比较</span></span><br><span class="line">    <span class="comment">// ...</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">// Color another_c = TrafficLight::RED; // 编译错误：不同枚举类型不能直接比较或赋值</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p><strong>默认底层类型为 <code>int</code>：</strong> 如果不显式指定，<code>enum class</code> 的底层类型默认为 <code>int</code>。你可以显式指定底层类型，这在传统 <code>enum</code> 中也是可行的，但对于 <code>enum class</code> 来说，这种控制更为重要。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum class</span> <span class="title class_">Color</span> : <span class="type">unsigned</span> <span class="type">char</span> &#123; RED, GREEN, BLUE &#125;; <span class="comment">// 显式指定底层类型为 unsigned char</span></span><br><span class="line"><span class="comment">// sizeof(Color) 会是 1</span></span><br></pre></td></tr></table></figure></li>
+</ol>
+<p><strong>示例：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">Direction</span> &#123;</span><br><span class="line">    NORTH, <span class="comment">// 0</span></span><br><span class="line">    EAST,  <span class="comment">// 1</span></span><br><span class="line">    SOUTH, <span class="comment">// 2</span></span><br><span class="line">    WEST   <span class="comment">// 3</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="keyword">enum class</span> <span class="title class_">Animal</span> &#123;</span><br><span class="line">    DOG = <span class="number">10</span>,</span><br><span class="line">    CAT,   <span class="comment">// 11</span></span><br><span class="line">    BIRD   <span class="comment">// 12</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">print_direction_class</span><span class="params">(Direction d)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (d) &#123;</span><br><span class="line">        <span class="keyword">case</span> Direction::NORTH: std::cout &lt;&lt; <span class="string">&quot;North&quot;</span> &lt;&lt; std::endl; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> Direction::EAST:  std::cout &lt;&lt; <span class="string">&quot;East&quot;</span> &lt;&lt; std::endl;  <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> Direction::SOUTH: std::cout &lt;&lt; <span class="string">&quot;South&quot;</span> &lt;&lt; std::endl; <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> Direction::WEST:  std::cout &lt;&lt; <span class="string">&quot;West&quot;</span> &lt;&lt; std::endl;  <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>:    std::cout &lt;&lt; <span class="string">&quot;Unknown Direction&quot;</span> &lt;&lt; std::endl; <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Direction my_dir = Direction::NORTH;</span><br><span class="line">    <span class="built_in">print_direction_class</span>(my_dir);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 强作用域：必须使用 Direction::NORTH</span></span><br><span class="line">    <span class="keyword">if</span> (my_dir == Direction::NORTH) &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;It&#x27;s North!&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 强类型：不能隐式转换为 int</span></span><br><span class="line">    <span class="comment">// int dir_val = my_dir; // 编译错误</span></span><br><span class="line">    <span class="type">int</span> dir_val = <span class="built_in">static_cast</span>&lt;<span class="type">int</span>&gt;(my_dir); <span class="comment">// 必须显式转换</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Direction value: &quot;</span> &lt;&lt; dir_val &lt;&lt; std::endl;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 强类型：不能隐式比较</span></span><br><span class="line">    <span class="comment">// if (my_dir == 0) &#123; // 编译错误</span></span><br><span class="line">    <span class="comment">//     std::cout &lt;&lt; &quot;North is 0&quot; &lt;&lt; std::endl;</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 强类型：不同枚举类型不能直接比较或赋值</span></span><br><span class="line">    <span class="comment">// Animal a = Direction::NORTH; // 编译错误</span></span><br><span class="line">    <span class="comment">// if (Direction::NORTH == Animal::DOG) &#123; // 编译错误</span></span><br><span class="line">    <span class="comment">//     // ...</span></span><br><span class="line">    <span class="comment">// &#125;</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">// 允许将整数转换为枚举类型，但仍需显式转换</span></span><br><span class="line">    <span class="type">int</span> x = <span class="number">1</span>;</span><br><span class="line">    Direction d2 = <span class="built_in">static_cast</span>&lt;Direction&gt;(x); <span class="comment">// 合法，但仍需小心无效值</span></span><br><span class="line">    <span class="built_in">print_direction_class</span>(d2); <span class="comment">// 如果 x=1，输出 East；如果 x=100，输出 Unknown Direction</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h3 id="三、-总结与选择"><a href="#三、-总结与选择" class="headerlink" title="三、 总结与选择"></a>三、 总结与选择</h3><table>
+<thead>
+<tr>
+<th align="left">特性</th>
+<th align="left"><code>enum</code> (传统枚举)</th>
+<th align="left"><code>enum class</code> (枚举类 &#x2F; 作用域枚举)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>C++版本</strong></td>
+<td align="left">C++98 及更高版本</td>
+<td align="left">C++11 及更高版本</td>
+</tr>
+<tr>
+<td align="left"><strong>作用域</strong></td>
+<td align="left">枚举器泄露到父作用域，可能导致命名冲突</td>
+<td align="left"><strong>强作用域</strong>，枚举器只在枚举类型内部可见</td>
+</tr>
+<tr>
+<td align="left"><strong>引用方式</strong></td>
+<td align="left"><code>EnumeratorName</code> 或 <code>EnumTypeName::EnumeratorName</code></td>
+<td align="left"><strong>必须</strong> <code>EnumTypeName::EnumeratorName</code></td>
+</tr>
+<tr>
+<td align="left"><strong>类型安全性</strong></td>
+<td align="left"><strong>弱类型</strong>，可隐式转换为整数，可与整数比较</td>
+<td align="left"><strong>强类型</strong>，不能隐式转换为整数，不能与整数比较</td>
+</tr>
+<tr>
+<td align="left"><strong>底层类型</strong></td>
+<td align="left">编译器决定 (实现定义)，默认为 <code>int</code></td>
+<td align="left">默认为 <code>int</code>，可显式指定</td>
+</tr>
+<tr>
+<td align="left"><strong>隐式转换</strong></td>
+<td align="left"><code>enum</code> -&gt; <code>int</code> (是)</td>
+<td align="left"><code>enum class</code> -&gt; <code>int</code> (否，需要 <code>static_cast</code>)</td>
+</tr>
+<tr>
+<td align="left"><strong>不同枚举类型比较</strong></td>
+<td align="left">如果底层值相同，可能隐式比较 (不安全)</td>
+<td align="left"><strong>否</strong>，编译错误</td>
+</tr>
+<tr>
+<td align="left"><strong>主要优点</strong></td>
+<td align="left">兼容 C 语言，在某些遗留代码中可能更方便</td>
+<td align="left"><strong>避免命名冲突，提高类型安全性，代码更清晰</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>主要缺点</strong></td>
+<td align="left">作用域污染，类型不安全</td>
+<td align="left">需要显式作用域限定符和类型转换</td>
+</tr>
+</tbody></table>
+<p><strong>何时选择哪种？</strong></p>
+<ul>
+<li><strong>推荐使用 <code>enum class</code>：</strong> 在现代 C++ 编程中，几乎所有情况下都应该优先使用 <code>enum class</code>。它解决了传统 <code>enum</code> 的主要痛点，提供了更好的类型安全性和代码清晰度，减少了潜在的错误。</li>
+<li><strong>使用 <code>enum</code> 的场景：</strong><ul>
+<li><strong>与 C 语言代码兼容：</strong> 如果你需要与 C 语言代码进行接口交互，并且 C 代码期望接收或返回传统的 <code>enum</code> 类型，那么可能需要使用 <code>enum</code>。</li>
+<li><strong>作为位标志 (Bit Flags)：</strong> 传统 <code>enum</code> 的隐式转换为整数的特性，有时在作为位标志使用时会显得“方便”（尽管仍然不安全）。然而，即使是位标志，也可以通过重载运算符等方式让 <code>enum class</code> 也能很好地工作，并且更安全。</li>
+</ul>
+</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/09/23/enum%E5%92%8Cenum-class/">https://cmzcc.github.io/2025/09/23/enum%E5%92%8Cenum-class/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E6%9E%9A%E4%B8%BE/">枚举</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover3.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/09/23/string-view%E4%B8%8Eformat/" title="string_view与format"><img class="cover" src="/img/text-cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">string_view与format</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">95</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">104</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">努力成为c++高手ing，专精多线程编程和性能优化方向，国内私募量化开发实习生（QD)牛马</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-enum-%E4%BC%A0%E7%BB%9F%E6%9E%9A%E4%B8%BE-Unscoped-Enum"><span class="toc-number">1.</span> <span class="toc-text">一、 enum (传统枚举 &#x2F; Unscoped Enum)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-enum-class-%E6%9E%9A%E4%B8%BE%E7%B1%BB-Scoped-Enum-C-11"><span class="toc-number">2.</span> <span class="toc-text">二、 enum class (枚举类 &#x2F; Scoped Enum) (C++11)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E6%80%BB%E7%BB%93%E4%B8%8E%E9%80%89%E6%8B%A9"><span class="toc-number">3.</span> <span class="toc-text">三、 总结与选择</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/09/23/enum%E5%92%8Cenum-class/" title="enum和enum class"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="enum和enum class"/></a><div class="content"><a class="title" href="/2025/09/23/enum%E5%92%8Cenum-class/" title="enum和enum class">enum和enum class</a><time datetime="2025-09-23T13:01:52.000Z" title="Created 2025-09-23 21:01:52">2025-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/23/string-view%E4%B8%8Eformat/" title="string_view与format"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="string_view与format"/></a><div class="content"><a class="title" href="/2025/09/23/string-view%E4%B8%8Eformat/" title="string_view与format">string_view与format</a><time datetime="2025-09-23T12:35:46.000Z" title="Created 2025-09-23 20:35:46">2025-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/23/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/" title="分支预测"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="分支预测"/></a><div class="content"><a class="title" href="/2025/09/23/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/" title="分支预测">分支预测</a><time datetime="2025-09-23T12:35:12.000Z" title="Created 2025-09-23 20:35:12">2025-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/23/%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A/" title="结构化绑定"><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="结构化绑定"/></a><div class="content"><a class="title" href="/2025/09/23/%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A/" title="结构化绑定">结构化绑定</a><time datetime="2025-09-23T12:35:01.000Z" title="Created 2025-09-23 20:35:01">2025-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/23/optional/" title="optional"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="optional"/></a><div class="content"><a class="title" href="/2025/09/23/optional/" title="optional">optional</a><time datetime="2025-09-23T12:34:48.000Z" title="Created 2025-09-23 20:34:48">2025-09-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

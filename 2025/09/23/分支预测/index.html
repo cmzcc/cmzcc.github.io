@@ -1,0 +1,306 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>分支预测 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="说实话，我是怎么也没想到这玩意可以被放到面试题合集里面，但是凯读的笔试考了，真服了  一、 分支预测 (Branch Prediction)1. 什么是分支预测？分支预测是现代微处理器（CPU）中的一项关键技术，用于优化指令流水线（Instruction Pipeline）的效率。简单来说，当CPU遇到一个条件分支（例如 if-else 语句、switch 语句、循环等）时，它需要决定接下来执行哪">
+<meta property="og:type" content="article">
+<meta property="og:title" content="分支预测">
+<meta property="og:url" content="https://cmzcc.github.io/2025/09/23/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="说实话，我是怎么也没想到这玩意可以被放到面试题合集里面，但是凯读的笔试考了，真服了  一、 分支预测 (Branch Prediction)1. 什么是分支预测？分支预测是现代微处理器（CPU）中的一项关键技术，用于优化指令流水线（Instruction Pipeline）的效率。简单来说，当CPU遇到一个条件分支（例如 if-else 语句、switch 语句、循环等）时，它需要决定接下来执行哪">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover3.jpg">
+<meta property="article:published_time" content="2025-09-23T12:35:12.000Z">
+<meta property="article:modified_time" content="2025-09-24T00:50:56.521Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="计算机体系结构">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover3.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/09/23/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '分支预测',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-09-24 08:50:56'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">95</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">104</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover3.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">分支预测</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">分支预测</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-09-23T12:35:12.000Z" title="Created 2025-09-23 20:35:12">2025-09-23</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-09-24T00:50:56.521Z" title="Updated 2025-09-24 08:50:56">2025-09-24</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E9%9D%A2%E8%AF%95%E9%A2%98/">面试题</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>说实话，我是怎么也没想到这玩意可以被放到面试题合集里面，但是凯读的笔试考了，真服了</p>
+<hr>
+<h3 id="一、-分支预测-Branch-Prediction"><a href="#一、-分支预测-Branch-Prediction" class="headerlink" title="一、 分支预测 (Branch Prediction)"></a>一、 分支预测 (Branch Prediction)</h3><h4 id="1-什么是分支预测？"><a href="#1-什么是分支预测？" class="headerlink" title="1. 什么是分支预测？"></a>1. 什么是分支预测？</h4><p>分支预测是现代微处理器（CPU）中的一项关键技术，用于<strong>优化指令流水线（Instruction Pipeline）的效率</strong>。简单来说，当CPU遇到一个条件分支（例如 <code>if-else</code> 语句、<code>switch</code> 语句、循环等）时，它需要决定接下来执行哪条路径的指令。然而，CPU无法立即知道条件判断的结果，如果等待判断结果出来再取下一条指令，就会导致流水线停顿，浪费大量时间。</p>
+<p>为了避免这种停顿，CPU会<strong>猜测</strong>哪个分支会被执行，并提前获取并处理该分支上的指令。这就是分支预测。</p>
+<h4 id="2-为什么需要分支预测？"><a href="#2-为什么需要分支预测？" class="headerlink" title="2. 为什么需要分支预测？"></a>2. 为什么需要分支预测？</h4><p>现代CPU采用<strong>指令流水线</strong>技术，将指令的执行过程分解为多个阶段（如取指、译码、执行、访存、写回），并让多个指令在不同阶段并行执行，就像工厂的流水线一样。这大大提高了CPU的吞吐量。</p>
+<p>然而，当遇到条件分支时，流水线的执行会遇到挑战：</p>
+<ul>
+<li><strong>取指阶段</strong>需要知道下一条指令的地址。</li>
+<li>如果下一条指令的地址取决于一个尚未计算出的条件（例如 <code>if (x &gt; y)</code>），那么流水线就必须等待 <code>x &gt; y</code> 的结果。</li>
+<li>这种等待会导致流水线**停顿 (Stall)**，所有后续阶段的指令都无法继续，大大降低了流水线的效率。</li>
+</ul>
+<p>分支预测就是为了解决这个问题而生。</p>
+<h4 id="3-分支预测的工作原理"><a href="#3-分支预测的工作原理" class="headerlink" title="3. 分支预测的工作原理"></a>3. 分支预测的工作原理</h4><p>CPU内部有一个**分支预测器 (Branch Predictor)**，它会根据历史信息和启发式算法来预测分支的走向。</p>
+<ul>
+<li><strong>预测正确 (Prediction Hit)：</strong> 如果CPU的猜测是正确的，那么它提前加载和处理的指令就是正确的，流水线可以顺畅地继续执行，没有任何停顿。这是我们希望看到的最佳情况。</li>
+<li><strong>预测错误 (Prediction Miss &#x2F; Misprediction)：</strong> 如果CPU的猜测是错误的，那么它提前加载和处理的指令就都是无用的。此时，CPU必须：<ol>
+<li><strong>清空 (Flush)</strong> 流水线中所有错误路径上的指令。</li>
+<li><strong>回滚 (Rollback)</strong> CPU的状态到分支点之前的状态。</li>
+<li>从正确的分支路径重新**取指 (Fetch)**。<br>这个过程会带来巨大的性能开销，通常会导致几十甚至上百个CPU周期的浪费。</li>
+</ol>
+</li>
+</ul>
+<h4 id="4-分支预测的策略-简述"><a href="#4-分支预测的策略-简述" class="headerlink" title="4. 分支预测的策略 (简述)"></a>4. 分支预测的策略 (简述)</h4><p>分支预测器会使用各种复杂的策略来提高预测准确率：</p>
+<ul>
+<li><strong>静态预测：</strong> 基于指令的类型或方向（例如，循环的向后跳转通常被预测为“Taken”）。</li>
+<li><strong>动态预测：</strong> 基于分支的历史行为。<ul>
+<li><strong>1-bit 预测器：</strong> 记住上次分支是否被执行。</li>
+<li><strong>2-bit 预测器 (饱和计数器)：</strong> 用一个两位计数器来记录分支的历史。只有连续两次预测错误才会改变预测方向，这使得预测器对偶尔的异常行为更具鲁棒性。</li>
+<li><strong>全局历史预测器：</strong> 结合多个分支的历史信息进行预测。</li>
+<li><strong>间接分支预测器：</strong> 预测通过函数指针或虚函数调用实现的间接跳转的目标地址。</li>
+</ul>
+</li>
+</ul>
+<h4 id="5-分支预测对性能的影响"><a href="#5-分支预测对性能的影响" class="headerlink" title="5. 分支预测对性能的影响"></a>5. 分支预测对性能的影响</h4><ul>
+<li><strong>可预测的分支 (Predictable Branches)：</strong> 如果一个分支的走向是规律的（例如，循环大部分时间都会执行，直到最后一次退出），分支预测器就能很好地预测，性能影响很小。</li>
+<li><strong>不可预测的分支 (Unpredictable Branches)：</strong> 如果一个分支的走向是随机的，或者频繁地在“Taken”和“Not Taken”之间切换，分支预测器就很难准确预测，导致大量的预测错误，从而严重拖慢程序执行速度。</li>
+</ul>
+<hr>
+<h3 id="二、-函数数组-Function-Arrays-及其优越性"><a href="#二、-函数数组-Function-Arrays-及其优越性" class="headerlink" title="二、 函数数组 (Function Arrays) 及其优越性"></a>二、 函数数组 (Function Arrays) 及其优越性</h3><p>函数数组（更准确地说，是<strong>函数指针数组</strong>）是一种存储函数指针的数组。它的每个元素都是一个指向特定函数的指针。</p>
+<h4 id="1-传统的分支密集型代码-Switch-If-Else-If"><a href="#1-传统的分支密集型代码-Switch-If-Else-If" class="headerlink" title="1. 传统的分支密集型代码 (Switch&#x2F;If-Else If)"></a>1. 传统的分支密集型代码 (Switch&#x2F;If-Else If)</h4><p>考虑一个常见的场景：根据一个枚举值或整数值来执行不同的操作。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">enum</span> <span class="title class_">Operation</span> &#123; ADD, SUB, MUL, DIV &#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123; std::cout &lt;&lt; a + b &lt;&lt; std::endl; &#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">sub</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123; std::cout &lt;&lt; a - b &lt;&lt; std::endl; &#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">mul</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123; std::cout &lt;&lt; a * b &lt;&lt; std::endl; &#125;</span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">div_op</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123; <span class="keyword">if</span> (b != <span class="number">0</span>) std::cout &lt;&lt; a / b &lt;&lt; std::endl; <span class="keyword">else</span> std::cout &lt;&lt; <span class="string">&quot;Error: Divide by zero&quot;</span> &lt;&lt; std::endl; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">perform_operation_switch</span><span class="params">(Operation op, <span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">switch</span> (op) &#123;</span><br><span class="line">        <span class="keyword">case</span> ADD: <span class="built_in">add</span>(x, y); <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> SUB: <span class="built_in">sub</span>(x, y); <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> MUL: <span class="built_in">mul</span>(x, y); <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">case</span> DIV: <span class="built_in">div_op</span>(x, y); <span class="keyword">break</span>;</span><br><span class="line">        <span class="keyword">default</span>: std::cout &lt;&lt; <span class="string">&quot;Unknown operation&quot;</span> &lt;&lt; std::endl; <span class="keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>或者使用 <code>if-else if</code>：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="type">void</span> <span class="title">perform_operation_if_else</span><span class="params">(Operation op, <span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (op == ADD) &#123;</span><br><span class="line">        <span class="built_in">add</span>(x, y);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (op == SUB) &#123;</span><br><span class="line">        <span class="built_in">sub</span>(x, y);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (op == MUL) &#123;</span><br><span class="line">        <span class="built_in">mul</span>(x, y);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (op == DIV) &#123;</span><br><span class="line">        <span class="built_in">div_op</span>(x, y);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Unknown operation&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这些情况下，<code>switch</code> 语句或 <code>if-else if</code> 链会产生一系列的条件分支。如果 <code>op</code> 的值是随机的，或者在不同的调用之间频繁变化，那么分支预测器就很难准确预测下一个要执行的 <code>case</code> 或 <code>else if</code> 分支，从而导致大量的<strong>分支预测错误</strong>，严重影响性能。</p>
+<h4 id="2-使用函数数组"><a href="#2-使用函数数组" class="headerlink" title="2. 使用函数数组"></a>2. 使用函数数组</h4><p>我们可以用函数指针数组来替代上述的分支密集型代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;vector&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span> <span class="comment">// For std::function</span></span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 定义函数签名</span></span><br><span class="line"><span class="keyword">using</span> OperationFunc = std::function&lt;<span class="built_in">void</span>(<span class="type">int</span>, <span class="type">int</span>)&gt;;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 假设这些函数已经定义</span></span><br><span class="line"><span class="comment">// void add(int a, int b) &#123; ... &#125;</span></span><br><span class="line"><span class="comment">// void sub(int a, int b) &#123; ... &#125;</span></span><br><span class="line"><span class="comment">// void mul(int a, int b) &#123; ... &#125;</span></span><br><span class="line"><span class="comment">// void div_op(int a, int b) &#123; ... &#125;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">// 函数指针数组</span></span><br><span class="line"><span class="comment">// 注意：std::function 允许存储 lambda、函数指针、函数对象等</span></span><br><span class="line"><span class="comment">// 如果只存储普通函数指针，可以用：void (*operations_ptr[])(int, int) = &#123;&amp;add, &amp;sub, ...&#125;;</span></span><br><span class="line">std::vector&lt;OperationFunc&gt; operations_array = &#123;</span><br><span class="line">    add,    <span class="comment">// 对应 ADD = 0</span></span><br><span class="line">    sub,    <span class="comment">// 对应 SUB = 1</span></span><br><span class="line">    mul,    <span class="comment">// 对应 MUL = 2</span></span><br><span class="line">    div_op  <span class="comment">// 对应 DIV = 3</span></span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">perform_operation_array</span><span class="params">(Operation op, <span class="type">int</span> x, <span class="type">int</span> y)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (op &gt;= <span class="number">0</span> &amp;&amp; op &lt; operations_array.<span class="built_in">size</span>()) &#123;</span><br><span class="line">        operations_array[op](x, y); <span class="comment">// 直接通过索引调用函数</span></span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Unknown operation&quot;</span> &lt;&lt; std::endl;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 示例调用</span></span><br><span class="line">    <span class="built_in">perform_operation_switch</span>(ADD, <span class="number">5</span>, <span class="number">3</span>);</span><br><span class="line">    <span class="built_in">perform_operation_array</span>(SUB, <span class="number">10</span>, <span class="number">4</span>);</span><br><span class="line">    <span class="built_in">perform_operation_if_else</span>(MUL, <span class="number">2</span>, <span class="number">6</span>);</span><br><span class="line">    <span class="built_in">perform_operation_array</span>(DIV, <span class="number">10</span>, <span class="number">0</span>); <span class="comment">// 演示错误处理</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="3-函数数组的优越性-在分支预测上下文"><a href="#3-函数数组的优越性-在分支预测上下文" class="headerlink" title="3. 函数数组的优越性 (在分支预测上下文)"></a>3. 函数数组的优越性 (在分支预测上下文)</h4><p>使用函数数组的主要优越性在于它能够<strong>减少分支预测错误的开销</strong>，尤其是在处理大量随机或不可预测的分支时：</p>
+<ol>
+<li><p><strong>消除多重条件分支：</strong></p>
+<ul>
+<li><code>if-else if</code> 和 <code>switch</code> 语句会生成一系列的条件跳转指令。CPU需要对每个条件进行预测。如果 <code>op</code> 的值是随机的，每次都需要预测，且预测错误的概率高，就会导致大量流水线清空。</li>
+<li>函数数组通过 <code>operations_array[op](x, y);</code> 实现了**间接跳转 (Indirect Jump)**。虽然间接跳转本身也是一个分支，但它只有一个目标，并且目标地址通常可以通过简单的内存查找（数组索引）直接计算出来。</li>
+<li>对于这种<strong>基于索引的间接跳转</strong>，现代CPU的间接分支预测器（如 BTB - Branch Target Buffer）通常能够更有效地预测目标地址，尤其是在目标地址集较小且稳定时。即使预测失败，也只是一次预测失败，而不是一系列潜在的预测失败。</li>
+</ul>
+</li>
+<li><p><strong>常数时间复杂度 (O(1)) 的分派：</strong></p>
+<ul>
+<li>访问数组元素是 O(1) 操作。这意味着无论有多少个操作，查找并调用正确函数的开销都是恒定的。</li>
+<li>虽然编译器通常会将 <code>switch</code> 语句优化为**跳转表 (Jump Table)**，使其在大多数情况下也达到 O(1) 的分派效率，但跳转表仍然涉及到分支预测的问题。函数数组在底层实现上与跳转表类似，但它在源代码层面更直接地表达了这种“直接跳转”的意图，有时能更好地帮助编译器和CPU优化。</li>
+</ul>
+</li>
+<li><p><strong>代码更简洁和可扩展：</strong></p>
+<ul>
+<li>对于大量操作，函数数组比冗长的 <code>if-else if</code> 链或 <code>switch</code> 语句更简洁、易读。</li>
+<li>添加新的操作只需在数组中添加新的函数指针，而无需修改现有的 <code>switch</code> 结构，降低了维护成本和引入错误的风险。</li>
+</ul>
+</li>
+<li><p><strong>避免数据依赖造成的流水线停顿：</strong></p>
+<ul>
+<li>在 <code>if-else if</code> 链中，每个条件判断都可能依赖于前一个判断的结果，这可能会在流水线中引入数据依赖，导致停顿。</li>
+<li>函数数组直接通过索引访问，索引本身通常是独立的，减少了这种依赖。</li>
+</ul>
+</li>
+</ol>
+<h4 id="4-适用场景和注意事项"><a href="#4-适用场景和注意事项" class="headerlink" title="4. 适用场景和注意事项"></a>4. 适用场景和注意事项</h4><p><strong>适用场景：</strong></p>
+<ul>
+<li>当你需要根据一个整数或枚举值来执行多个不同的、具有相同签名的函数时。</li>
+<li>当这些操作的调用模式是随机的，导致 <code>switch</code> 或 <code>if-else if</code> 产生大量分支预测错误时。</li>
+<li>需要高性能、低延迟的事件分发系统（如游戏引擎、网络服务器）。</li>
+</ul>
+<p><strong>注意事项：</strong></p>
+<ul>
+<li><strong>函数签名必须一致：</strong> 数组中的所有函数指针必须指向具有相同参数类型和返回类型的函数。如果函数签名不同，你需要使用 <code>std::variant&lt;std::function&lt;...&gt;&gt;</code> 或其他更复杂的机制。</li>
+<li><strong>索引必须连续且合理：</strong> 如果你的枚举值或整数索引是稀疏的（例如 0, 1, 100, 1000），那么创建一个巨大的数组来填充中间的空洞将是内存浪费。在这种情况下，<code>std::map&lt;int, OperationFunc&gt;</code> 可能更合适，但会牺牲一部分性能（因为 <code>map</code> 查找本身也有分支和缓存问题）。</li>
+<li><strong>安全性：</strong> 直接通过外部输入索引函数数组可能存在安全风险（例如，索引越界可能导致执行任意内存地址的代码）。务必进行严格的边界检查。</li>
+<li><strong>小规模场景：</strong> 对于只有少数几个分支的情况，<code>switch</code> 语句通常会被编译器优化得非常好，并且代码可能更直观，此时函数数组的性能优势不明显。</li>
+</ul>
+<p>总之，函数数组是一种强大的优化技术，它通过将运行时决策转化为直接的内存查找和间接跳转，有效地规避了分支预测失败带来的性能惩罚，尤其适用于需要高效分发大量随机操作的场景。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/09/23/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/">https://cmzcc.github.io/2025/09/23/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E8%AE%A1%E7%AE%97%E6%9C%BA%E4%BD%93%E7%B3%BB%E7%BB%93%E6%9E%84/">计算机体系结构</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover3.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2025/09/23/string-view%E4%B8%8Eformat/" title="string_view与format"><img class="cover" src="/img/text-cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">string_view与format</div></div></a><a class="next-post pull-right" href="/2025/09/23/%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A/" title="结构化绑定"><img class="cover" src="/img/text-cover4.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">结构化绑定</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">95</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">104</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">6</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">努力成为c++高手ing，专精多线程编程和性能优化方向，国内私募量化开发实习生（QD)牛马</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B-Branch-Prediction"><span class="toc-number">1.</span> <span class="toc-text">一、 分支预测 (Branch Prediction)</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BB%80%E4%B9%88%E6%98%AF%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%EF%BC%9F"><span class="toc-number">1.1.</span> <span class="toc-text">1. 什么是分支预测？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%EF%BC%9F"><span class="toc-number">1.2.</span> <span class="toc-text">2. 为什么需要分支预测？</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E7%9A%84%E5%B7%A5%E4%BD%9C%E5%8E%9F%E7%90%86"><span class="toc-number">1.3.</span> <span class="toc-text">3. 分支预测的工作原理</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E7%9A%84%E7%AD%96%E7%95%A5-%E7%AE%80%E8%BF%B0"><span class="toc-number">1.4.</span> <span class="toc-text">4. 分支预测的策略 (简述)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#5-%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E5%AF%B9%E6%80%A7%E8%83%BD%E7%9A%84%E5%BD%B1%E5%93%8D"><span class="toc-number">1.5.</span> <span class="toc-text">5. 分支预测对性能的影响</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E5%87%BD%E6%95%B0%E6%95%B0%E7%BB%84-Function-Arrays-%E5%8F%8A%E5%85%B6%E4%BC%98%E8%B6%8A%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">二、 函数数组 (Function Arrays) 及其优越性</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#1-%E4%BC%A0%E7%BB%9F%E7%9A%84%E5%88%86%E6%94%AF%E5%AF%86%E9%9B%86%E5%9E%8B%E4%BB%A3%E7%A0%81-Switch-If-Else-If"><span class="toc-number">2.1.</span> <span class="toc-text">1. 传统的分支密集型代码 (Switch&#x2F;If-Else If)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#2-%E4%BD%BF%E7%94%A8%E5%87%BD%E6%95%B0%E6%95%B0%E7%BB%84"><span class="toc-number">2.2.</span> <span class="toc-text">2. 使用函数数组</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#3-%E5%87%BD%E6%95%B0%E6%95%B0%E7%BB%84%E7%9A%84%E4%BC%98%E8%B6%8A%E6%80%A7-%E5%9C%A8%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B%E4%B8%8A%E4%B8%8B%E6%96%87"><span class="toc-number">2.3.</span> <span class="toc-text">3. 函数数组的优越性 (在分支预测上下文)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-%E9%80%82%E7%94%A8%E5%9C%BA%E6%99%AF%E5%92%8C%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">2.4.</span> <span class="toc-text">4. 适用场景和注意事项</span></a></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/09/23/enum%E5%92%8Cenum-class/" title="enum和enum class"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="enum和enum class"/></a><div class="content"><a class="title" href="/2025/09/23/enum%E5%92%8Cenum-class/" title="enum和enum class">enum和enum class</a><time datetime="2025-09-23T13:01:52.000Z" title="Created 2025-09-23 21:01:52">2025-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/23/string-view%E4%B8%8Eformat/" title="string_view与format"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="string_view与format"/></a><div class="content"><a class="title" href="/2025/09/23/string-view%E4%B8%8Eformat/" title="string_view与format">string_view与format</a><time datetime="2025-09-23T12:35:46.000Z" title="Created 2025-09-23 20:35:46">2025-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/23/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/" title="分支预测"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="分支预测"/></a><div class="content"><a class="title" href="/2025/09/23/%E5%88%86%E6%94%AF%E9%A2%84%E6%B5%8B/" title="分支预测">分支预测</a><time datetime="2025-09-23T12:35:12.000Z" title="Created 2025-09-23 20:35:12">2025-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/23/%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A/" title="结构化绑定"><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="结构化绑定"/></a><div class="content"><a class="title" href="/2025/09/23/%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A/" title="结构化绑定">结构化绑定</a><time datetime="2025-09-23T12:35:01.000Z" title="Created 2025-09-23 20:35:01">2025-09-23</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/23/optional/" title="optional"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="optional"/></a><div class="content"><a class="title" href="/2025/09/23/optional/" title="optional">optional</a><time datetime="2025-09-23T12:34:48.000Z" title="Created 2025-09-23 20:34:48">2025-09-23</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
