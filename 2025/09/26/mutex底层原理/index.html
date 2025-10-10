@@ -1,0 +1,356 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>mutex底层原理 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="std::mutex（互斥锁）是 C++ 中用于实现互斥访问共享资源的关键工具。它的底层原理涉及到操作系统、CPU硬件指令以及内存模型等多个层面。理解这些底层机制对于编写高效、正确的并发程序至关重要。 1. 为什么需要 Mutex？在多线程环境中，当多个线程尝试同时访问和修改同一个共享资源（如变量、数据结构、文件等）时，如果没有适当的同步机制，就可能发生**竞态条件 (Race Conditio">
+<meta property="og:type" content="article">
+<meta property="og:title" content="mutex底层原理">
+<meta property="og:url" content="https://cmzcc.github.io/2025/09/26/mutex%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="std::mutex（互斥锁）是 C++ 中用于实现互斥访问共享资源的关键工具。它的底层原理涉及到操作系统、CPU硬件指令以及内存模型等多个层面。理解这些底层机制对于编写高效、正确的并发程序至关重要。 1. 为什么需要 Mutex？在多线程环境中，当多个线程尝试同时访问和修改同一个共享资源（如变量、数据结构、文件等）时，如果没有适当的同步机制，就可能发生**竞态条件 (Race Conditio">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover5.jpg">
+<meta property="article:published_time" content="2025-09-26T07:37:10.000Z">
+<meta property="article:modified_time" content="2025-10-07T02:07:09.903Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="原子操作">
+<meta property="article:tag" content="锁">
+<meta property="article:tag" content="CAS">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover5.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/09/26/mutex%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'mutex底层原理',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-10-07 10:07:09'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">102</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">110</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover5.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">mutex底层原理</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">mutex底层原理</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-09-26T07:37:10.000Z" title="Created 2025-09-26 15:37:10">2025-09-26</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-10-07T02:07:09.903Z" title="Updated 2025-10-07 10:07:09">2025-10-07</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/c/">c++</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p> <code>std::mutex</code>（互斥锁）是 C++ 中用于实现互斥访问共享资源的关键工具。它的底层原理涉及到操作系统、CPU硬件指令以及内存模型等多个层面。理解这些底层机制对于编写高效、正确的并发程序至关重要。</p>
+<h3 id="1-为什么需要-Mutex？"><a href="#1-为什么需要-Mutex？" class="headerlink" title="1. 为什么需要 Mutex？"></a>1. 为什么需要 Mutex？</h3><p>在多线程环境中，当多个线程尝试同时访问和修改同一个共享资源（如变量、数据结构、文件等）时，如果没有适当的同步机制，就可能发生**竞态条件 (Race Condition)**，导致数据损坏或程序行为不可预测。</p>
+<p><strong>示例：</strong></p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> counter = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">increment</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">for</span> (<span class="type">int</span> i = <span class="number">0</span>; i &lt; <span class="number">100000</span>; ++i) &#123;</span><br><span class="line">        counter++; <span class="comment">// 这不是一个原子操作</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">// 两个线程同时调用 increment()，counter 的最终值可能不是 200000</span></span><br></pre></td></tr></table></figure>
+<p><code>counter++</code> 表面上是一行代码，但在 CPU 层面可能被分解为以下步骤：</p>
+<ol>
+<li>读取 <code>counter</code> 的当前值到寄存器。</li>
+<li>寄存器中的值加 1。</li>
+<li>将寄存器中的新值写回 <code>counter</code>。</li>
+</ol>
+<p>如果两个线程同时执行这些步骤，就可能出现以下情况：</p>
+<ul>
+<li>线程 A 读取 <code>counter</code> (0)。</li>
+<li>线程 B 读取 <code>counter</code> (0)。</li>
+<li>线程 A 将寄存器中的值加 1 (1)。</li>
+<li>线程 B 将寄存器中的值加 1 (1)。</li>
+<li>线程 A 将 1 写回 <code>counter</code>。</li>
+<li>线程 B 将 1 写回 <code>counter</code>。<br>最终 <code>counter</code> 的值是 1，而不是 2。</li>
+</ul>
+<p>Mutex 的作用就是确保在任何给定时刻，只有一个线程能够进入**临界区 (Critical Section)**，即访问共享资源的代码段。</p>
+<h3 id="2-Mutex-的核心思想"><a href="#2-Mutex-的核心思想" class="headerlink" title="2. Mutex 的核心思想"></a>2. Mutex 的核心思想</h3><p>Mutex 可以被想象成一个房间的钥匙。</p>
+<ul>
+<li>当一个线程想要进入房间（临界区）时，它必须先拿到钥匙（调用 <code>lock()</code>）。</li>
+<li>如果钥匙已经被其他线程拿走，当前线程就必须在门外等待。</li>
+<li>当持有钥匙的线程离开房间（临界区）时，它会归还钥匙（调用 <code>unlock()</code>）。</li>
+<li>等待的线程中会有一个被选中（通常是第一个等待的），拿到钥匙并进入房间。</li>
+</ul>
+<h3 id="3-底层原理：原子操作-Atomic-Operations"><a href="#3-底层原理：原子操作-Atomic-Operations" class="headerlink" title="3. 底层原理：原子操作 (Atomic Operations)"></a>3. 底层原理：原子操作 (Atomic Operations)</h3><p>Mutex 的实现本身也需要防止竞态条件。如果 <code>lock()</code> 和 <code>unlock()</code> 操作不是原子的，那么两个线程可能同时认为自己获得了锁。因此，Mutex 的最底层依赖于 CPU 提供的<strong>原子指令</strong>。</p>
+<p>原子指令是指在执行过程中不会被中断的 CPU 指令。即使在多核处理器上，这些指令也能保证其操作的完整性。</p>
+<p>常见的原子指令有：</p>
+<ul>
+<li><p><strong>Test-and-Set (TAS) &#x2F; Test-and-Set-Lock (TSL):</strong></p>
+<ul>
+<li>读取一个内存位置的值，将其设置为 1（或 true），并返回原始值。</li>
+<li>这个“读取-设置-返回”操作是原子的。</li>
+<li>如果返回的值是 0（或 false），表示之前是未锁定状态，当前线程成功获取锁。</li>
+<li>如果返回的值是 1（或 true），表示之前是锁定状态，当前线程未能获取锁。</li>
+</ul>
+</li>
+<li><p><strong>Compare-and-Swap (CAS) &#x2F; Compare-Exchange (CMPXCHG):</strong></p>
+<ul>
+<li>更通用的原子操作。</li>
+<li>它接收三个参数：一个内存地址 <code>addr</code>，一个期望值 <code>expected</code>，一个新值 <code>new_val</code>。</li>
+<li>如果 <code>addr</code> 处的当前值等于 <code>expected</code>，则将 <code>addr</code> 处的值更新为 <code>new_val</code>。</li>
+<li>整个操作是原子的，并返回 <code>addr</code> 处操作前的值（或一个布尔值指示是否成功）。</li>
+<li>Mutex 可以用 CAS 实现：尝试将锁的状态从 <code>unlocked</code> (0) 变为 <code>locked</code> (1)。如果 CAS 成功，则获取锁。</li>
+</ul>
+</li>
+<li><p><strong>Fetch-and-Add:</strong></p>
+<ul>
+<li>原子地将一个值加到一个内存位置，并返回原始值。常用于实现原子计数器。</li>
+</ul>
+</li>
+</ul>
+<p>这些原子指令是构建所有高级同步原语（包括 Mutex）的基石。</p>
+<h3 id="4-两种-Mutex-实现策略"><a href="#4-两种-Mutex-实现策略" class="headerlink" title="4. 两种 Mutex 实现策略"></a>4. 两种 Mutex 实现策略</h3><p>基于原子操作，Mutex 可以主要分为两种实现策略：</p>
+<h4 id="4-1-自旋锁-Spinlock"><a href="#4-1-自旋锁-Spinlock" class="headerlink" title="4.1. 自旋锁 (Spinlock)"></a>4.1. 自旋锁 (Spinlock)</h4><p>自旋锁是最简单的 Mutex 实现，它完全基于原子指令。</p>
+<p><strong>工作原理：</strong></p>
+<ol>
+<li>当一个线程尝试获取自旋锁时，它会使用原子指令（如 <code>Test-and-Set</code> 或 <code>CAS</code>）来尝试将锁的状态从“未锁定”变为“锁定”。</li>
+<li>如果成功，线程获得锁，进入临界区。</li>
+<li>如果失败（锁已经被其他线程持有），当前线程不会放弃 CPU，而是进入一个<strong>忙等待 (Busy-Waiting)</strong> 循环，不断地重复尝试获取锁，直到成功为止。</li>
+<li>当线程释放锁时，它会原子地将锁的状态设置为“未锁定”。</li>
+</ol>
+<p><strong>特点：</strong></p>
+<ul>
+<li><strong>优点：</strong><ul>
+<li><strong>低开销：</strong> 如果临界区很短，并且线程等待时间很短，自旋锁的开销非常小，因为它避免了上下文切换（从用户态到内核态的切换，以及保存&#x2F;恢复线程状态）。</li>
+<li><strong>无上下文切换：</strong> 线程一直在运行，没有被操作系统调度出去。</li>
+</ul>
+</li>
+<li><strong>缺点：</strong><ul>
+<li><strong>浪费 CPU 资源：</strong> 如果临界区很长，或者等待时间较长，忙等待会浪费大量的 CPU 周期，尤其是在单核处理器上，这会非常低效，甚至可能导致死锁（如果持有锁的线程无法运行）。</li>
+<li><strong>不公平：</strong> 无法保证等待线程的获取顺序。</li>
+</ul>
+</li>
+</ul>
+<p><strong>使用场景：</strong></p>
+<ul>
+<li>主要用于操作系统内核中，保护非常短的临界区。</li>
+<li>在多核处理器上，当预期锁的持有时间非常短时。</li>
+</ul>
+<h4 id="4-2-阻塞式互斥锁-Blocking-Mutex"><a href="#4-2-阻塞式互斥锁-Blocking-Mutex" class="headerlink" title="4.2. 阻塞式互斥锁 (Blocking Mutex)"></a>4.2. 阻塞式互斥锁 (Blocking Mutex)</h4><p><code>std::mutex</code> 属于阻塞式互斥锁，它在底层依赖于操作系统的调度机制。</p>
+<p><strong>工作原理：</strong></p>
+<ol>
+<li><strong>尝试获取锁：</strong> 当一个线程调用 <code>lock()</code> 时，它会首先尝试使用原子指令（像自旋锁一样）快速获取锁。</li>
+<li><strong>进入等待状态：</strong><ul>
+<li>如果锁已经被其他线程持有，当前线程不会忙等待。</li>
+<li>它会通知操作系统，表明自己无法继续执行，需要**阻塞 (Block)**。</li>
+<li>操作系统会将该线程的状态从“运行”变为“等待”，并将其放入一个与该 Mutex 关联的<strong>等待队列 (Waiting Queue)</strong> 中。</li>
+<li>随后，操作系统会进行**上下文切换 (Context Switch)**，将 CPU 调度给另一个准备好运行的线程。</li>
+</ul>
+</li>
+<li><strong>释放锁与唤醒：</strong><ul>
+<li>当持有锁的线程调用 <code>unlock()</code> 时，它会原子地将锁的状态设置为“未锁定”。</li>
+<li>然后，它会通知操作系统，告知有线程可能在等待这个锁。</li>
+<li>操作系统会从该 Mutex 的等待队列中选择一个（或多个）线程，将其状态从“等待”变为“就绪 (Ready-to-Run)”。</li>
+<li>这些被唤醒的线程将有机会在未来的某个时刻被调度器选中并重新运行。</li>
+</ul>
+</li>
+</ol>
+<p><strong>特点：</strong></p>
+<ul>
+<li><strong>优点：</strong><ul>
+<li><strong>不浪费 CPU 资源：</strong> 当线程无法获取锁时，它会进入睡眠状态，释放 CPU 给其他线程使用。</li>
+<li><strong>公平性（可选）：</strong> 操作系统可以实现公平的调度策略，例如先进先出 (FIFO)，确保等待时间最长的线程优先获取锁。</li>
+</ul>
+</li>
+<li><strong>缺点：</strong><ul>
+<li><strong>上下文切换开销：</strong> 阻塞和唤醒线程涉及到用户态到内核态的切换，以及保存和恢复线程的上下文信息，这会带来显著的性能开销。</li>
+</ul>
+</li>
+<li><strong>混合策略 (Spin-then-Block):</strong> 许多现代操作系统和库（包括 <code>std::mutex</code> 的实现）会采用一种混合策略：在尝试获取锁失败后，线程会先进行短暂的自旋（忙等待一小段时间），如果仍然无法获取，才会选择阻塞。这样可以兼顾短时间等待的低开销和长时间等待的高效率。</li>
+</ul>
+<h3 id="5-内存模型与内存屏障-Memory-Barriers"><a href="#5-内存模型与内存屏障-Memory-Barriers" class="headerlink" title="5. 内存模型与内存屏障 (Memory Barriers)"></a>5. 内存模型与内存屏障 (Memory Barriers)</h3><p>除了原子性，Mutex 还必须保证<strong>内存可见性 (Memory Visibility)</strong> 和**内存顺序 (Memory Ordering)**。</p>
+<ul>
+<li><strong>内存可见性：</strong> 当一个线程修改了共享数据，并释放了锁，另一个线程获取锁后，必须能够看到前一个线程所做的所有修改。</li>
+<li><strong>内存顺序：</strong> 编译器和 CPU 为了优化性能，可能会对指令进行重排序。Mutex 必须确保在临界区内外的内存操作不会被错误地重排序，从而破坏程序的逻辑。</li>
+</ul>
+<p>Mutex 的 <code>lock()</code> 操作通常具有**获取语义 (Acquire Semantics)**：它确保在 <code>lock()</code> 之后的所有内存操作，都不会被重排到 <code>lock()</code> 之前。同时，它也确保能看到在之前某个线程释放锁（具有释放语义）时，所有在该释放操作之前发生的内存写入。</p>
+<p>Mutex 的 <code>unlock()</code> 操作通常具有**释放语义 (Release Semantics)**：它确保在 <code>unlock()</code> 之前的所有内存操作，都不会被重排到 <code>unlock()</code> 之后。同时，它也确保这些写入操作在后续某个线程获取锁（具有获取语义）时变得可见。</p>
+<p>这些语义是通过在 <code>lock()</code> 和 <code>unlock()</code> 内部插入<strong>内存屏障 (Memory Barriers)</strong> 或使用具有相应语义的原子操作来实现的。内存屏障是一种 CPU 指令，它强制 CPU 和编译器在屏障两侧的内存操作不能重排序。</p>
+<h3 id="6-std-mutex-的实现概览"><a href="#6-std-mutex-的实现概览" class="headerlink" title="6. std::mutex 的实现概览"></a>6. <code>std::mutex</code> 的实现概览</h3><p><code>std::mutex</code> 通常是由操作系统提供的底层互斥量 API（如 POSIX 线程库的 <code>pthread_mutex_t</code> 或 Windows API 的 <code>CRITICAL_SECTION</code> &#x2F; <code>HANDLE</code>）封装而成的。</p>
+<p><strong>在 Linux&#x2F;POSIX 系统上：</strong><br><code>std::mutex</code> 内部可能使用 <code>pthread_mutex_t</code>。<code>pthread_mutex_lock()</code> 和 <code>pthread_mutex_unlock()</code> 函数会调用内核提供的系统调用来管理线程的阻塞和唤醒。</p>
+<p><strong>在 Windows 系统上：</strong><br><code>std::mutex</code> 内部可能使用 <code>CRITICAL_SECTION</code> 或 <code>HANDLE</code>（用于事件或互斥体对象）。<code>EnterCriticalSection()</code> 和 <code>LeaveCriticalSection()</code> 也是通过系统调用与内核交互。</p>
+<p>这些操作系统级别的互斥量通常实现了上述的“自旋-阻塞”混合策略，以在不同场景下提供最佳性能。</p>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><p><code>std::mutex</code> 的底层原理是一个多层次的抽象：</p>
+<ol>
+<li><strong>硬件层：</strong> 依赖 CPU 提供的<strong>原子指令</strong>（如 CAS, Test-and-Set）来保证锁状态的修改是不可分割的。</li>
+<li><strong>操作系统层：</strong><ul>
+<li>对于阻塞式 Mutex，操作系统负责管理线程的<strong>阻塞、唤醒和调度</strong>。</li>
+<li>维护等待队列，并在锁释放时选择唤醒合适的线程。</li>
+<li>处理<strong>上下文切换</strong>的开销。</li>
+</ul>
+</li>
+<li><strong>内存模型层：</strong> 通过内置的<strong>内存屏障</strong>（或具有相应语义的原子操作），保证内存操作的可见性和顺序性，防止编译器和 CPU 的重排序优化导致的问题。</li>
+<li><strong>C++ 标准库层：</strong> <code>std::mutex</code> 是对这些底层操作系统原语的 C++ 封装，提供了统一、类型安全的接口供开发者使用。</li>
+</ol>
+<p>理解这些原理有助于你更好地使用 Mutex，避免常见的并发问题，并对并发程序的性能瓶颈有更深入的认识。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/09/26/mutex%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/">https://cmzcc.github.io/2025/09/26/mutex%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C/">原子操作</a><a class="post-meta__tags" href="/tags/%E9%94%81/">锁</a><a class="post-meta__tags" href="/tags/CAS/">CAS</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover5.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2025/09/29/IPC%E9%80%9A%E4%BF%A1/" title="IPC通信"><img class="cover" src="/img/text-cover5.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">IPC通信</div></div></a><a class="next-post pull-right" href="/2025/09/24/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/" title="c++中的协程（一）"><img class="cover" src="/img/text-cover1.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">c++中的协程（一）</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a href="/2025/06/30/atomic/" title="atomic"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-30</div><div class="title">atomic</div></div></a><a href="/2025/06/29/%E5%90%84%E7%A7%8D%E5%90%84%E6%A0%B7%E7%9A%84%E9%94%81/" title="各种各样的锁~"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-29</div><div class="title">各种各样的锁~</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">102</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">110</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">努力成为c++高手ing，专精多线程编程和性能优化方向，国内私募量化开发实习生（QD)牛马</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E4%B8%BA%E4%BB%80%E4%B9%88%E9%9C%80%E8%A6%81-Mutex%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">1. 为什么需要 Mutex？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Mutex-%E7%9A%84%E6%A0%B8%E5%BF%83%E6%80%9D%E6%83%B3"><span class="toc-number">2.</span> <span class="toc-text">2. Mutex 的核心思想</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86%EF%BC%9A%E5%8E%9F%E5%AD%90%E6%93%8D%E4%BD%9C-Atomic-Operations"><span class="toc-number">3.</span> <span class="toc-text">3. 底层原理：原子操作 (Atomic Operations)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E4%B8%A4%E7%A7%8D-Mutex-%E5%AE%9E%E7%8E%B0%E7%AD%96%E7%95%A5"><span class="toc-number">4.</span> <span class="toc-text">4. 两种 Mutex 实现策略</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#4-1-%E8%87%AA%E6%97%8B%E9%94%81-Spinlock"><span class="toc-number">4.1.</span> <span class="toc-text">4.1. 自旋锁 (Spinlock)</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#4-2-%E9%98%BB%E5%A1%9E%E5%BC%8F%E4%BA%92%E6%96%A5%E9%94%81-Blocking-Mutex"><span class="toc-number">4.2.</span> <span class="toc-text">4.2. 阻塞式互斥锁 (Blocking Mutex)</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#5-%E5%86%85%E5%AD%98%E6%A8%A1%E5%9E%8B%E4%B8%8E%E5%86%85%E5%AD%98%E5%B1%8F%E9%9A%9C-Memory-Barriers"><span class="toc-number">5.</span> <span class="toc-text">5. 内存模型与内存屏障 (Memory Barriers)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#6-std-mutex-%E7%9A%84%E5%AE%9E%E7%8E%B0%E6%A6%82%E8%A7%88"><span class="toc-number">6.</span> <span class="toc-text">6. std::mutex 的实现概览</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">7.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/10/10/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%BA%8C)/" title="c中的协程(二)"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c中的协程(二)"/></a><div class="content"><a class="title" href="/2025/10/10/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%BA%8C)/" title="c中的协程(二)">c中的协程(二)</a><time datetime="2025-10-10T03:52:23.000Z" title="Created 2025-10-10 11:52:23">2025-10-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/06/Rangers%E5%BA%93/" title="Rangers库"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Rangers库"/></a><div class="content"><a class="title" href="/2025/10/06/Rangers%E5%BA%93/" title="Rangers库">Rangers库</a><time datetime="2025-10-06T02:50:13.000Z" title="Created 2025-10-06 10:50:13">2025-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/06/concepts/" title="concepts"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="concepts"/></a><div class="content"><a class="title" href="/2025/10/06/concepts/" title="concepts">concepts</a><time datetime="2025-10-06T02:49:44.000Z" title="Created 2025-10-06 10:49:44">2025-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/06/span/" title="span"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="span"/></a><div class="content"><a class="title" href="/2025/10/06/span/" title="span">span</a><time datetime="2025-10-06T02:48:58.000Z" title="Created 2025-10-06 10:48:58">2025-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/29/IPC%E9%80%9A%E4%BF%A1/" title="IPC通信"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="IPC通信"/></a><div class="content"><a class="title" href="/2025/09/29/IPC%E9%80%9A%E4%BF%A1/" title="IPC通信">IPC通信</a><time datetime="2025-09-29T02:30:54.000Z" title="Created 2025-09-29 10:30:54">2025-09-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

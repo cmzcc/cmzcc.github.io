@@ -1,0 +1,394 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>c++中的协程（一） | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="在学习协程之前，我们再重新回顾一下进程，线程  进程 (Process)： 操作系统分配资源（内存、文件句柄等）的基本单位。每个进程有独立的地址空间。 线程 (Thread)： CPU 调度的基本单位。一个进程可以包含多个线程，这些线程共享进程的地址空间和资源。线程比进程更轻量级。   1. 内核线程 (Kernel Thread) 定义： 内核线程是由操作系统内核直接创建、管理和调度的线程。也就">
+<meta property="og:type" content="article">
+<meta property="og:title" content="c++中的协程（一）">
+<meta property="og:url" content="https://cmzcc.github.io/2025/09/24/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="在学习协程之前，我们再重新回顾一下进程，线程  进程 (Process)： 操作系统分配资源（内存、文件句柄等）的基本单位。每个进程有独立的地址空间。 线程 (Thread)： CPU 调度的基本单位。一个进程可以包含多个线程，这些线程共享进程的地址空间和资源。线程比进程更轻量级。   1. 内核线程 (Kernel Thread) 定义： 内核线程是由操作系统内核直接创建、管理和调度的线程。也就">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover1.jpg">
+<meta property="article:published_time" content="2025-09-24T01:20:32.000Z">
+<meta property="article:modified_time" content="2025-10-10T03:51:28.262Z">
+<meta property="article:author" content="cmz">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover1.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/09/24/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'c++中的协程（一）',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-10-10 11:51:28'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">102</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">110</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover1.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">c++中的协程（一）</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">c++中的协程（一）</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-09-24T01:20:32.000Z" title="Created 2025-09-24 09:20:32">2025-09-24</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-10-10T03:51:28.262Z" title="Updated 2025-10-10 11:51:28">2025-10-10</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/c/">c++</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>在学习协程之前，我们再重新回顾一下进程，线程</p>
+<ul>
+<li><strong>进程 (Process)：</strong> 操作系统分配资源（内存、文件句柄等）的基本单位。每个进程有独立的地址空间。</li>
+<li><strong>线程 (Thread)：</strong> CPU 调度的基本单位。一个进程可以包含多个线程，这些线程共享进程的地址空间和资源。线程比进程更轻量级。</li>
+</ul>
+<hr>
+<h3 id="1-内核线程-Kernel-Thread"><a href="#1-内核线程-Kernel-Thread" class="headerlink" title="1. 内核线程 (Kernel Thread)"></a>1. 内核线程 (Kernel Thread)</h3><ul>
+<li><strong>定义：</strong> 内核线程是由操作系统内核直接创建、管理和调度的线程。也就是我们说的LWP(轻量级进程)，在linux系统中，内核线程和用户态线程是1：1的。</li>
+<li><strong>实现：</strong> 操作系统内核维护所有内核线程的上下文信息（如寄存器状态、栈指针等）。当需要进行线程切换时，内核会执行上下文切换。</li>
+<li><strong>调度：</strong> 由操作系统的调度器负责调度。调度器根据优先级、时间片等策略决定哪个线程在哪个 CPU 上运行。</li>
+<li><strong>开销：</strong><ul>
+<li><strong>创建&#x2F;销毁：</strong> 创建和销毁内核线程的开销相对较大，因为它涉及到系统调用和内核数据结构的操作。</li>
+<li><strong>上下文切换：</strong> 上下文切换的开销也相对较大，因为它需要保存和恢复大量的寄存器信息，并且可能涉及到 TLB (Translation Lookaside Buffer) 刷新等操作。</li>
+</ul>
+</li>
+<li><strong>并行性：</strong> 多个内核线程可以在多核 CPU 上真正并行执行。</li>
+<li><strong>阻塞：</strong> 当一个内核线程执行阻塞式系统调用（如 I&#x2F;O 操作）时，只有该线程会被阻塞，同一进程中的其他内核线程可以继续运行。</li>
+<li><strong>优点：</strong><ul>
+<li>能够充分利用多核 CPU 的并行能力。</li>
+<li>一个线程阻塞不会影响同一进程中的其他线程。</li>
+<li>由操作系统管理，更稳定可靠。</li>
+</ul>
+</li>
+<li><strong>缺点：</strong><ul>
+<li>创建、销毁和切换开销较大，不适合创建大量线程的场景。</li>
+<li>线程数量受限于操作系统资源。</li>
+</ul>
+</li>
+<li><strong>例子：</strong> Linux 上的 POSIX 线程 (pthreads) 在默认情况下就是内核线程（1:1 模型）。Windows 上的线程也是内核线程。</li>
+</ul>
+<hr>
+<h3 id="2-用户态线程-User-Level-Thread"><a href="#2-用户态线程-User-Level-Thread" class="headerlink" title="2. 用户态线程 (User-Level Thread)"></a>2. 用户态线程 (User-Level Thread)</h3><ul>
+<li><strong>定义：</strong> 用户态线程是由用户空间的线程库（而不是操作系统内核）创建、管理和调度的线程。内核对这些线程一无所知，它只知道运行这些用户态线程的进程。</li>
+<li><strong>实现：</strong> 线程库负责维护用户态线程的上下文信息（如程序计数器、栈指针、寄存器等）。线程的切换完全在用户空间完成，不涉及系统调用。</li>
+<li><strong>调度：</strong> 由用户态的线程库自行调度。库可以实现自己的调度算法（例如，基于优先级、协作式调度或抢占式调度）。</li>
+<li><strong>开销：</strong><ul>
+<li><strong>创建&#x2F;销毁：</strong> 开销非常小，因为不涉及系统调用。</li>
+<li><strong>上下文切换：</strong> 开销非常小，因为完全在用户空间完成，不需要进入内核态。</li>
+</ul>
+</li>
+<li><strong>并行性：</strong> 多个用户态线程<strong>无法在多核 CPU 上真正并行执行</strong>。因为内核只知道一个进程，它会将整个进程调度到一个 CPU 上。即使进程中有多个用户态线程，在同一时刻，也只有一个用户态线程能运行。</li>
+<li><strong>阻塞：</strong> 这是用户态线程的一个主要缺点。如果一个用户态线程执行了阻塞式系统调用，那么<strong>整个进程（包括所有其他用户态线程）都会被阻塞</strong>，直到该系统调用完成。这也是协程重点解决的问题，</li>
+<li><strong>优点：</strong><ul>
+<li>创建、销毁和切换开销极小，可以创建非常大量的线程。</li>
+<li>用户可以自定义调度策略。</li>
+</ul>
+</li>
+<li>缺点：<ul>
+<li>无法利用多核 CPU 的并行性。</li>
+<li>一个用户态线程阻塞会导致整个进程阻塞。</li>
+<li>需要用户态线程库来管理，增加了编程复杂性。</li>
+</ul>
+</li>
+<li><strong>例子：</strong> 早期的 Java 线程（在某些 JVM 实现中）、一些绿色线程 (Green Thread) 实现。</li>
+</ul>
+<hr>
+<h3 id="3-协程-Coroutine"><a href="#3-协程-Coroutine" class="headerlink" title="3. 协程 (Coroutine)"></a>3. 协程 (Coroutine)</h3><ul>
+<li><strong>定义：</strong> 协程是一种<strong>用户态的、协作式多任务</strong>的程序组件。它不是由操作系统调度，而是由程序自身控制其执行流程。协程可以在执行过程中暂停，并将控制权交回给调用者（或另一个协程），然后在需要时从暂停的地方恢复执行。</li>
+<li><strong>实现：</strong> 完全在用户空间实现，不涉及任何系统调用。协程的切换是<strong>非抢占式</strong>的，即一个协程只有在主动让出控制权时才会被切换。</li>
+<li><strong>调度：</strong> 由程序逻辑或协程库负责调度。它不是操作系统调度器的一部分。</li>
+<li><strong>开销：</strong><ul>
+<li><strong>创建&#x2F;销毁：</strong> 开销极小，通常只是分配一个小的栈空间。</li>
+<li><strong>上下文切换：</strong> 开销极小，因为只保存和恢复最少的上下文信息（主要是程序计数器和栈指针），不涉及内核态切换，也没有 TLB 刷新等开销。</li>
+</ul>
+</li>
+<li><strong>并行性：</strong> 协程<strong>无法在多核 CPU 上并行执行</strong>。在任何给定时刻，一个进程中只能有一个协程在运行。它们是并发的，而不是并行的。</li>
+<li><strong>阻塞：</strong> 协程是<strong>非阻塞的</strong>。当一个协程需要等待 I&#x2F;O 或其他事件时，它会主动暂停执行，并将控制权交还给调度器。调度器可以运行其他协程，直到等待的事件完成，然后该协程再被恢复。这避免了整个进程或线程的阻塞。</li>
+<li><strong>优点：</strong><ul>
+<li>极低的创建、销毁和切换开销，可以创建数百万个协程。</li>
+<li>避免了传统线程的同步问题（因为同一时间只有一个协程运行）。</li>
+<li>代码逻辑更清晰，可以用同步的方式编写异步代码（“回调地狱”的终结者）。</li>
+<li>非常适合 I&#x2F;O 密集型任务。</li>
+</ul>
+</li>
+<li><strong>缺点：</strong><ul>
+<li><strong>协作式调度：</strong> 如果一个协程内部有长时间的计算任务，它不主动让出控制权，就会阻塞整个进程，导致其他协程无法执行（“饿死”）。</li>
+<li>无法利用多核 CPU 的并行能力，如果需要并行计算，仍需结合多线程。</li>
+</ul>
+</li>
+<li><strong>例子：</strong> Python 的 <code>asyncio</code>，Go 语言的 Goroutines，Lua 的协程，C++20 的 Coroutines。</li>
+</ul>
+<hr>
+<h3 id="区别总结表"><a href="#区别总结表" class="headerlink" title="区别总结表"></a>区别总结表</h3><table>
+<thead>
+<tr>
+<th align="left">特性</th>
+<th align="left">内核线程 (Kernel Thread)</th>
+<th align="left">用户态线程 (User-Level Thread)</th>
+<th align="left">LWP (Lightweight Process)</th>
+<th align="left">协程 (Coroutine)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>管理方</strong></td>
+<td align="left">操作系统内核</td>
+<td align="left">用户态线程库</td>
+<td align="left">操作系统内核</td>
+<td align="left">用户态程序&#x2F;协程库</td>
+</tr>
+<tr>
+<td align="left"><strong>调度方</strong></td>
+<td align="left">操作系统调度器</td>
+<td align="left">用户态线程库</td>
+<td align="left">操作系统调度器</td>
+<td align="left">程序逻辑&#x2F;协程库</td>
+</tr>
+<tr>
+<td align="left"><strong>调度方式</strong></td>
+<td align="left">抢占式</td>
+<td align="left">抢占式或协作式</td>
+<td align="left">抢占式</td>
+<td align="left"><strong>协作式</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>上下文切换</strong></td>
+<td align="left">内核态，开销大</td>
+<td align="left">用户态，开销小</td>
+<td align="left">内核态，开销大</td>
+<td align="left">用户态，开销极小</td>
+</tr>
+<tr>
+<td align="left"><strong>并行性</strong></td>
+<td align="left"><strong>可并行</strong> (多核)</td>
+<td align="left"><strong>不可并行</strong></td>
+<td align="left"><strong>可并行</strong> (多核)</td>
+<td align="left"><strong>不可并行</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>阻塞影响</strong></td>
+<td align="left">单个线程阻塞</td>
+<td align="left"><strong>整个进程阻塞</strong></td>
+<td align="left">单个 LWP 阻塞</td>
+<td align="left"><strong>不阻塞</strong> (主动让出控制)</td>
+</tr>
+<tr>
+<td align="left"><strong>创建数量</strong></td>
+<td align="left">相对有限</td>
+<td align="left">可大量创建</td>
+<td align="left">相对有限</td>
+<td align="left"><strong>可大量创建 (百万级)</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>资源消耗</strong></td>
+<td align="left">较大</td>
+<td align="left">较小</td>
+<td align="left">较大</td>
+<td align="left">极小</td>
+</tr>
+<tr>
+<td align="left"><strong>主要优点</strong></td>
+<td align="left">利用多核，稳定</td>
+<td align="left">开销小，可定制调度</td>
+<td align="left">利用多核，提供执行上下文</td>
+<td align="left">开销极小，非阻塞 I&#x2F;O，同步代码写异步逻辑</td>
+</tr>
+<tr>
+<td align="left"><strong>主要缺点</strong></td>
+<td align="left">开销大</td>
+<td align="left">无法并行，阻塞整个进程</td>
+<td align="left">开销大</td>
+<td align="left">无法并行，协作式调度需小心</td>
+</tr>
+<tr>
+<td align="left"><strong>现代应用</strong></td>
+<td align="left">Linux pthreads (1:1)</td>
+<td align="left">极少直接使用</td>
+<td align="left">Linux 内核线程的别称</td>
+<td align="left">Go Goroutines, Python asyncio, C++20 Coroutines</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ul>
+<li><strong>内核线程</strong>是操作系统提供的最基本的并发执行单元，开销相对大，但能充分利用多核。</li>
+<li><strong>用户态线程</strong>是用户空间库实现的并发，开销极小，但无法并行，且阻塞时会影响整个进程。</li>
+<li><strong>LWP</strong> 是内核调度实体，在 Linux 中几乎等同于内核线程，它为用户态线程提供了内核上下文。</li>
+<li><strong>协程</strong>是用户态的协作式任务，开销极小，通过主动让出控制权实现非阻塞，非常适合高并发 I&#x2F;O 密集型任务，但无法并行。</li>
+</ul>
+<p><strong>这里简单总结一下，一个pthread对应一个内核线程，用户态线程：内核线程&#x3D;n:1的，所以用户态线程无法并行执行，甚至遇到阻塞时连并发都做不到。</strong></p>
+<p><strong>而对于协程而言，其实和用户态线程差不多，只是不会阻塞，也是只能做到并发而无法并行，比如python中的协程。但是go和java中的协程引入了调度器，实现m:n的映射，让多个协程映射到多个内核线程，从而可以实现真正的并行</strong></p>
+<p>但是这里引入了一个很有意思的问题，在同一个程序（进程）里面通过pthread库实现了多个内核线程，并将其绑定在不同的内核上，就要考虑缓存一致性这个问题。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/09/24/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/">https://cmzcc.github.io/2025/09/24/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%B8%80%EF%BC%89/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-share"><div class="social-share" data-image="/img/text-cover1.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2025/09/26/mutex%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" title="mutex底层原理"><img class="cover" src="/img/text-cover5.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">mutex底层原理</div></div></a><a class="next-post pull-right" href="/2025/09/23/enum%E5%92%8Cenum-class/" title="enum和enum class"><img class="cover" src="/img/text-cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">enum和enum class</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">102</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">110</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">努力成为c++高手ing，专精多线程编程和性能优化方向，国内私募量化开发实习生（QD)牛马</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%86%85%E6%A0%B8%E7%BA%BF%E7%A8%8B-Kernel-Thread"><span class="toc-number">1.</span> <span class="toc-text">1. 内核线程 (Kernel Thread)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%94%A8%E6%88%B7%E6%80%81%E7%BA%BF%E7%A8%8B-User-Level-Thread"><span class="toc-number">2.</span> <span class="toc-text">2. 用户态线程 (User-Level Thread)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%8D%8F%E7%A8%8B-Coroutine"><span class="toc-number">3.</span> <span class="toc-text">3. 协程 (Coroutine)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%8C%BA%E5%88%AB%E6%80%BB%E7%BB%93%E8%A1%A8"><span class="toc-number">4.</span> <span class="toc-text">区别总结表</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/10/10/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%BA%8C)/" title="c中的协程(二)"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c中的协程(二)"/></a><div class="content"><a class="title" href="/2025/10/10/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%BA%8C)/" title="c中的协程(二)">c中的协程(二)</a><time datetime="2025-10-10T03:52:23.000Z" title="Created 2025-10-10 11:52:23">2025-10-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/06/Rangers%E5%BA%93/" title="Rangers库"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Rangers库"/></a><div class="content"><a class="title" href="/2025/10/06/Rangers%E5%BA%93/" title="Rangers库">Rangers库</a><time datetime="2025-10-06T02:50:13.000Z" title="Created 2025-10-06 10:50:13">2025-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/06/concepts/" title="concepts"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="concepts"/></a><div class="content"><a class="title" href="/2025/10/06/concepts/" title="concepts">concepts</a><time datetime="2025-10-06T02:49:44.000Z" title="Created 2025-10-06 10:49:44">2025-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/06/span/" title="span"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="span"/></a><div class="content"><a class="title" href="/2025/10/06/span/" title="span">span</a><time datetime="2025-10-06T02:48:58.000Z" title="Created 2025-10-06 10:48:58">2025-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/29/IPC%E9%80%9A%E4%BF%A1/" title="IPC通信"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="IPC通信"/></a><div class="content"><a class="title" href="/2025/09/29/IPC%E9%80%9A%E4%BF%A1/" title="IPC通信">IPC通信</a><time datetime="2025-09-29T02:30:54.000Z" title="Created 2025-09-29 10:30:54">2025-09-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

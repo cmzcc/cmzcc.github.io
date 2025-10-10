@@ -1,0 +1,486 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>IPC通信 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="一、引言上班要用，临时抱佛脚学一下，引用进程间通信 IPC 完全指南：各种机制的原理与实战-腾讯云开发者社区-腾讯云 在现代计算系统中，多进程环境已经成为标准配置。随着计算需求的增长和应用复杂性的提升，单一进程往往无法独立完成所有任务。为了提高系统的灵活性、性能和可靠性，多个进程之间的协作成为了必然的选择。这就引出了一个关键问题：如何高效、安全地实现进程间的数据交换与通信？这就是进程间通信（Int">
+<meta property="og:type" content="article">
+<meta property="og:title" content="IPC通信">
+<meta property="og:url" content="https://cmzcc.github.io/2025/09/29/IPC%E9%80%9A%E4%BF%A1/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="一、引言上班要用，临时抱佛脚学一下，引用进程间通信 IPC 完全指南：各种机制的原理与实战-腾讯云开发者社区-腾讯云 在现代计算系统中，多进程环境已经成为标准配置。随着计算需求的增长和应用复杂性的提升，单一进程往往无法独立完成所有任务。为了提高系统的灵活性、性能和可靠性，多个进程之间的协作成为了必然的选择。这就引出了一个关键问题：如何高效、安全地实现进程间的数据交换与通信？这就是进程间通信（Int">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover5.jpg">
+<meta property="article:published_time" content="2025-09-29T02:30:54.000Z">
+<meta property="article:modified_time" content="2025-09-29T09:25:44.282Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="IPC">
+<meta property="article:tag" content="多进程编程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover5.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/09/29/IPC%E9%80%9A%E4%BF%A1/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'IPC通信',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-09-29 17:25:44'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">102</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">110</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover5.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">IPC通信</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">IPC通信</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-09-29T02:30:54.000Z" title="Created 2025-09-29 10:30:54">2025-09-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-09-29T09:25:44.282Z" title="Updated 2025-09-29 17:25:44">2025-09-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%93%8D%E4%BD%9C%E7%B3%BB%E7%BB%9F/">操作系统</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="一、引言"><a href="#一、引言" class="headerlink" title="一、引言"></a>一、引言</h2><p>上班要用，临时抱佛脚学一下，引用<a target="_blank" rel="noopener" href="https://cloud.tencent.com/developer/article/2439262?policyId=1004">进程间通信 IPC 完全指南：各种机制的原理与实战-腾讯云开发者社区-腾讯云</a></p>
+<p>在现代计算系统中，多进程环境已经成为标准配置。随着计算需求的增长和应用复杂性的提升，单一进程往往无法独立完成所有任务。为了提高系统的灵活性、性能和可靠性，多个进程之间的协作成为了必然的选择。这就引出了一个关键问题：如何高效、安全地实现进程间的数据交换与通信？这就是进程间通信（Inter-Process Communication，IPC）的核心问题。</p>
+<p><strong>进程间通信的重要性：</strong></p>
+<p>进程间通信是指在不同进程之间传递信息的机制。在多进程系统中，各个进程可能需要共享数据、协调工作或交换状态信息。例如，在一个Web服务器中，工作进程可能需要与管理进程通信，以获取配置或报告状态；在数据处理系统中，生产者进程与消费者进程需要交换数据以完成任务。这些通信需求促使了IPC机制的设计与实现。</p>
+<p>有效的IPC机制不仅能够提升系统的性能和响应速度，还能确保数据的一致性和系统的稳定性。在某些情况下，IPC机制甚至可以成为系统架构的核心组成部分，例如在分布式系统或<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/tse?from_column=20065&from=20065">微服务架构</a>中，进程间通信的效率直接影响到整个系统的性能。</p>
+<p>本指南旨在深入探讨进程间通信的各种机制，从基础知识到实战应用，帮助读者全面理解IPC的工作原理，并掌握如何在不同场景下选择和应用最合适的IPC方法。本文将涵盖以下几个方面：</p>
+<ol>
+<li><strong>进程间通信的基本概念</strong>：介绍IPC的定义、应用场景及主要挑战，为后续深入理解奠定基础。</li>
+<li><strong>经典的IPC机制</strong>：详细解读管道、消息队列、共享内存、信号、套接字和内存映射文件等传统IPC机制的原理、优缺点及实际应用。</li>
+</ol>
+<p><img src="https://developer.qcloudimg.com/http-save/yehe-11218869/12f8b873613cc3ff948620f2dd1e31fa.png" alt="img"></p>
+<h2 id="二、进程间通信的基本概念"><a href="#二、进程间通信的基本概念" class="headerlink" title="二、进程间通信的基本概念"></a>二、进程间通信的基本概念</h2><p>进程间通信是一种通常由操作系统（或操作系统）提供的机制。该机制的主要目的或目标是在多个进程之间提供通信。简而言之，互通允许一个进程让另一个进程知道某些事件已经发生。</p>
+<h3 id="2-1、进程间通信（IPC）的定义"><a href="#2-1、进程间通信（IPC）的定义" class="headerlink" title="2.1、进程间通信（IPC）的定义"></a>2.1、进程间通信（IPC）的定义</h3><p>定义：<strong>进程间通信用于在一个或多个进程（或程序）中的众多线程之间交换有用的信息</strong>。由于进程之间拥有独立的地址空间和资源，直接访问对方的数据是不可能的。因此，IPC机制提供了一种通过操作系统提供的接口来进行数据交换的方法。IPC机制不仅涉及数据传输，还包括进程间的同步与协调。</p>
+<h3 id="2-2、IPC-的应用场景"><a href="#2-2、IPC-的应用场景" class="headerlink" title="2.2、IPC 的应用场景"></a>2.2、IPC 的应用场景</h3><ul>
+<li><strong>数据共享</strong>：多个进程需要访问或修改同一数据集合。例如，数据库系统中的多个进程可能需要访问共享的缓存或数据库表。</li>
+<li><strong>任务协调</strong>：进程之间需要协同工作以完成复杂任务。例如，在网络服务器中，工作进程需要与主进程协调处理请求。</li>
+<li><strong>状态更新</strong>：进程需要互相传递状态信息以便于系统的整体协调。例如，监控系统中的主进程需要获取各个子进程的运行状态。</li>
+</ul>
+<h3 id="2-3、IPC-的主要挑战"><a href="#2-3、IPC-的主要挑战" class="headerlink" title="2.3、IPC 的主要挑战"></a>2.3、IPC 的主要挑战</h3><ul>
+<li><strong>同步与互斥</strong>：多个进程可能同时访问共享资源，需要确保数据的一致性和避免冲突。同步机制（如锁和信号量）帮助控制对共享资源的访问。</li>
+<li><strong>数据一致性</strong>：确保在进程间传递的数据在接收方能够准确还原。数据一致性问题通常需要设计合理的数据格式和验证机制。</li>
+<li><strong>性能</strong>：IPC机制的效率对系统性能有直接影响。选择合适的IPC机制可以在满足通信需求的同时，尽可能降低通信的开销。</li>
+<li><strong>安全性</strong>：确保IPC过程中数据的安全性和隐私，防止未经授权的访问或数据篡改。</li>
+</ul>
+<h3 id="2-4、IPC-机制的分类和选择"><a href="#2-4、IPC-机制的分类和选择" class="headerlink" title="2.4、IPC 机制的分类和选择"></a>2.4、IPC 机制的分类和选择</h3><ul>
+<li><strong>基于消息的通信</strong>：如消息队列、套接字等，通过消息传递实现进程间的数据交换。</li>
+<li><strong>基于共享内存的通信</strong>：如共享内存和内存映射文件，通过共享内存区域实现进程间的数据共享。</li>
+<li><strong>基于信号的通信</strong>：如信号机制，通过发送和接收信号实现进程间的事件通知和同步。</li>
+</ul>
+<p>IPC 机制的选择：</p>
+<ul>
+<li><strong>数据量和通信频率</strong>：对于大量数据和频繁通信，需要高效的机制，如共享内存。</li>
+<li><strong>数据一致性要求</strong>：高一致性要求需要可靠的机制，如消息队列。</li>
+<li><strong>实时性</strong>：实时系统对通信延迟有严格要求，需要优先考虑低延迟的IPC机制，如信号。</li>
+<li><strong>复杂性和维护性</strong>：有些IPC机制实现和维护较为复杂，需要考虑系统的开发和维护成本。</li>
+</ul>
+<h2 id="三、经典的-IPC-机制"><a href="#三、经典的-IPC-机制" class="headerlink" title="三、经典的 IPC 机制"></a>三、经典的 IPC 机制</h2><ul>
+<li>管道（Pipe）。</li>
+<li>消息队列（Message Queues）。</li>
+<li>共享内存（Shared Memory）。</li>
+<li>信号（Signals）。</li>
+<li>套接字（Sockets）。</li>
+<li>内存映射文件（Memory-Mapped Files）</li>
+</ul>
+<h3 id="3-1、管道（Pipe）"><a href="#3-1、管道（Pipe）" class="headerlink" title="3.1、管道（Pipe）"></a>3.1、管道（Pipe）</h3><p><strong>管道是一种单向的数据通道，即数据通道中的数据一次只能向一个方向移动</strong>。这是一种半双工方法，为了实现全双工，需要另一根管道，形成一组双通道，以便能够在两个进程中发送和接收数据。通常，它使用标准方法进行输入和输出。这些管道用于所有类型的 POSIX 系统以及不同版本的Windows操作系统。</p>
+<p>在Unix和类Unix系统中，管道通常用于父子进程之间或者通过<code>fork</code>创建的进程之间进行通信，因为<strong>在一个进程中使用管道是没有意义的</strong>。管道有两种类型：匿名管道和命名管道（FIFO）。</p>
+<p>管道（Pipe）可能是本地使用最广泛的 IPC 方法之一。管道（Pipe）实际上是使用一段内核内存实现的。系统调用始终创建一个管道和两个关联的文件说明，用于从管道读取和写入管道。</p>
+<p>优点：</p>
+<ul>
+<li>实现简单，适合简单的父子进程通信。</li>
+<li>管道使用管道缓冲区，可以控制读写进程之间的数据流。</li>
+</ul>
+<p>缺点：</p>
+<ul>
+<li>单向传输限制了其应用场景，不适合双向通信。</li>
+<li>由于是基于内存的，对于大数据量的传输效率可能较低。</li>
+<li>匿名管道通常只能用于具有亲缘关系的进程之间，而无法在任意两个进程之间进行通信。</li>
+</ul>
+<p><strong>管道的工作原理：</strong></p>
+<ol>
+<li><strong>管道的创建</strong>：在Unix系统中，可以使用<code>pipe()</code>系统调用来创建一个管道。这个调用会返回两个文件描述符，一个用于读操作，一个用于写操作。例如： int pipefd[2]; if (pipe(pipefd) &#x3D;&#x3D; -1) {     perror(“pipe”);     exit(EXIT_FAILURE); } <code>pipefd[0]</code>用于读取数据，而<code>pipefd[1]</code>用于写入数据。两个文件描述符形成了一个单向的数据流通道。</li>
+<li>数据传输：<ul>
+<li>写操作：进程可以通过写文件描述符将数据写入管道。数据会被存储在管道的缓冲区中，直到被读取。const char *message &#x3D; “Hello, World!”; write(pipefd[1], message, strlen(message));</li>
+<li>读操作：另一个进程可以通过读取文件描述符从管道中读取数据。读取操作会从缓冲区中提取数据，并将其返回给调用进程。char buffer[128]; ssize_t bytesRead &#x3D; read(pipefd[0], buffer, sizeof(buffer));</li>
+</ul>
+</li>
+<li>管道的使用：<ul>
+<li>在进程间通信中，通常有两个进程使用管道进行数据交换。例如，父进程创建管道，并在<code>fork()</code>之后将管道的读写文件描述符分别传递给子进程和父进程。</li>
+<li>子进程可以将数据写入管道，父进程则从管道中读取数据。此时，数据在两个进程之间流动，通过管道实现了进程间的数据传递。</li>
+</ul>
+</li>
+</ol>
+<p><strong>区分匿名管道与命名管道：</strong></p>
+<ul>
+<li><strong>匿名管道</strong>：匿名管道最基本的管道类型，它是一个临时的、单向的数据通道，通常用于具有亲缘关系的进程（如父子进程）之间的通信。匿名管道没有名称，它们在管道创建时只在进程内有效，无法在系统中被其他进程访问。</li>
+<li><strong>命名管道（FIFO）</strong>：命名管道是一种具有名称的特殊文件，它在文件系统中存在，允许不相关的进程之间进行通信。因此可以在不相关的进程之间实现双向或单向的通信，而不需要进程间有直接的亲缘关系。使用<code>mkfifo()</code>函数创建命名管道，并通过文件路径进行读写操作：mkfifo(“&#x2F;tmp&#x2F;myfifo”, 0666);</li>
+</ul>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 匿名管道</span></span><br><span class="line">#include &lt;stdio.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;stdlib.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;unistd.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;string.<span class="property">h</span>&gt;</span><br><span class="line"></span><br><span class="line">int <span class="title function_">main</span>(<span class="params"></span>) &#123;</span><br><span class="line">    int pipefd[<span class="number">2</span>];</span><br><span class="line">    pid_t pid;</span><br><span class="line">    char buffer[<span class="number">128</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">pipe</span>(pipefd) == -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;pipe&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> ((pid = <span class="title function_">fork</span>()) == -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123; <span class="comment">// 子进程</span></span><br><span class="line">        <span class="title function_">close</span>(pipefd[<span class="number">0</span>]); <span class="comment">// 关闭读端</span></span><br><span class="line">        <span class="keyword">const</span> char *message = <span class="string">&quot;Hello from child&quot;</span>;</span><br><span class="line">        <span class="title function_">write</span>(pipefd[<span class="number">1</span>], message, <span class="title function_">strlen</span>(message) + <span class="number">1</span>);</span><br><span class="line">        <span class="title function_">close</span>(pipefd[<span class="number">1</span>]);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_SUCCESS</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// 父进程</span></span><br><span class="line">        <span class="title function_">close</span>(pipefd[<span class="number">1</span>]); <span class="comment">// 关闭写端</span></span><br><span class="line">        <span class="title function_">read</span>(pipefd[<span class="number">0</span>], buffer, <span class="title function_">sizeof</span>(buffer));</span><br><span class="line">        <span class="title function_">printf</span>(<span class="string">&quot;Received message: %s\n&quot;</span>, buffer);</span><br><span class="line">        <span class="title function_">close</span>(pipefd[<span class="number">0</span>]);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 命名管道（FIFO）</span></span><br><span class="line">#include &lt;stdio.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;stdlib.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;fcntl.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;unistd.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;string.<span class="property">h</span>&gt;</span><br><span class="line"></span><br><span class="line">int <span class="title function_">main</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">const</span> char *fifo = <span class="string">&quot;/tmp/myfifo&quot;</span>;</span><br><span class="line">    char buffer[<span class="number">128</span>];</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 创建命名管道</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">mkfifo</span>(fifo, <span class="number">0666</span>) == -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;mkfifo&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    pid_t pid;</span><br><span class="line">    <span class="keyword">if</span> ((pid = <span class="title function_">fork</span>()) == -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;fork&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123; <span class="comment">// 子进程</span></span><br><span class="line">        int fd = <span class="title function_">open</span>(fifo, <span class="variable constant_">O_WRONLY</span>);</span><br><span class="line">        <span class="keyword">const</span> char *message = <span class="string">&quot;Hello from FIFO&quot;</span>;</span><br><span class="line">        <span class="title function_">write</span>(fd, message, <span class="title function_">strlen</span>(message) + <span class="number">1</span>);</span><br><span class="line">        <span class="title function_">close</span>(fd);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_SUCCESS</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123; <span class="comment">// 父进程</span></span><br><span class="line">        int fd = <span class="title function_">open</span>(fifo, <span class="variable constant_">O_RDONLY</span>);</span><br><span class="line">        <span class="title function_">read</span>(fd, buffer, <span class="title function_">sizeof</span>(buffer));</span><br><span class="line">        <span class="title function_">printf</span>(<span class="string">&quot;Received message: %s\n&quot;</span>, buffer);</span><br><span class="line">        <span class="title function_">close</span>(fd);</span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 删除命名管道</span></span><br><span class="line">    <span class="title function_">unlink</span>(fifo);</span><br><span class="line">    </span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>应用场景：</strong></p>
+<p>管道常用于实现简单的父子进程间的数据传递，或在管道的另一端读取进程的标准输出。在Shell脚本中，管道被广泛用于将一个命令的输出传递给另一个命令作为输入。例如：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ls | grep <span class="string">&quot;txt&quot;</span></span><br></pre></td></tr></table></figure>
+
+<p>这个命令将<code>ls</code>命令的输出传递给<code>grep</code>命令进行过滤，使用管道实现了两个命令之间的数据传递。</p>
+<h3 id="3-2、消息队列（Message-Queues）"><a href="#3-2、消息队列（Message-Queues）" class="headerlink" title="3.2、消息队列（Message Queues）"></a>3.2、消息队列（Message Queues）</h3><p>消息队列 (Message Queue) 允许进程在两个进程之间以消息的形式交换数据。它允许进程通过相互发送消息来异步通信，其中消息存储在队列中，等待处理，并在处理后删除。</p>
+<p>消息队列是在非共享内存环境中使用的缓冲区，其中任务通过相互传递消息而不是通过访问共享变量进行通信。任务共享一个公共缓冲池。消息队列是一个无界 FIFO 队列，可防止不同线程的并发访问。</p>
+<p><strong>定义：消息队列提供异步通信协议，消息的发送方和接收方不需要同时与消息队列进行交互。</strong></p>
+<p>简单的说，消息队列的工作原理类似于邮箱：多个进程可以向消息队列发送邮件，接受者可以从队列中取回邮件。</p>
+<p>事件是异步的。当一个类将事件发送到另一个类时，它不会将其直接发送到目标反应类，而是将事件传递到操作系统消息队列。当目标类准备好处理事件时，它从消息队列的头部检索该事件。可以改用触发的操作来传递同步事件。</p>
+<p>许多任务可以将消息写入队列，但一次只能有一个任务从队列中读取消息。读取器在消息队列上等待，直到有消息要处理。消息可以是任意大小的。</p>
+<p>消息队列是一种软件组件，可在微服务和无服务器基础架构中实现应用程序到应用程序的通信。消息使用异步通信协议进行传输和接收，该协议对消息进行排队，不需要收件人的立即响应。</p>
+<p><strong>优点:</strong></p>
+<ul>
+<li><strong>异步通信:</strong> 发送进程无需等待接收进程立即处理消息，可以高效地继续执行其他任务，提高了系统吞吐量和响应速度。</li>
+<li><strong>解耦:</strong> 不同进程之间可以相互通信，而不需要了解对方的内部结构或运行机制，降低了系统复杂度和维护难度。</li>
+<li><strong>灵活的消息处理:</strong> 可以根据消息内容采取不同的处理策略，实现不同的功能，灵活地处理不同类型的数据。</li>
+<li><strong>安全性:</strong> 可以使用权限控制机制保护消息队列的访问权限，确保数据安全。</li>
+<li><strong>排队机制:</strong> 由于消息存放在队列中，消息的顺序会被保留，确保消息按指定的顺序被接收并处理。</li>
+</ul>
+<p><strong>缺点:</strong></p>
+<ul>
+<li><strong>资源开销:</strong> 创建和管理消息队列需要消耗系统资源，包括内存和系统调用时间。</li>
+<li><strong>复杂性:</strong> 与其他简单IPC机制相比，消息队列的使用需要了解消息结构、权限设置和同步机制等概念。</li>
+<li><strong>性能:</strong> 在并发场景下，如果消息队列长度过长，可能会因为消息处理速度跟不上发送速度而导致积压，影响系统性能。</li>
+<li><strong>限于特定处理消息类型:</strong> 消息队列更适合用于处理自包含信息的完整消息，而在处理有限数据类型，例如同步信号更推荐使用其他机制，例如信号量。</li>
+</ul>
+<p>在程序中使用四个重要功能来实现使用消息队列的 IPC：</p>
+<ul>
+<li><strong><code>msgget(key_t key, int msgflg)</code></strong>: 用来创建或打开一个消息队列。第一个参数是命名系统中消息队列的键，使用<code>ftok</code>创建；第二个参数用于为消息队列分配权限。</li>
+<li><strong><code>msgsnd(int msqid, const void \*msg_ptr, size_t msg_sz, int msgflg)</code></strong>: 用于发送消息到消息队列。最后一个参数控制在消息队列已满或达到排队消息的系统限制时会发生什么情况。</li>
+<li><strong><code>msgrcv(int msqid, void \*msg_ptr, size_t msg_sz, long int msgtype, int msgflg)</code></strong>: 用于从消息队列接收消息。</li>
+<li><strong><code>msgctl(int msqid, int command, struct msqid_ds \*buf)</code></strong>: 用于控制消息队列，例如修改权限、获取消息队列信息等等。第二个参数可以具有<code>IPC_STAT</code>、<code>IPC_SET</code>、<code>IPC_RMID</code>中的一个。</li>
+</ul>
+<p>使用消息队列执行 IPC 的步骤：</p>
+<ol>
+<li>创建一个新队列或由 <code>msgget()</code> 打开一个现有队列。</li>
+<li>新消息由 <code>msgsnd()</code> 添加到队列末尾。每条消息都有一个正的长整型字段、一个非负长度和实际的数据字节（对应于长度），所有这些都在将消息添加到队列时指定给 <code>msgsnd()</code>。</li>
+<li>消息由 <code>msgrcv()</code> 从队列中获取。我们不必按先进先出的顺序获取消息。相反，可以根据消息的类型字段获取消息。</li>
+<li>对消息队列 <code>msgctl()</code>执行控制操作。</li>
+</ol>
+<p>示例，写消息队列：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdlib.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;stdio.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;string.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;unistd.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;sys/types.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;sys/ipc.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;sys/msg.<span class="property">h</span>&gt;  </span><br><span class="line">#define <span class="variable constant_">MAX_TEXT</span> <span class="number">512</span>   <span class="comment">//maximum length of the message that can be sent allowed  </span></span><br><span class="line">struct my_msg&#123;  </span><br><span class="line">    long int msg_type;  </span><br><span class="line">    char some_text[<span class="variable constant_">MAX_TEXT</span>];  </span><br><span class="line">&#125;;  </span><br><span class="line">int <span class="title function_">main</span>(<span class="params"></span>)  </span><br><span class="line">&#123;  </span><br><span class="line">    int running=<span class="number">1</span>;  </span><br><span class="line">    int msgid;  </span><br><span class="line">    struct my_msg some_data;  </span><br><span class="line">    char buffer[<span class="number">50</span>]; <span class="comment">//array to store user input  </span></span><br><span class="line">    msgid=<span class="title function_">msgget</span>((key_t)<span class="number">14534</span>,<span class="number">0666</span>|<span class="variable constant_">IPC_CREAT</span>);  </span><br><span class="line">    <span class="keyword">if</span> (msgid == -<span class="number">1</span>) &#123;  </span><br><span class="line">		<span class="title function_">printf</span>(<span class="string">&quot;Error in creating queue\n&quot;</span>);  </span><br><span class="line">		<span class="title function_">exit</span>(<span class="number">0</span>);  </span><br><span class="line">    &#125;  </span><br><span class="line">	<span class="keyword">while</span>(running) &#123;  </span><br><span class="line">		<span class="title function_">printf</span>(<span class="string">&quot;Enter some text:\n&quot;</span>);  </span><br><span class="line">		<span class="title function_">fgets</span>(buffer,<span class="number">50</span>,stdin);  </span><br><span class="line">		some_data.<span class="property">msg_type</span>=<span class="number">1</span>;  </span><br><span class="line">		<span class="title function_">strcpy</span>(some_data.<span class="property">some_text</span>,buffer);  </span><br><span class="line">		<span class="keyword">if</span>(<span class="title function_">msgsnd</span>(msgid,(<span class="keyword">void</span> *)&amp;some_data, <span class="variable constant_">MAX_TEXT</span>,<span class="number">0</span>)==-<span class="number">1</span>) &#123;  </span><br><span class="line">		 	<span class="title function_">printf</span>(<span class="string">&quot;Msg not sent\n&quot;</span>);  </span><br><span class="line">		&#125;  </span><br><span class="line">		<span class="keyword">if</span>(<span class="title function_">strncmp</span>(buffer,<span class="string">&quot;end&quot;</span>,<span class="number">3</span>)==<span class="number">0</span>)  &#123;  </span><br><span class="line">			running=<span class="number">0</span>;  </span><br><span class="line">		&#125;  </span><br><span class="line">	&#125;  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<p>读消息队列：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdlib.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;stdio.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;string.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;unistd.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;sys/types.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;sys/ipc.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;sys/msg.<span class="property">h</span>&gt;  </span><br><span class="line">struct my_msg&#123;  </span><br><span class="line">	long int msg_type;  </span><br><span class="line">	char some_text[<span class="variable constant_">BUFSIZ</span>];  </span><br><span class="line">&#125;;  </span><br><span class="line">int <span class="title function_">main</span>(<span class="params"></span>)  </span><br><span class="line">&#123;  </span><br><span class="line">	int running=<span class="number">1</span>;  </span><br><span class="line">	int msgid;  </span><br><span class="line">	struct my_msg some_data;  </span><br><span class="line">	long int msg_to_rec=<span class="number">0</span>;  </span><br><span class="line">	msgid=<span class="title function_">msgget</span>((key_t)<span class="number">12345</span>,<span class="number">0666</span>|<span class="variable constant_">IPC_CREAT</span>);  </span><br><span class="line">	<span class="keyword">while</span>(running)  &#123;  </span><br><span class="line">	    <span class="title function_">msgrcv</span>(msgid,(<span class="keyword">void</span> *)&amp;some_data,<span class="variable constant_">BUFSIZ</span>,msg_to_rec,<span class="number">0</span>);                   </span><br><span class="line">	    <span class="title function_">printf</span>(<span class="string">&quot;Data received: %s\n&quot;</span>,some_data.<span class="property">some_text</span>);  </span><br><span class="line">	    <span class="keyword">if</span>(<span class="title function_">strncmp</span>(some_data.<span class="property">some_text</span>,<span class="string">&quot;end&quot;</span>,<span class="number">3</span>)==<span class="number">0</span>)  </span><br><span class="line">	    	running=<span class="number">0</span>;  </span><br><span class="line">	&#125;  </span><br><span class="line">	 <span class="title function_">msgctl</span>(msgid,<span class="variable constant_">IPC_RMID</span>,<span class="number">0</span>);  </span><br><span class="line"> &#125;  </span><br></pre></td></tr></table></figure>
+
+<h3 id="3-3、共享内存（Shared-Memory）"><a href="#3-3、共享内存（Shared-Memory）" class="headerlink" title="3.3、共享内存（Shared Memory）"></a>3.3、共享内存（Shared Memory）</h3><p>共享内存是两个或多个进程之间共享的内存,允许多个进程访问和共享相同内存块。每个进程都有自己的地址空间；如果任何进程想要将某些信息从其自己的地址空间与其他进程进行通信，则只能使用 IPC（进程间通信）共享内存技术。</p>
+<p><strong>共享内存是最快的进程间通信机制</strong>。操作系统将多个进程的地址空间中的内存段映射到该内存段中读取和写入，而无需调用操作系统函数。</p>
+<p>对于交换大量数据的应用程序，共享内存远远优于消息队列技术，因为IPC消息队列需要对每次数据交换进行系统调用。</p>
+<p>通常，使用管道或命名管道执行相互关联的进程通信。不相关的进程通信可以使用命名管道或通过共享内存和消息队列等。但是，管道、FIFO和消息队列的问题在于两个进程之间的信息交换要经过内核，总共需要 4 个数据副本（2 个读取和 2 个写入）。因此，共享内存提供了一种方法，让两个或多个进程共享一个内存段。使用共享内存时，数据仅复制两次，从输入文件复制到共享内存，从共享内存复制到输出文件。</p>
+<p>在两个或多个进程中建立共享内存区域时，无法保证这些区域将放置在相同的基址上，当需要同步时，可以使用信号量。</p>
+<p>有两个函数 <code>shmget()</code> 和 <code>shmat()</code> 用于使用共享内存的 IPC。<code>shmget()</code> 函数用于创建共享内存段，而 <code>shmat()</code>函数用于将共享段与进程的地址空间附加。</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;sys/ipc.<span class="property">h</span>&gt;   </span><br><span class="line">#include &lt;sys/shm.<span class="property">h</span>&gt;   </span><br><span class="line"></span><br><span class="line">int <span class="title function_">shmget</span> (key_t key, size_t size, int shmflg);  </span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> *<span class="title function_">shmat</span>(int shmid, <span class="keyword">const</span> <span class="keyword">void</span> *shmaddr, int shmflg);  </span><br></pre></td></tr></table></figure>
+
+<p><strong>IPC使用共享内存如何工作？</strong> 进程使用 <code>shmget()</code> 创建共享内存段。共享内存段的原始所有者可以使用 <code>shmctl()</code>将所有权分配给另一个用户。它还可以撤销此分配。具有适当权限的其他进程可以使用 <code>shmctl()</code>在共享内存段上执行各种控制功能。</p>
+<p>创建后，可以使用 <code>shmat()</code>将共享段附加到进程地址空间。可以使用 <code>shmdt()</code> 将其分离。附加进程必须具有 <code>shmat()</code>的适当权限。附加后，进程可以读取或写入段，因为附加操作中请求的权限允许。共享段可以通过同一进程多次附加。</p>
+<p>共享内存段由具有唯一 ID 的控制结构描述，该 ID 指向物理内存区域。段的标识符称为 <code>shmid</code>。共享内存段控制结构和原型的结构定义可以在 <code>&lt;sys/shm.h&gt;</code> 中找到。</p>
+<p>使用示例：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;stdlib.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;unistd.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;sys/shm.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;string.<span class="property">h</span>&gt;  </span><br><span class="line">int <span class="title function_">main</span>(<span class="params"></span>)  </span><br><span class="line">&#123;  </span><br><span class="line">	int i;  </span><br><span class="line">	<span class="keyword">void</span> *shared_memory;  </span><br><span class="line">	char buff[<span class="number">100</span>];  </span><br><span class="line">	int shmid;  </span><br><span class="line">	shmid=<span class="title function_">shmget</span>((key_t)<span class="number">2345</span>, <span class="number">1024</span>, <span class="number">0666</span>|<span class="variable constant_">IPC_CREAT</span>);   </span><br><span class="line">	<span class="comment">//creates shared memory segment with key 2345, having size 1024 bytes. </span></span><br><span class="line">	<span class="title function_">printf</span>(<span class="string">&quot;Key of shared memory is %d\n&quot;</span>,shmid);  </span><br><span class="line">	shared_memory=<span class="title function_">shmat</span>(shmid,<span class="variable constant_">NULL</span>,<span class="number">0</span>);   </span><br><span class="line">	<span class="comment">//process attached to shared memory segment  </span></span><br><span class="line">	<span class="title function_">printf</span>(<span class="string">&quot;Process attached at %p\n&quot;</span>,shared_memory);   </span><br><span class="line">	<span class="comment">//this prints the address where the segment is attached with this process  </span></span><br><span class="line">	<span class="title function_">printf</span>(<span class="string">&quot;Enter some data to write to shared memory\n&quot;</span>);  </span><br><span class="line">	<span class="title function_">read</span>(<span class="number">0</span>,buff,<span class="number">100</span>); <span class="comment">//get some input from user  </span></span><br><span class="line">	<span class="title function_">strcpy</span>(shared_memory,buff); <span class="comment">//data written to shared memory  </span></span><br><span class="line">	<span class="title function_">printf</span>(<span class="string">&quot;You wrote : %s\n&quot;</span>,(char *)shared_memory);  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#include&lt;stdio.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;stdlib.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;unistd.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;sys/shm.<span class="property">h</span>&gt;  </span><br><span class="line">#include&lt;string.<span class="property">h</span>&gt;  </span><br><span class="line">int <span class="title function_">main</span>(<span class="params"></span>)  </span><br><span class="line">&#123;  </span><br><span class="line">	int i;  </span><br><span class="line">	<span class="keyword">void</span> *shared_memory;  </span><br><span class="line">	char buff[<span class="number">100</span>];  </span><br><span class="line">	int shmid;  </span><br><span class="line">	shmid=<span class="title function_">shmget</span>((key_t)<span class="number">2345</span>, <span class="number">1024</span>, <span class="number">0666</span>);  </span><br><span class="line">	<span class="title function_">printf</span>(<span class="string">&quot;Key of shared memory is %d\n&quot;</span>,shmid);  </span><br><span class="line">	shared_memory=<span class="title function_">shmat</span>(shmid,<span class="variable constant_">NULL</span>,<span class="number">0</span>); <span class="comment">//process attached to shared memory segment  </span></span><br><span class="line">	<span class="title function_">printf</span>(<span class="string">&quot;Process attached at %p\n&quot;</span>,shared_memory);  </span><br><span class="line">	<span class="title function_">printf</span>(<span class="string">&quot;Data read from shared memory is : %s\n&quot;</span>,(char *)shared_memory);  </span><br><span class="line">&#125;  </span><br></pre></td></tr></table></figure>
+
+<h3 id="3-4、信号（Signals）"><a href="#3-4、信号（Signals）" class="headerlink" title="3.4、信号（Signals）"></a>3.4、信号（Signals）</h3><p>在操作系统和进程间通信中，信号（Signals）是一种重要的机制，用于通知进程发生了某种事件或异常。</p>
+<p>信号是一种异步通知机制，用于在软件层面向进程发送通知。它通常用于以下几种情况：</p>
+<ul>
+<li><strong>进程间通信（IPC）：</strong> 信号可以用来通知进程某种事件已经发生，比如用户键入了某个中断键（如Ctrl+C），或者子进程结束等。</li>
+<li><strong>异常事件：</strong> 比如内存访问错误（如分段错误），浮点数溢出等硬件引发的异常，这些异常会被操作系统转换为信号发送给相应进程。</li>
+<li><strong>系统管理：</strong> 操作系统可以通过信号强制进程执行某些动作，如中止进程、重新启动进程等。</li>
+</ul>
+<p>每种信号都由一个唯一的整数编号表示，这些编号通常以宏的形式定义在 <code>&lt;signal.h&gt;</code> 头文件中。一些常见的信号包括：</p>
+<ul>
+<li><strong>SIGINT (2):</strong> 终端中断信号，通常由用户键入Ctrl+C触发。</li>
+<li><strong>SIGKILL (9):</strong> 无法被忽略的终止信号，用于强制终止进程。</li>
+<li><strong>SIGTERM (15):</strong> 终止信号，用于正常结束进程。</li>
+<li><strong>SIGSEGV (11):</strong> 无效内存引用导致的段错误。</li>
+<li><strong>SIGCHLD (17):</strong> 子进程状态发生变化的通知信号，通常由子进程退出或终止时发送给父进程。</li>
+</ul>
+<p>信号的发送与处理：</p>
+<ul>
+<li><strong>发送信号：</strong> 可以使用系统调用 <code>kill(pid, sig)</code> 向指定的进程 <code>pid</code> 发送信号 <code>sig</code>。</li>
+<li><strong>捕获信号：</strong> 进程可以通过注册信号处理函数来捕获和处理信号。使用 <code>signal(sig, handler)</code> 或 <code>sigaction(sig, &amp;act, &amp;oldact)</code> 函数来指定信号处理函数。</li>
+<li><strong>信号处理函数：</strong> 信号处理函数是一个特殊的函数，用来处理特定信号发生时的行为。这些函数必须满足特定的格式，通常使用 <code>void handler(int sig)</code> 这样的声明。</li>
+</ul>
+<p>信号处理的注意事项：</p>
+<ul>
+<li><strong>异步性质：</strong> 信号的到达是异步的，即进程无法预测信号何时到达。因此，信号处理函数应设计为尽可能简单和快速。</li>
+<li><strong>可重入性：</strong> 由于信号可以在任何时候中断进程执行，因此信号处理函数必须是可重入的，即可以安全地在其自身执行期间再次调用。</li>
+<li><strong>信号屏蔽：</strong> 进程可以使用 <code>sigprocmask()</code> 函数来屏蔽（阻止）或解除屏蔽特定的信号，以控制在什么时候接收某些信号。</li>
+</ul>
+<p>示例，使用 <code>signal()</code> 函数来捕获并处理 <code>SIGINT</code> 信号：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;signal.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;unistd.<span class="property">h</span>&gt;</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">sigint_handler</span>(<span class="params">int sig</span>) &#123;</span><br><span class="line">    <span class="title function_">printf</span>(<span class="string">&quot;Caught SIGINT, exiting...&quot;</span>);</span><br><span class="line">    <span class="title function_">exit</span>(<span class="number">0</span>);  <span class="comment">// 或者执行一些清理工作后退出</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int <span class="title function_">main</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="title function_">signal</span>(<span class="variable constant_">SIGINT</span>, sigint_handler);</span><br><span class="line"></span><br><span class="line">    <span class="title function_">printf</span>(<span class="string">&quot;Waiting for SIGINT (Ctrl+C)...&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="title function_">sleep</span>(<span class="number">1</span>);  <span class="comment">// 让程序持续运行</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>信号虽然主要用于通知事件和处理异常，但也可以用于简单的进程间通信。</p>
+<p><strong>发送进程 (<code>sender.c</code>)</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;stdlib.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;signal.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;unistd.<span class="property">h</span>&gt;</span><br><span class="line"></span><br><span class="line">#define <span class="variable constant_">SIG_CUSTOM</span> <span class="title class_">SIGUSR1</span>  <span class="comment">// 自定义信号</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">error_handling</span>(<span class="params">char *msg</span>) &#123;</span><br><span class="line">    <span class="title function_">perror</span>(msg);</span><br><span class="line">    <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int <span class="title function_">main</span>(<span class="params"></span>) &#123;</span><br><span class="line">    pid_t pid = <span class="title function_">fork</span>();  <span class="comment">// 创建子进程</span></span><br><span class="line">    <span class="keyword">if</span> (pid &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="title function_">error_handling</span>(<span class="string">&quot;Fork error&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (pid == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="comment">// 子进程（接收进程）</span></span><br><span class="line">        <span class="title function_">execl</span>(<span class="string">&quot;./receiver&quot;</span>, <span class="string">&quot;receiver&quot;</span>, <span class="variable constant_">NULL</span>);  <span class="comment">// 执行接收进程程序</span></span><br><span class="line">        <span class="title function_">error_handling</span>(<span class="string">&quot;Exec error&quot;</span>);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="comment">// 父进程（发送进程）</span></span><br><span class="line">        <span class="title function_">sleep</span>(<span class="number">1</span>);  <span class="comment">// 等待子进程初始化完毕</span></span><br><span class="line"></span><br><span class="line">        <span class="title function_">printf</span>(<span class="string">&quot;Sending signal to child process (PID: %d)...\</span></span><br><span class="line"><span class="string">&quot;</span>, pid);</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_">kill</span>(pid, <span class="variable constant_">SIG_CUSTOM</span>) == -<span class="number">1</span>) &#123;</span><br><span class="line">            <span class="title function_">error_handling</span>(<span class="string">&quot;Kill error&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="title function_">printf</span>(<span class="string">&quot;Signal sent.\</span></span><br><span class="line"><span class="string">&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>接收进程 (<code>receiver.c</code>)</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;stdlib.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;signal.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;unistd.<span class="property">h</span>&gt;</span><br><span class="line"></span><br><span class="line">#define <span class="variable constant_">SIG_CUSTOM</span> <span class="title class_">SIGUSR1</span>  <span class="comment">// 自定义信号</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> <span class="title function_">sig_handler</span>(<span class="params">int sig</span>) &#123;</span><br><span class="line">    <span class="keyword">if</span> (sig == <span class="variable constant_">SIG_CUSTOM</span>) &#123;</span><br><span class="line">        <span class="title function_">printf</span>(<span class="string">&quot;Received custom signal SIGUSR1.\</span></span><br><span class="line"><span class="string">&quot;</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int <span class="title function_">main</span>(<span class="params"></span>) &#123;</span><br><span class="line">    struct sigaction act;</span><br><span class="line">    act.<span class="property">sa_handler</span> = sig_handler;</span><br><span class="line">    <span class="title function_">sigemptyset</span>(&amp;act.<span class="property">sa_mask</span>);</span><br><span class="line">    act.<span class="property">sa_flags</span> = <span class="number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 设置自定义信号的处理函数</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">sigaction</span>(<span class="variable constant_">SIG_CUSTOM</span>, &amp;act, <span class="variable constant_">NULL</span>) == -<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;Sigaction error&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="title function_">printf</span>(<span class="string">&quot;Waiting for signal...\</span></span><br><span class="line"><span class="string">&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span> (<span class="number">1</span>) &#123;</span><br><span class="line">        <span class="title function_">sleep</span>(<span class="number">1</span>);  <span class="comment">// 让程序持续运行</span></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>编译和运行：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc sender.<span class="property">c</span> -o sender</span><br><span class="line">gcc receiver.<span class="property">c</span> -o receiver</span><br></pre></td></tr></table></figure>
+
+<p>然后，分别在两个终端窗口中运行编译后的可执行文件：</p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./receiver</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">./sender</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-5、套接字（Sockets）"><a href="#3-5、套接字（Sockets）" class="headerlink" title="3.5、套接字（Sockets）"></a>3.5、套接字（Sockets）</h3><p>套接字（Socket）用于在不同主机或同一主机的不同进程之间进行通信。它是<strong>网络编程中最常用的一种方式</strong>，允许进程通过网络发送和接收数据。</p>
+<p>套接字的基本概念：</p>
+<ul>
+<li><strong>套接字地址：</strong> 套接字由两个地址构成，即 IP 地址和端口号。IP 地址标识网络上的主机，端口号标识主机上的进程。</li>
+<li><strong>通信模式：</strong> 套接字可以支持不同的通信模式，包括<strong>面向连接</strong>的和<strong>无连接</strong>的两种主要模式。</li>
+<li><strong>数据传输方式：</strong> 套接字可以通过字节流或数据报两种方式传输数据，取决于使用的协议（如 TCP 或 UDP）。</li>
+</ul>
+<p>本地套接字（Local Socket，也称为 Unix 域套接字）和网络套接字（Network Socket）是两种不同的套接字类型，它们主要在使用场景、实现方式和特性上有所区别。</p>
+<p>本地套接字（Local Socket）:</p>
+<ul>
+<li><strong>使用场景：</strong> 主要用于本地进程间的通信，即在同一台机器上运行的不同进程之间的通信。它们不经过网络协议栈，通信速度更快，适用于需要高效率和安全性的应用场景。</li>
+<li><strong>实现方式：</strong> 在文件系统中以文件形式存在，通常位于 <code>/tmp</code> 目录或者系统指定的临时目录下。本地套接字使用文件系统的权限机制来控制访问权限。</li>
+<li><strong>地址：</strong> 本地套接字地址是文件系统路径名，通常以文件系统的形式存在，例如 <code>/tmp/mysocket</code>。</li>
+<li><strong>优点：</strong> 传输速度快，通信效率高；支持多种协议族（如 UNIX 套接字和 Netlink 套接字等）。</li>
+<li><strong>缺点：</strong> 仅限于本地通信，无法跨越网络边界直接进行通信。</li>
+</ul>
+<p>网络套接字（Network Socket）:</p>
+<ul>
+<li><strong>使用场景：</strong> 用于网络间的进程通信，可以在不同主机之间进行通信，是实现网络应用的基础。</li>
+<li><strong>实现方式：</strong> 使用网络协议栈进行数据传输，通过网络接口进行数据交换。常见的网络套接字有 TCP 套接字和 UDP 套接字等。</li>
+<li><strong>地址：</strong> 网络套接字地址由 IP 地址和端口号组成，用于标识网络中的主机和进程。</li>
+<li><strong>优点：</strong> 可以实现跨网络的通信，支持广域网（WAN）和局域网（LAN）等不同网络环境下的通信需求。</li>
+<li><strong>缺点：</strong> 涉及到网络协议栈的传输，相比本地套接字可能会有一定的传输延迟，同时需要考虑网络安全和稳定性的问题。</li>
+</ul>
+<p>套接字主要可以根据使用的协议来分类，常见的包括：</p>
+<ul>
+<li><strong>流套接字（Stream Socket）：</strong> 也称为 <code>SOCK_STREAM</code>，基于 TCP 协议。它提供面向连接的、可靠的数据传输，确保数据按顺序到达目的地，且不丢失、不重复。</li>
+<li><strong>数据报套接字（Datagram Socket）：</strong> 也称为 <code>SOCK_DGRAM</code>，基于 UDP 协议。它提供无连接的<a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/dts?from_column=20065&from=20065">数据传输服务</a>，数据包可能会丢失或重复，不保证数据的顺序。</li>
+<li><strong>原始套接字（Raw Socket）：</strong> 允许直接访问底层网络协议，如 ICMP（用于网络错误报告和诊断）、IGMP（Internet 组管理协议）等。通常需要特殊权限才能使用。</li>
+</ul>
+<p>在 UNIX 和类 UNIX 系统中，套接字通常使用以下系统调用进行创建、绑定、监听、连接、发送和接收数据等操作：</p>
+<ul>
+<li><strong><code>socket()</code>：</strong> 创建套接字，返回一个文件描述符。</li>
+<li><strong><code>bind()</code>：</strong> 将套接字绑定到一个地址，如 IP 地址和端口号。</li>
+<li><strong><code>listen()</code>：</strong> 仅用于流套接字，将套接字标记为被动套接字，等待连接请求。</li>
+<li><strong><code>accept()</code>：</strong> 仅用于流套接字，接受客户端的连接请求，返回一个新的文件描述符用于与客户端通信。</li>
+<li><strong><code>connect()</code>：</strong> 仅用于流套接字，连接到远程套接字（客户端）。</li>
+<li><strong><code>send()</code></strong> <strong>和</strong> <strong><code>recv()</code>：</strong> 发送和接收数据。</li>
+<li><strong><code>sendto()</code></strong> <strong>和</strong> <strong><code>recvfrom()</code>：</strong> 用于数据报套接字，发送和接收数据报。</li>
+</ul>
+<p>示例代码，使用套接字进行基本的客户端-服务器通信：</p>
+<p><strong>服务器端 (<code>server.c</code>)</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;stdlib.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;string.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;unistd.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;arpa/inet.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;sys/socket.<span class="property">h</span>&gt;</span><br><span class="line"></span><br><span class="line">#define <span class="variable constant_">PORT</span> <span class="number">8888</span></span><br><span class="line"></span><br><span class="line">int <span class="title function_">main</span>(<span class="params"></span>) &#123;</span><br><span class="line">    int server_fd, new_socket;</span><br><span class="line">    struct sockaddr_in address;</span><br><span class="line">    int addrlen = <span class="title function_">sizeof</span>(address);</span><br><span class="line">    char buffer[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line">    <span class="keyword">const</span> char *hello = <span class="string">&quot;Hello from server&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建 TCP 套接字</span></span><br><span class="line">    <span class="keyword">if</span> ((server_fd = <span class="title function_">socket</span>(<span class="variable constant_">AF_INET</span>, <span class="variable constant_">SOCK_STREAM</span>, <span class="number">0</span>)) == <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;Socket creation failed&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    address.<span class="property">sin_family</span> = <span class="variable constant_">AF_INET</span>;</span><br><span class="line">    address.<span class="property">sin_addr</span>.<span class="property">s_addr</span> = <span class="variable constant_">INADDR_ANY</span>;</span><br><span class="line">    address.<span class="property">sin_port</span> = <span class="title function_">htons</span>(<span class="variable constant_">PORT</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将套接字绑定到指定地址和端口</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">bind</span>(server_fd, (struct sockaddr *)&amp;address, <span class="title function_">sizeof</span>(address)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;Bind failed&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 监听传入的连接请求</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">listen</span>(server_fd, <span class="number">3</span>) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;Listen failed&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 接受连接，并处理数据</span></span><br><span class="line">    <span class="keyword">if</span> ((new_socket = <span class="title function_">accept</span>(server_fd, (struct sockaddr *)&amp;address, (socklen_t*)&amp;addrlen)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;Accept failed&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 从客户端接收数据，并发送响应</span></span><br><span class="line">    int valread = <span class="title function_">read</span>(new_socket, buffer, <span class="number">1024</span>);</span><br><span class="line">    <span class="title function_">printf</span>(<span class="string">&quot;Received message from client: %s</span></span><br><span class="line"><span class="string">&quot;</span>, buffer);</span><br><span class="line">    <span class="title function_">send</span>(new_socket, hello, <span class="title function_">strlen</span>(hello), <span class="number">0</span>);</span><br><span class="line">    <span class="title function_">printf</span>(<span class="string">&quot;Hello message sent</span></span><br><span class="line"><span class="string">&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>客户端 (<code>client.c</code>)</strong></p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdio.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;stdlib.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;string.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;unistd.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;arpa/inet.<span class="property">h</span>&gt;</span><br><span class="line">#include &lt;sys/socket.<span class="property">h</span>&gt;</span><br><span class="line"></span><br><span class="line">#define <span class="variable constant_">PORT</span> <span class="number">8888</span></span><br><span class="line"></span><br><span class="line">int <span class="title function_">main</span>(<span class="params"></span>) &#123;</span><br><span class="line">    int sock = <span class="number">0</span>;</span><br><span class="line">    struct sockaddr_in serv_addr;</span><br><span class="line">    char *hello = <span class="string">&quot;Hello from client&quot;</span>;</span><br><span class="line">    char buffer[<span class="number">1024</span>] = &#123;<span class="number">0</span>&#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 创建 TCP 套接字</span></span><br><span class="line">    <span class="keyword">if</span> ((sock = <span class="title function_">socket</span>(<span class="variable constant_">AF_INET</span>, <span class="variable constant_">SOCK_STREAM</span>, <span class="number">0</span>)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;Socket creation failed&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    serv_addr.<span class="property">sin_family</span> = <span class="variable constant_">AF_INET</span>;</span><br><span class="line">    serv_addr.<span class="property">sin_port</span> = <span class="title function_">htons</span>(<span class="variable constant_">PORT</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 将 IPv4 地址从文本转换为二进制格式</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">inet_pton</span>(<span class="variable constant_">AF_INET</span>, <span class="string">&quot;127.0.0.1&quot;</span>, &amp;serv_addr.<span class="property">sin_addr</span>) &lt;= <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;Invalid address/ Address not supported&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 连接到服务器</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="title function_">connect</span>(sock, (struct sockaddr *)&amp;serv_addr, <span class="title function_">sizeof</span>(serv_addr)) &lt; <span class="number">0</span>) &#123;</span><br><span class="line">        <span class="title function_">perror</span>(<span class="string">&quot;Connection failed&quot;</span>);</span><br><span class="line">        <span class="title function_">exit</span>(<span class="variable constant_">EXIT_FAILURE</span>);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 发送消息给服务器</span></span><br><span class="line">    <span class="title function_">send</span>(sock, hello, <span class="title function_">strlen</span>(hello), <span class="number">0</span>);</span><br><span class="line">    <span class="title function_">printf</span>(<span class="string">&quot;Hello message sent to server</span></span><br><span class="line"><span class="string">&quot;</span>);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 接收服务器的响应</span></span><br><span class="line">    int valread = <span class="title function_">read</span>(sock, buffer, <span class="number">1024</span>);</span><br><span class="line">    <span class="title function_">printf</span>(<span class="string">&quot;Message from server: %s&quot;</span>, buffer);</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-6、内存映射文件（Memory-Mapped-Files）"><a href="#3-6、内存映射文件（Memory-Mapped-Files）" class="headerlink" title="3.6、内存映射文件（Memory-Mapped Files）"></a>3.6、内存映射文件（Memory-Mapped Files）</h3><p>内存映射文件（Memory-Mapped Files）是一种高效的文件访问方式，它允许将一个文件的内容直接映射到进程的虚拟内存空间中，使得文件的读取和写入可以像访问内存一样高效。</p>
+<p>工作机制：</p>
+<ol>
+<li><strong>映射创建：</strong> 进程调用 <code>mmap()</code> 系统调用，请求将一个文件的一部分或整个内容映射到自己的虚拟地址空间。<code>mmap()</code> 函数的参数包括文件描述符、映射长度、权限（读、写、执行）、映射标志等。</li>
+<li><strong>虚拟内存映射：</strong> 操作系统在进程的虚拟地址空间中创建一段与文件对应的虚拟内存区域，称为内存映射区域。这段虚拟内存区域可能会与文件的一部分或整个文件内容对应，取决于映射时指定的长度。</li>
+<li><strong>页表映射：</strong> 操作系统通过页表将虚拟内存区域映射到实际物理内存或者交换空间中。初始时，虚拟内存区域的页面可能并没有实际的物理内存页，而是指向文件中相应位置的数据。</li>
+<li><strong>文件访问：</strong> 当进程访问内存映射区域时，如果数据尚未加载到物理内存，则操作系统会将文件中对应部分数据读取到物理内存中的页中。这样，进程就可以通过对内存映射区域的读写操作，实现对文件内容的读写。</li>
+<li><strong>同步与更新：</strong> 内存映射文件的修改会直接影响到对应文件的内容，即使文件内容被修改也会反映在内存中。操作系统提供 <code>msync()</code> 函数来同步内存映射区域的修改到文件中，或者在不同进程间共享修改后的数据。</li>
+<li><strong>释放映射：</strong> 当不再需要内存映射文件时，进程可以调用 <code>munmap()</code> 函数释放映射，操作系统会取消虚拟地址空间中的映射关系，并根据需要更新文件的修改到磁盘上。</li>
+</ol>
+<p>关键特点：</p>
+<ul>
+<li><strong>高效访问：</strong> 内存映射文件允许直接将文件内容映射到内存，避免了传统的读取和写入系统调用的性能开销，提高了文件访问的效率。</li>
+<li><strong>共享文件：</strong> 多个进程可以将同一个文件映射到它们的地址空间中，实现共享文件内容。</li>
+<li><strong>透明性：</strong> 对内存映射区域的访问操作看起来像对内存的操作，对程序员来说更为方便和直观。</li>
+<li><strong>实时更新：</strong> 内存映射文件的修改可以即时反映到文件本身，或者共享给其他进程，无需额外的文件读写操作。</li>
+</ul>
+<p>应用场景：</p>
+<ul>
+<li><strong>数据库系统：</strong> 数据库可以使用内存映射文件来直接操作数据文件，提高读写性能。</li>
+<li><strong>文件编辑器：</strong> 文本编辑器可以使用内存映射文件来处理大文件，支持快速的搜索和修改操作。</li>
+<li><a target="_blank" rel="noopener" href="https://cloud.tencent.com/product/mmp?from_column=20065&from=20065"><strong>多媒体处理</strong></a><strong>：</strong> 多媒体应用程序可以使用内存映射文件来处理大文件的读写，如音频和视频文件。</li>
+<li><strong>共享内存：</strong> 进程间通信时，可以使用共享的内存映射文件来传递数据，提高通信效率。</li>
+</ul>
+<h2 id="四、总结"><a href="#四、总结" class="headerlink" title="四、总结"></a>四、总结</h2><p>进程间通信（IPC）作为现代计算系统中重要的组成部分，扮演着确保多进程协作顺利进行的关键角色。本文从IPC的基本概念出发，深入探讨了多种经典和高级IPC机制的原理、优缺点及实际应用场景。</p>
+<p>IPC是在多进程环境中实现进程间通信的关键技术，涉及数据共享、任务协调和状态更新等多个方面。有效的IPC机制可以提高系统性能和响应速度，确保数据的一致性和安全性，是现代计算系统中不可或缺的部分。</p>
+<p>学习书籍：</p>
+<ul>
+<li><strong>《Unix Network Programming, Volume 2: Interprocess Communications》</strong> ：经典的UNIX网络编程系列之一，深入讲解了多种IPC机制，特别是套接字和UNIX域套接字等网络IPC方式。</li>
+<li><strong>《Advanced Programming in the UNIX Environment》</strong> ：另一本经典的UNIX编程书籍，详细介绍了UNIX系统编程的方方面面，包括IPC机制。</li>
+<li><strong>《****Linux</strong> <strong>System Programming: Talking Directly to the</strong> <strong>Kernel</strong> <strong>and C Library》</strong> ：强调Linux系统编程的技术书籍，包括IPC、信号处理、共享内存等方面的深入讲解。</li>
+</ul>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/09/29/IPC%E9%80%9A%E4%BF%A1/">https://cmzcc.github.io/2025/09/29/IPC%E9%80%9A%E4%BF%A1/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/IPC/">IPC</a><a class="post-meta__tags" href="/tags/%E5%A4%9A%E8%BF%9B%E7%A8%8B%E7%BC%96%E7%A8%8B/">多进程编程</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover5.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2025/10/06/span/" title="span"><img class="cover" src="/img/text-cover5.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">span</div></div></a><a class="next-post pull-right" href="/2025/09/26/mutex%E5%BA%95%E5%B1%82%E5%8E%9F%E7%90%86/" title="mutex底层原理"><img class="cover" src="/img/text-cover5.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">mutex底层原理</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">102</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">110</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">7</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">努力成为c++高手ing，专精多线程编程和性能优化方向，国内私募量化开发实习生（QD)牛马</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%BC%95%E8%A8%80"><span class="toc-number">1.</span> <span class="toc-text">一、引言</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%E7%9A%84%E5%9F%BA%E6%9C%AC%E6%A6%82%E5%BF%B5"><span class="toc-number">2.</span> <span class="toc-text">二、进程间通信的基本概念</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1%E3%80%81%E8%BF%9B%E7%A8%8B%E9%97%B4%E9%80%9A%E4%BF%A1%EF%BC%88IPC%EF%BC%89%E7%9A%84%E5%AE%9A%E4%B9%89"><span class="toc-number">2.1.</span> <span class="toc-text">2.1、进程间通信（IPC）的定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2%E3%80%81IPC-%E7%9A%84%E5%BA%94%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.2.</span> <span class="toc-text">2.2、IPC 的应用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-3%E3%80%81IPC-%E7%9A%84%E4%B8%BB%E8%A6%81%E6%8C%91%E6%88%98"><span class="toc-number">2.3.</span> <span class="toc-text">2.3、IPC 的主要挑战</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-4%E3%80%81IPC-%E6%9C%BA%E5%88%B6%E7%9A%84%E5%88%86%E7%B1%BB%E5%92%8C%E9%80%89%E6%8B%A9"><span class="toc-number">2.4.</span> <span class="toc-text">2.4、IPC 机制的分类和选择</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E7%BB%8F%E5%85%B8%E7%9A%84-IPC-%E6%9C%BA%E5%88%B6"><span class="toc-number">3.</span> <span class="toc-text">三、经典的 IPC 机制</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#3-1%E3%80%81%E7%AE%A1%E9%81%93%EF%BC%88Pipe%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">3.1、管道（Pipe）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-2%E3%80%81%E6%B6%88%E6%81%AF%E9%98%9F%E5%88%97%EF%BC%88Message-Queues%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">3.2、消息队列（Message Queues）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-3%E3%80%81%E5%85%B1%E4%BA%AB%E5%86%85%E5%AD%98%EF%BC%88Shared-Memory%EF%BC%89"><span class="toc-number">3.3.</span> <span class="toc-text">3.3、共享内存（Shared Memory）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-4%E3%80%81%E4%BF%A1%E5%8F%B7%EF%BC%88Signals%EF%BC%89"><span class="toc-number">3.4.</span> <span class="toc-text">3.4、信号（Signals）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-5%E3%80%81%E5%A5%97%E6%8E%A5%E5%AD%97%EF%BC%88Sockets%EF%BC%89"><span class="toc-number">3.5.</span> <span class="toc-text">3.5、套接字（Sockets）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-6%E3%80%81%E5%86%85%E5%AD%98%E6%98%A0%E5%B0%84%E6%96%87%E4%BB%B6%EF%BC%88Memory-Mapped-Files%EF%BC%89"><span class="toc-number">3.6.</span> <span class="toc-text">3.6、内存映射文件（Memory-Mapped Files）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81%E6%80%BB%E7%BB%93"><span class="toc-number">4.</span> <span class="toc-text">四、总结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/10/10/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%BA%8C)/" title="c中的协程(二)"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c中的协程(二)"/></a><div class="content"><a class="title" href="/2025/10/10/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%BA%8C)/" title="c中的协程(二)">c中的协程(二)</a><time datetime="2025-10-10T03:52:23.000Z" title="Created 2025-10-10 11:52:23">2025-10-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/06/Rangers%E5%BA%93/" title="Rangers库"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Rangers库"/></a><div class="content"><a class="title" href="/2025/10/06/Rangers%E5%BA%93/" title="Rangers库">Rangers库</a><time datetime="2025-10-06T02:50:13.000Z" title="Created 2025-10-06 10:50:13">2025-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/06/concepts/" title="concepts"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="concepts"/></a><div class="content"><a class="title" href="/2025/10/06/concepts/" title="concepts">concepts</a><time datetime="2025-10-06T02:49:44.000Z" title="Created 2025-10-06 10:49:44">2025-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/06/span/" title="span"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="span"/></a><div class="content"><a class="title" href="/2025/10/06/span/" title="span">span</a><time datetime="2025-10-06T02:48:58.000Z" title="Created 2025-10-06 10:48:58">2025-10-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/09/29/IPC%E9%80%9A%E4%BF%A1/" title="IPC通信"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="IPC通信"/></a><div class="content"><a class="title" href="/2025/09/29/IPC%E9%80%9A%E4%BF%A1/" title="IPC通信">IPC通信</a><time datetime="2025-09-29T02:30:54.000Z" title="Created 2025-09-29 10:30:54">2025-09-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
