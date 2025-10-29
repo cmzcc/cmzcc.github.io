@@ -1,0 +1,290 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>线程池中的意外发现 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="本来我在认真学习bind和function的区别 1. std::bind 的作用std::bind 的作用是将函数和其参数绑定在一起，返回一个可调用对象。当你调用这个对象时，已经绑定好的函数和参数会被执行。 举个例子： 123456789101112#include &lt;iostream&gt;#include &lt;functional&gt;void add(int a, int b)">
+<meta property="og:type" content="article">
+<meta property="og:title" content="线程池中的意外发现">
+<meta property="og:url" content="https://cmzcc.github.io/2025/10/29/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E7%9A%84%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="本来我在认真学习bind和function的区别 1. std::bind 的作用std::bind 的作用是将函数和其参数绑定在一起，返回一个可调用对象。当你调用这个对象时，已经绑定好的函数和参数会被执行。 举个例子： 123456789101112#include &lt;iostream&gt;#include &lt;functional&gt;void add(int a, int b)">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover5.jpg">
+<meta property="article:published_time" content="2025-10-29T13:28:03.000Z">
+<meta property="article:modified_time" content="2025-10-29T15:54:29.137Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="模板">
+<meta property="article:tag" content="线程池">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover5.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/10/29/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E7%9A%84%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '线程池中的意外发现',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-10-29 23:54:29'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">105</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">110</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover5.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">线程池中的意外发现</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">线程池中的意外发现</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-10-29T13:28:03.000Z" title="Created 2025-10-29 21:28:03">2025-10-29</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-10-29T15:54:29.137Z" title="Updated 2025-10-29 23:54:29">2025-10-29</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%80%9D%E8%80%83/">思考</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>本来我在认真学习bind和function的区别</p>
+<h3 id="1-std-bind-的作用"><a href="#1-std-bind-的作用" class="headerlink" title="1. std::bind 的作用"></a>1. <strong><code>std::bind</code> 的作用</strong></h3><p><code>std::bind</code> 的作用是将函数和其参数绑定在一起，返回一个<strong>可调用对象</strong>。当你调用这个对象时，<strong>已经绑定好的函数和参数</strong>会被执行。</p>
+<p>举个例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Sum: &quot;</span> &lt;&lt; a + b &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="comment">// 使用 bind 绑定 add 函数和参数</span></span><br><span class="line">    <span class="keyword">auto</span> bound_func = std::<span class="built_in">bind</span>(add, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line">    <span class="built_in">bound_func</span>(); <span class="comment">// 执行 add(3, 4)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在这个例子中，<code>std::bind</code> 将 <code>add</code> 函数与参数 <code>3</code> 和 <code>4</code> 绑定，返回的 <code>bound_func</code> 是一个可调用对象，调用时就相当于执行了 <code>add(3, 4)</code>。</p>
+<hr>
+<h3 id="2-std-function-的作用"><a href="#2-std-function-的作用" class="headerlink" title="2. std::function 的作用"></a>2. <strong><code>std::function</code> 的作用</strong></h3><p><code>std::function</code> 是一个<strong>类型擦除</strong>的类模板，它可以封装任何可调用的对象，无论是普通函数、成员函数、函数指针、lambda 表达式等。它可以作为参数传递或者存储。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Sum: &quot;</span> &lt;&lt; a + b &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::function&lt;<span class="type">void</span>()&gt; func = std::<span class="built_in">bind</span>(add, <span class="number">3</span>, <span class="number">4</span>);</span><br><span class="line">    <span class="built_in">func</span>(); <span class="comment">// 执行 add(3, 4)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这里，<code>std::function&lt;void()&gt;</code> 是一个可调用对象，它存储了通过 <code>std::bind</code> 创建的 <code>add</code> 函数的绑定版本。<code>std::function</code> 允许你动态传递任何符合签名的可调用对象。</p>
+<p>然后忽然想让ai生成一个线程池综合运用一下。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line">#include &lt;functional&gt;</span><br><span class="line">#include &lt;thread&gt;</span><br><span class="line">#include &lt;vector&gt;</span><br><span class="line">#include &lt;queue&gt;</span><br><span class="line">#include &lt;mutex&gt;</span><br><span class="line">#include &lt;condition_variable&gt;</span><br><span class="line"></span><br><span class="line">class ThreadPool &#123;</span><br><span class="line">public:</span><br><span class="line">    ThreadPool(size_t numThreads) : stop(false) &#123;</span><br><span class="line">        for (size_t i = 0; i &lt; numThreads; ++i) &#123;</span><br><span class="line">            workers.emplace_back([this] &#123;</span><br><span class="line">                while (true) &#123;</span><br><span class="line">                    std::function&lt;void()&gt; task;</span><br><span class="line">                    &#123;</span><br><span class="line">                        std::unique_lock&lt;std::mutex&gt; lock(this-&gt;queueMutex);</span><br><span class="line">                        this-&gt;cv.wait(lock, [this] &#123; return this-&gt;stop || !this-&gt;tasks.empty(); &#125;);</span><br><span class="line">                        if (this-&gt;stop &amp;&amp; this-&gt;tasks.empty()) &#123;</span><br><span class="line">                            return;</span><br><span class="line">                        &#125;</span><br><span class="line">                        task = std::move(this-&gt;tasks.front());</span><br><span class="line">                        this-&gt;tasks.pop();</span><br><span class="line">                    &#125;</span><br><span class="line">                    task(); // 执行任务</span><br><span class="line">                &#125;</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    template&lt;typename F&gt;</span><br><span class="line">    void enqueue(F&amp;&amp; f) &#123;</span><br><span class="line">        &#123;</span><br><span class="line">            std::unique_lock&lt;std::mutex&gt; lock(queueMutex);</span><br><span class="line">            tasks.emplace(std::forward&lt;F&gt;(f)); // 将任务添加到队列</span><br><span class="line">        &#125;</span><br><span class="line">        cv.notify_one(); // 唤醒一个线程来处理任务</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    void shutdown() &#123;</span><br><span class="line">        &#123;</span><br><span class="line">            std::unique_lock&lt;std::mutex&gt; lock(queueMutex);</span><br><span class="line">            stop = true;</span><br><span class="line">        &#125;</span><br><span class="line">        cv.notify_all(); // 唤醒所有线程退出</span><br><span class="line">        for (std::thread&amp; worker : workers) &#123;</span><br><span class="line">            worker.join();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">private:</span><br><span class="line">    std::vector&lt;std::thread&gt; workers;</span><br><span class="line">    std::queue&lt;std::function&lt;void()&gt;&gt; tasks;</span><br><span class="line">    std::mutex queueMutex;</span><br><span class="line">    std::condition_variable cv;</span><br><span class="line">    bool stop;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">void print_message(const std::string&amp; msg) &#123;</span><br><span class="line">    std::cout &lt;&lt; msg &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    ThreadPool pool(4); // 创建一个有4个线程的线程池</span><br><span class="line"></span><br><span class="line">    pool.enqueue(std::bind(print_message, &quot;Hello from thread pool!&quot;));</span><br><span class="line">    pool.enqueue(std::bind(print_message, &quot;Another task!&quot;));</span><br><span class="line"></span><br><span class="line">    pool.shutdown(); // 关闭线程池</span><br><span class="line">    return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然后我发现在主函数中明明enqueue时使用的是bind，但是实际在线程池中没有使用function进行类型擦除，而是使用了模板+右值+完美转发的一个操作，顿时引起了我的好奇。</p>
+<p>为什么要半路使用模板呢？</p>
+<p>ai的给我的回答是，一部分原因是要用完美转发，将bind绑定中的参数如果有右值的情况，也能正确的转发给函数。另一部分原因是，function本身在包装时有开销。</p>
+<p>这个回答是没有问题的，但是为什么queue却使用了function来再次包装，然后运行呢，不是可以用模板吗。</p>
+<ul>
+<li><h3 id="1-模板如何在前面工作？"><a href="#1-模板如何在前面工作？" class="headerlink" title="1. 模板如何在前面工作？"></a>1. <strong>模板如何在前面工作？</strong></h3><p>回顾你之前提到的代码中的模板成员函数（<code>enqueue</code>）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> F&gt;</span></span><br><span class="line"><span class="function"><span class="type">void</span> <span class="title">enqueue</span><span class="params">(F&amp;&amp; f)</span> </span>&#123;</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(queueMutex)</span></span>;</span><br><span class="line">        tasks.<span class="built_in">emplace</span>(std::forward&lt;F&gt;(f)); <span class="comment">// 将任务添加到队列</span></span><br><span class="line">    &#125;</span><br><span class="line">    cv.<span class="built_in">notify_one</span>(); <span class="comment">// 唤醒一个线程来处理任务</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><strong>为什么模板可以在这里工作</strong>：<br>这里的 <code>enqueue</code> 是一个模板成员函数，意味着它在编译时会根据传入的参数类型 <code>F</code> 生成不同的函数版本。</p>
+<p>在此情况下，模板可以使用<strong>类型推导</strong>来确定 <code>F</code> 的类型。只要你传入一个类型兼容的任务对象（如函数指针、lambda 表达式或 <code>std::bind</code> 的结果），编译器就会自动推导出 <code>F</code> 的类型，并生成对应的代码版本。</p>
+</li>
+<li><p><strong>编译时多态</strong>：<br>这里的模板是一种典型的 <strong>编译时多态</strong>，因为模板生成不同的函数版本，而不是在运行时决定使用哪个函数版本。<code>tasks.emplace(std::forward&lt;F&gt;(f));</code> 会在编译期根据 <code>F</code> 的类型推导出正确的代码。</p>
+<p>因此，模板函数可以处理不同类型的任务，只要这些任务的类型能够匹配 <code>std::function&lt;void()&gt;</code> 或 <code>void()</code> 的签名（如 <code>lambda</code>、<code>std::bind</code>、普通函数等）。</p>
+</li>
+</ul>
+<hr>
+<h3 id="2-为什么后面不能再用模板了？"><a href="#2-为什么后面不能再用模板了？" class="headerlink" title="2. 为什么后面不能再用模板了？"></a>2. <strong>为什么后面不能再用模板了？</strong></h3><p>当你到了这段代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">std::function&lt;<span class="type">void</span>()&gt; task;</span><br><span class="line">&#123;</span><br><span class="line">    <span class="function">std::unique_lock&lt;std::mutex&gt; <span class="title">lock</span><span class="params">(<span class="keyword">this</span>-&gt;queueMutex)</span></span>;</span><br><span class="line">    <span class="keyword">this</span>-&gt;cv.<span class="built_in">wait</span>(lock, [<span class="keyword">this</span>] &#123; <span class="keyword">return</span> <span class="keyword">this</span>-&gt;stop || !<span class="keyword">this</span>-&gt;tasks.<span class="built_in">empty</span>(); &#125;);</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>-&gt;stop &amp;&amp; <span class="keyword">this</span>-&gt;tasks.<span class="built_in">empty</span>()) &#123;</span><br><span class="line">        <span class="keyword">return</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    task = std::<span class="built_in">move</span>(<span class="keyword">this</span>-&gt;tasks.<span class="built_in">front</span>());</span><br><span class="line">    <span class="keyword">this</span>-&gt;tasks.<span class="built_in">pop</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="built_in">task</span>(); <span class="comment">// 执行任务</span></span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>这里不能使用模板的原因</p>
+<p>：</p>
+<ol>
+<li><p><strong>任务类型不一致</strong>：<br><code>std::function&lt;void()&gt; task</code> 是一个具体的类型，它要求队列中的任务能够转换为 <code>std::function&lt;void()&gt;</code> 类型，而模板只能在编译时根据传入的类型推导生成对应的函数版本。所以这里的 <code>task()</code> 必须是一个统一的可调用对象（如 <code>std::function&lt;void()&gt;</code>），否则无法调用。</p>
+<p>但是模板在这里无法直接解决任务队列中每个任务类型的差异。任务队列中的任务类型是 <strong>不确定的</strong>，可能有不同的参数、返回值类型等。因此，无法在运行时动态推导出每个任务的类型并调用它们。</p>
+</li>
+<li><p><strong><code>std::function</code> 的类型擦除机制</strong>：<br>由于你将任务存储在 <code>std::function&lt;void()&gt;</code> 中，你就 <strong>丧失了类型信息</strong>。<code>std::function&lt;void()&gt;</code> 是一个类型擦除（type-erasure）的容器，它把任何可调用对象（函数指针、<code>lambda</code>、<code>std::bind</code> 等）包装成统一的 <code>void()</code> 类型。模板无法在此情况下直接工作，因为 <strong>你已经失去了任务类型的详细信息</strong>。</p>
+<p>例如，假设你希望支持有返回值的任务（比如 <code>int task() &#123; return 42; &#125;</code>）。但是 <code>std::function&lt;void()&gt;</code> 无法包装带返回值的任务（如 <code>std::function&lt;int()&gt;</code>）。要处理这种情况，你就需要 <strong>模板化</strong> 任务类型（例如，使用 <code>std::future</code> 来返回任务结果）。</p>
+</li>
+<li><p><strong>模板无法在运行时推导</strong>：<br>模板是在编译时实例化的，而 <code>std::function&lt;void()&gt;</code> 是一种 <strong>运行时的封装</strong>。在编译时，模板知道任务类型，但是在运行时 <code>std::function</code> 执行了类型擦除。你只能在编译期确定模板参数类型，而在运行时你必须通过 <code>std::function</code> 来调用具体的任务。所以，当你将任务存储到 <code>std::function&lt;void()&gt;</code> 中后，任务的实际类型就被“隐藏”了。</p>
+</li>
+</ol>
+</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="模板成员函数的编译原理"><a href="#模板成员函数的编译原理" class="headerlink" title="模板成员函数的编译原理"></a>模板成员函数的编译原理</h2><p>当你写下：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">ThreadPool <span class="title">pool</span><span class="params">(<span class="number">4</span>)</span></span>;</span><br><span class="line">pool.<span class="built_in">enqueue</span>([] &#123; std::cout &lt;&lt; <span class="string">&quot;hello&quot;</span>; &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>编译器会自动为该 lambda 类型（假设是 <code>lambda_type_123</code>）实例化 <code>enqueue</code> 的一个版本：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> ThreadPool::<span class="built_in">enqueue</span>&lt;lambda_type_123&gt;(lambda_type_123&amp;&amp; f);</span><br></pre></td></tr></table></figure>
+
+<p>如果你下一次又传入另一个类型（比如 <code>std::function&lt;void()&gt;</code>），<br>编译器会自动生成新的版本：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> ThreadPool::enqueue&lt;std::function&lt;<span class="type">void</span>()&gt;&gt;(std::function&lt;<span class="built_in">void</span>()&gt;&amp;&amp; f);</span><br></pre></td></tr></table></figure>
+
+<p>这样线程池就能通用地支持各种任务类型，但不需要为每种任务类型创建一个不同的线程池类。</p>
+<hr>
+<h2 id="为什么不能让整个类模板化？"><a href="#为什么不能让整个类模板化？" class="headerlink" title="为什么不能让整个类模板化？"></a>为什么不能让整个类模板化？</h2><p>你当然可以写成：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span>&lt;<span class="keyword">class</span> <span class="title class_">F</span>&gt;</span><br><span class="line"><span class="keyword">class</span> <span class="title class_">ThreadPool</span> &#123;</span><br><span class="line">    ...</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">enqueue</span><span class="params">(F&amp;&amp; f)</span> </span>&#123; ... &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>但那样意味着：</p>
+<ul>
+<li>每种任务类型都要生成一个新的线程池类型（例如 <code>ThreadPool&lt;void(*)()&gt;</code>、<code>ThreadPool&lt;lambda_type&gt;</code>）。</li>
+<li>不同类型任务的线程池无法共存或共享任务队列。</li>
+</ul>
+<p>这完全违背了线程池的设计初衷 ——<br><strong>“统一管理任务”</strong>。</p>
+<p>因此，只有 <code>enqueue()</code> 需要模板化，而类本身保持非模板。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/10/29/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E7%9A%84%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0/">https://cmzcc.github.io/2025/10/29/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E7%9A%84%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/c/">c++</a><a class="post-meta__tags" href="/tags/%E6%A8%A1%E6%9D%BF/">模板</a><a class="post-meta__tags" href="/tags/%E7%BA%BF%E7%A8%8B%E6%B1%A0/">线程池</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover5.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/10/29/%E3%80%8AC-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0/" title="《C++ Concurrency in Action》第二章"><img class="cover" src="/img/text-cover4.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">《C++ Concurrency in Action》第二章</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a href="/2025/01/12/Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="Lambda表达式"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-12</div><div class="title">Lambda表达式</div></div></a><a href="/2025/06/30/atomic/" title="atomic"><img class="cover" src="/img/text-cover1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-30</div><div class="title">atomic</div></div></a><a href="/2025/01/27/bind%E5%92%8C%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB/" title="bind和回调函数的关系"><img class="cover" src="/img/text-cover1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-27</div><div class="title">bind和回调函数的关系</div></div></a><a href="/2024/11/25/c++11%E6%96%B0%E7%89%B9%E6%80%A7%E4%B9%8Bemplace/" title="c++11新特性之emplace"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++11新特性之emplace</div></div></a><a href="/2024/09/17/c++%E4%B8%AD%E5%85%B3%E4%BA%8E%E6%B7%B1%E6%8B%B7%E8%B4%9D%E4%B8%8E%E9%87%8D%E8%BD%BD%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E7%9A%84%E6%80%9D%E8%80%83/" title="c++中关于深拷贝与重载赋值运算符的思考"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-09-17</div><div class="title">c++中关于深拷贝与重载赋值运算符的思考</div></div></a><a href="/2024/11/25/c++%E4%B8%AD%E7%9A%84IO%E6%B5%81/" title="c++中的I&#x2F;O流"><img class="cover" src="/img/text-cover5.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2024-11-25</div><div class="title">c++中的I&#x2F;O流</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">105</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">110</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">努力成为c++高手ing，专精多线程编程和性能优化方向，国内私募量化开发实习生（QD)牛马</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-std-bind-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">1.</span> <span class="toc-text">1. std::bind 的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-std-function-%E7%9A%84%E4%BD%9C%E7%94%A8"><span class="toc-number">2.</span> <span class="toc-text">2. std::function 的作用</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%A8%A1%E6%9D%BF%E5%A6%82%E4%BD%95%E5%9C%A8%E5%89%8D%E9%9D%A2%E5%B7%A5%E4%BD%9C%EF%BC%9F"><span class="toc-number">3.</span> <span class="toc-text">1. 模板如何在前面工作？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%90%8E%E9%9D%A2%E4%B8%8D%E8%83%BD%E5%86%8D%E7%94%A8%E6%A8%A1%E6%9D%BF%E4%BA%86%EF%BC%9F"><span class="toc-number">4.</span> <span class="toc-text">2. 为什么后面不能再用模板了？</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E6%A8%A1%E6%9D%BF%E6%88%90%E5%91%98%E5%87%BD%E6%95%B0%E7%9A%84%E7%BC%96%E8%AF%91%E5%8E%9F%E7%90%86"><span class="toc-number"></span> <span class="toc-text">模板成员函数的编译原理</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%B8%8D%E8%83%BD%E8%AE%A9%E6%95%B4%E4%B8%AA%E7%B1%BB%E6%A8%A1%E6%9D%BF%E5%8C%96%EF%BC%9F"><span class="toc-number"></span> <span class="toc-text">为什么不能让整个类模板化？</span></a></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/10/29/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E7%9A%84%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0/" title="线程池中的意外发现"><img src="/img/text-cover5.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="线程池中的意外发现"/></a><div class="content"><a class="title" href="/2025/10/29/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E7%9A%84%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0/" title="线程池中的意外发现">线程池中的意外发现</a><time datetime="2025-10-29T13:28:03.000Z" title="Created 2025-10-29 21:28:03">2025-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/29/%E3%80%8AC-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0/" title="《C++ Concurrency in Action》第二章"><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="《C++ Concurrency in Action》第二章"/></a><div class="content"><a class="title" href="/2025/10/29/%E3%80%8AC-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0/" title="《C++ Concurrency in Action》第二章">《C++ Concurrency in Action》第二章</a><time datetime="2025-10-29T13:27:33.000Z" title="Created 2025-10-29 21:27:33">2025-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/11/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%B8%89%EF%BC%89/" title="c中的协程(三)"><img src="/img/text-cover4.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c中的协程(三)"/></a><div class="content"><a class="title" href="/2025/10/11/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%B8%89%EF%BC%89/" title="c中的协程(三)">c中的协程(三)</a><time datetime="2025-10-11T08:18:23.000Z" title="Created 2025-10-11 16:18:23">2025-10-11</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/10/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%BA%8C)/" title="c中的协程(二)"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="c中的协程(二)"/></a><div class="content"><a class="title" href="/2025/10/10/c++%E4%B8%AD%E7%9A%84%E5%8D%8F%E7%A8%8B%EF%BC%88%E4%BA%8C)/" title="c中的协程(二)">c中的协程(二)</a><time datetime="2025-10-10T03:52:23.000Z" title="Created 2025-10-10 11:52:23">2025-10-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/06/Rangers%E5%BA%93/" title="Rangers库"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Rangers库"/></a><div class="content"><a class="title" href="/2025/10/06/Rangers%E5%BA%93/" title="Rangers库">Rangers库</a><time datetime="2025-10-06T02:50:13.000Z" title="Created 2025-10-06 10:50:13">2025-10-06</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
