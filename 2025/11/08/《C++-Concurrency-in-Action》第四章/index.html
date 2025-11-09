@@ -1,0 +1,630 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>《C++-Concurrency-in-Action》第四章 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="碎碎念：接下来的一两周就是考试面试考试面试了，前段时间好不容易说服自己专心搞量化，wlb才是该追求的东西，但是京东的一个面试邀约直接打乱了计划。还是想去互联网刷一段实习，去去魅，毕竟如果秋招去量化的话，社招大概率也去不了互联网了。 努努力准备一下吧，算法，八股，项目，今天下午再看一下dp是怎么回事，重点刷一下，我还是太摆烂了，自己定下的目标很少能完成。 ——————————————————————">
+<meta property="og:type" content="article">
+<meta property="og:title" content="《C++-Concurrency-in-Action》第四章">
+<meta property="og:url" content="https://cmzcc.github.io/2025/11/08/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="碎碎念：接下来的一两周就是考试面试考试面试了，前段时间好不容易说服自己专心搞量化，wlb才是该追求的东西，但是京东的一个面试邀约直接打乱了计划。还是想去互联网刷一段实习，去去魅，毕竟如果秋招去量化的话，社招大概率也去不了互联网了。 努努力准备一下吧，算法，八股，项目，今天下午再看一下dp是怎么回事，重点刷一下，我还是太摆烂了，自己定下的目标很少能完成。 ——————————————————————">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover3.jpg">
+<meta property="article:published_time" content="2025-11-08T14:04:05.000Z">
+<meta property="article:modified_time" content="2025-11-09T03:36:10.418Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="c++">
+<meta property="article:tag" content="多线程">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover3.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/11/08/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '《C++-Concurrency-in-Action》第四章',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-11-09 11:36:10'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">109</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">112</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover3.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">《C++-Concurrency-in-Action》第四章</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">《C++-Concurrency-in-Action》第四章</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-11-08T14:04:05.000Z" title="Created 2025-11-08 22:04:05">2025-11-08</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-11-09T03:36:10.418Z" title="Updated 2025-11-09 11:36:10">2025-11-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E8%AF%BB%E4%B9%A6%E7%AC%94%E8%AE%B0/">读书笔记</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>碎碎念：接下来的一两周就是考试面试考试面试了，前段时间好不容易说服自己专心搞量化，wlb才是该追求的东西，但是京东的一个面试邀约直接打乱了计划。还是想去互联网刷一段实习，去去魅，毕竟如果秋招去量化的话，社招大概率也去不了互联网了。</p>
+<p>努努力准备一下吧，算法，八股，项目，今天下午再看一下dp是怎么回事，重点刷一下，我还是太摆烂了，自己定下的目标很少能完成。</p>
+<p>————————————————————————————————————</p>
+<p>本书的第四章是同步条件，重点讲的是condition_varible条件变量和future，这里重点讲一下future，并以线程池为例子，第四章后半部分的东西过于小众，我们就略过不讲。</p>
+<p>cv这个我们常用的条件变量，会存在一个伪唤醒的情况，即cv.wait()的条件明明没有真正准备好，但就被唤醒了（这让我想到了cas_weak)</p>
+<p><strong>伪唤醒</strong> 指的是：一个正在条件变量上等待的线程，<strong>在没有其他线程显式地通知（signal 或 broadcast）它的情况下，自己从等待状态（如 <code>pthread_cond_wait</code> 或 <code>std::condition_variable::wait</code>）中恢复执行了。</strong></p>
+<p>换句话说，线程被“莫名其妙”地唤醒了，但线程等待的那个“条件”实际上并未变为真。</p>
+<h3 id="为什么会出现伪唤醒？"><a href="#为什么会出现伪唤醒？" class="headerlink" title="为什么会出现伪唤醒？"></a>为什么会出现伪唤醒？</h3><p>伪唤醒听起来像是一个 Bug，但实际上，在某些操作系统和线程库的实现中，这是被允许甚至是有意为之的行为。主要原因有：</p>
+<ol>
+<li><strong>性能和实现的简化</strong>：在支持多处理器（SMP）的系统上，在条件变量的实现中，要完全避免竞争条件和保证绝对的“不唤醒”，可能需要非常复杂的、低效的代码。为了性能和代码简洁性，标准允许在某些边缘情况下发生伪唤醒。</li>
+<li><strong>信号中断</strong>：在某些系统上，如果一个线程在等待时收到了一个信号（例如 UNIX 信号），等待函数可能会提前返回。虽然这通常会被归类为错误返回，但在某些实现中也可能被视为一种唤醒。</li>
+</ol>
+<p><strong>关键点</strong>：POSIX 线程标准和 C++ 标准都<strong>明确允许伪唤醒的发生</strong>。因此，编写代码时绝不能假设“线程被唤醒”就等于“条件已满足”。</p>
+<h3 id="带来的问题"><a href="#带来的问题" class="headerlink" title="带来的问题"></a>带来的问题</h3><p>如果代码没有正确处理伪唤醒，会导致严重的并发 Bug：</p>
+<ul>
+<li><strong>数据竞争</strong>：线程在条件不满足的情况下访问了受保护的数据，可能导致数据损坏或读取到无效状态。</li>
+<li><strong>逻辑错误</strong>：程序基于一个错误的前提（认为条件已满足）继续执行，产生不可预知的结果。</li>
+<li><strong>程序崩溃</strong>：例如，线程认为队列非空，结果去取元素时发现是空的，导致未定义行为。</li>
+</ul>
+<h3 id="如何避免伪唤醒？——-正确的使用模式"><a href="#如何避免伪唤醒？——-正确的使用模式" class="headerlink" title="如何避免伪唤醒？—— 正确的使用模式"></a>如何避免伪唤醒？—— 正确的使用模式</h3><p>解决方案非常简单和固定：<strong>永远不要在条件变量上使用简单的 <code>if</code> 语句来检查条件，而必须使用 <code>while</code> 循环。</strong></p>
+<p>这是因为 <code>while</code> 循环可以在线程被唤醒后，<strong>再次检查条件是否真正满足</strong>。如果发生了伪唤醒，条件依然不成立，线程会自动再次进入等待状态。</p>
+<h4 id="错误示例（使用-if，易受伪唤醒影响）"><a href="#错误示例（使用-if，易受伪唤醒影响）" class="headerlink" title="错误示例（使用 if，易受伪唤醒影响）"></a>错误示例（使用 <code>if</code>，易受伪唤醒影响）</h4><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 错误的写法！</span><br><span class="line">std::unique_lock&lt;std::mutex&gt; lock(mutex);</span><br><span class="line">// 检查条件</span><br><span class="line">if (queue.empty()) &#123; // 使用 if 是危险的</span><br><span class="line">    cond_var.wait(lock);</span><br><span class="line">&#125;</span><br><span class="line">// 被唤醒后，直接使用资源（此时队列可能仍然是空的！）</span><br><span class="line">auto item = queue.front();</span><br><span class="line">queue.pop();</span><br></pre></td></tr></table></figure>
+
+<h4 id="正确示例（使用-while，防止伪唤醒）"><a href="#正确示例（使用-while，防止伪唤醒）" class="headerlink" title="正确示例（使用 while，防止伪唤醒）"></a>正确示例（使用 <code>while</code>，防止伪唤醒）</h4><p>这是多线程编程中的标准范式。</p>
+<p>cpp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">std::unique_lock&lt;std::mutex&gt; lock(mutex);</span><br><span class="line">// 使用 while 循环检查条件</span><br><span class="line">while (queue.empty()) &#123; // 正确：使用 while</span><br><span class="line">    cond_var.wait(lock); // 1. 释放锁，进入等待</span><br><span class="line">                         // 2. 被唤醒时，会重新获取锁</span><br><span class="line">                         // 3. 跳出 wait 后，再次检查 while 条件</span><br><span class="line">&#125;</span><br><span class="line">// 能执行到这里，说明队列一定非空</span><br><span class="line">auto item = queue.front();</span><br><span class="line">queue.pop();</span><br></pre></td></tr></table></figure>
+
+
+
+<p><strong>流程解释：</strong></p>
+<ol>
+<li>线程获取互斥锁，检查 <code>queue.empty()</code> 是否为 <code>true</code>。</li>
+<li>如果是，则调用 <code>cond_var.wait(lock)</code>。这个调用会<strong>原子地</strong>释放互斥锁，并将线程挂起。</li>
+<li>当有其他线程向条件变量发出通知，<strong>或者发生伪唤醒</strong>时，线程会从 <code>wait</code> 中返回。在返回之前，它会<strong>重新获取互斥锁</strong>。</li>
+<li>由于我们使用 <code>while</code> 循环，线程会立刻再次检查 <code>queue.empty()</code>。<ul>
+<li><strong>如果是真通知</strong>：另一个线程已经将数据放入队列，<code>queue.empty()</code> 为 <code>false</code>，循环结束，线程安全地处理数据。</li>
+<li><strong>如果是伪唤醒</strong>：<code>queue.empty()</code> 仍然为 <code>true</code>，循环继续，线程再次调用 <code>wait</code> 进入等待状态。</li>
+</ul>
+</li>
+</ol>
+<h3 id="C-的进一步简化：带谓词的-wait"><a href="#C-的进一步简化：带谓词的-wait" class="headerlink" title="C++ 的进一步简化：带谓词的 wait"></a>C++ 的进一步简化：带谓词的 <code>wait</code></h3><p>为了简化代码，C++ 标准库提供了可以接受一个“谓词”（一个可调用对象，返回布尔值）的 <code>wait</code> 重载版本。这个版本在内部自动为我们实现了 <code>while</code> 循环。</p>
+<p>上面的正确示例可以简写为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">std::unique_lock&lt;std::mutex&gt; lock(mutex);</span><br><span class="line">// wait 的第一个参数是 lock，第二个参数是一个 lambda 函数作为谓词</span><br><span class="line">cond_var.wait(lock, []&#123; return !queue.empty(); &#125;);</span><br><span class="line">// 当执行到这里时，队列一定非空</span><br><span class="line">auto item = queue.front();</span><br><span class="line">queue.pop();</span><br></pre></td></tr></table></figure>
+
+<p>这个 <code>wait(lock, predicate)</code> 的内部逻辑等价于：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">while (!predicate()) &#123;</span><br><span class="line">    wait(lock);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h3><ol>
+<li><strong>伪唤醒是什么</strong>：没有收到通知就自行唤醒的线程。</li>
+<li><strong>为什么存在</strong>：出于性能和实现复杂度的考虑，标准允许其发生。</li>
+<li><strong>核心对策</strong>：<strong>永远使用 <code>while</code> 循环</strong>来检查条件，而不是 <code>if</code> 语句。</li>
+<li><strong>最佳实践</strong>：在 C++ 中，优先使用 <code>condition_variable::wait</code> 带谓词的版本，它更简洁、更安全。</li>
+</ol>
+<p>记住这个黄金法则：<strong>条件变量的等待必须在一个循环中。</strong> 这是编写正确、健壮的多线程代码的基石之一</p>
+<p>接下来是future和async</p>
+<p>std::future&lt;&gt;这里的模板函数签名表示异步进行的任务的返回值类型</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">所以其实我们可以用auto自动推导（太好用了家人们）</span><br><span class="line">如果async使用默认的参数，即只传入一个函数，会出现下面的情况</span><br><span class="line">// 默认策略：可能是 async | deferred</span><br><span class="line">auto future = std::async(heavy_computation);</span><br><span class="line"></span><br><span class="line">// 这允许实现选择策略：</span><br><span class="line">// - 可能立即在新线程执行</span><br><span class="line">// - 也可能延迟到get()时执行</span><br><span class="line">// 因此不要依赖默认策略的特定行为！</span><br><span class="line">如果使用std::lanuch::async，就会在当场创建一个并行线程，然后在后台执行函数</span><br><span class="line">如果使用std::lanuch::deferred,那么不会创建一个并行线程，而是在原线程阻塞执行，适合小任务</span><br></pre></td></tr></table></figure>
+
+<p><code>std::future</code>、<code>std::shared_future</code> 和 <code>std::async</code> ——<br>是 C++11 引入的<strong>异步任务与结果通信机制</strong>的核心。  </p>
+<hr>
+<h2 id="🧩-一、std-future-是什么？"><a href="#🧩-一、std-future-是什么？" class="headerlink" title="🧩 一、std::future 是什么？"></a>🧩 一、<code>std::future</code> 是什么？</h2><h3 id="🌱-定义"><a href="#🌱-定义" class="headerlink" title="🌱 定义"></a>🌱 定义</h3><p><code>std::future&lt;T&gt;</code> 是一个<strong>未来结果的占位符</strong>，<br>用来在<strong>异步任务和主线程之间传递结果</strong>。</p>
+<blockquote>
+<p>可以理解为：我现在没有结果，但我将来能拿到。</p>
+</blockquote>
+<hr>
+<h3 id="🧠-使用场景"><a href="#🧠-使用场景" class="headerlink" title="🧠 使用场景"></a>🧠 使用场景</h3><ul>
+<li>在一个线程中启动任务；</li>
+<li>返回一个 <code>future</code>；</li>
+<li>主线程稍后通过 <code>future.get()</code> 获取任务结果。</li>
+</ul>
+<hr>
+<h3 id="✅-基本用法示例"><a href="#✅-基本用法示例" class="headerlink" title="✅ 基本用法示例"></a>✅ 基本用法示例</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">compute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Computing...\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">42</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::async, compute);</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 可以做其他事...</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Main thread working...\n&quot;</span>;</span><br><span class="line"></span><br><span class="line">    <span class="type">int</span> result = fut.<span class="built_in">get</span>(); <span class="comment">// 阻塞等待结果</span></span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Result: &quot;</span> &lt;&lt; result &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>解释：</strong></p>
+<ul>
+<li><code>std::async</code> 启动了一个异步任务（可能是新线程）；</li>
+<li>返回一个 <code>std::future&lt;int&gt;</code>；</li>
+<li>调用 <code>fut.get()</code> 会阻塞，直到 <code>compute()</code> 执行完毕；</li>
+<li><code>get()</code> 只能调用一次！</li>
+</ul>
+<hr>
+<h3 id="⚠️-注意事项"><a href="#⚠️-注意事项" class="headerlink" title="⚠️ 注意事项"></a>⚠️ 注意事项</h3><ul>
+<li><code>future.get()</code> 调用一次后，结果被<strong>取走</strong>，不能再用；</li>
+<li>如果不调用 <code>get()</code> 就销毁了 future，程序在某些实现下可能阻塞（等待任务完成）。</li>
+</ul>
+<hr>
+<h2 id="🌿-二、std-shared-future-——-可共享的-future"><a href="#🌿-二、std-shared-future-——-可共享的-future" class="headerlink" title="🌿 二、std::shared_future —— 可共享的 future"></a>🌿 二、<code>std::shared_future</code> —— 可共享的 future</h2><p><code>std::future</code> 的结果只能取一次，这在某些情况下不方便。<br>例如多个线程都想读取同一个异步结果。</p>
+<p>为了解决这个问题，C++11 提供了 <code>std::shared_future</code>。</p>
+<hr>
+<h3 id="✅-基本用法"><a href="#✅-基本用法" class="headerlink" title="✅ 基本用法"></a>✅ 基本用法</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">compute</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Computing...\n&quot;</span>;</span><br><span class="line">    <span class="keyword">return</span> <span class="number">42</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::future&lt;<span class="type">int</span>&gt; fut = std::<span class="built_in">async</span>(std::launch::async, compute);</span><br><span class="line">    std::shared_future&lt;<span class="type">int</span>&gt; sfut = fut.<span class="built_in">share</span>(); <span class="comment">// 共享 future</span></span><br><span class="line"></span><br><span class="line">    <span class="keyword">auto</span> worker = [sfut]() &#123;</span><br><span class="line">        std::cout &lt;&lt; <span class="string">&quot;Result = &quot;</span> &lt;&lt; sfut.<span class="built_in">get</span>() &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="function">std::thread <span class="title">t1</span><span class="params">(worker)</span></span>;</span><br><span class="line">    <span class="function">std::thread <span class="title">t2</span><span class="params">(worker)</span></span>;</span><br><span class="line"></span><br><span class="line">    t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">    t<span class="number">2.</span><span class="built_in">join</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><strong>解释：</strong></p>
+<ul>
+<li><code>std::future&lt;int&gt;::share()</code> → 转换为 <code>std::shared_future&lt;int&gt;</code>；</li>
+<li>多个线程都可以调用 <code>sfut.get()</code>；</li>
+<li><code>shared_future</code> 内部有引用计数；</li>
+<li>结果缓存下来，<strong>不会被“取走”</strong>。</li>
+</ul>
+<hr>
+<h3 id="⚙️-区别总结"><a href="#⚙️-区别总结" class="headerlink" title="⚙️ 区别总结"></a>⚙️ 区别总结</h3><table>
+<thead>
+<tr>
+<th>特性</th>
+<th><code>std::future</code></th>
+<th><code>std::shared_future</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td>获取结果方式</td>
+<td><code>get()</code> 一次性取走</td>
+<td><code>get()</code> 可多次读取</td>
+</tr>
+<tr>
+<td>拷贝</td>
+<td>不可拷贝</td>
+<td>可拷贝（引用计数）</td>
+</tr>
+<tr>
+<td>线程安全</td>
+<td>只能单线程取结果</td>
+<td>多线程可同时取结果</td>
+</tr>
+<tr>
+<td>典型用途</td>
+<td>单消费者</td>
+<td>多消费者（广播结果）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="🚀-三、std-async-——-异步任务启动器"><a href="#🚀-三、std-async-——-异步任务启动器" class="headerlink" title="🚀 三、std::async —— 异步任务启动器"></a>🚀 三、<code>std::async</code> —— 异步任务启动器</h2><p><code>std::async</code> 是最常用的异步执行函数。<br>它返回一个 <code>std::future&lt;T&gt;</code>，代表任务的最终结果。</p>
+<hr>
+<h3 id="✅-基本语法"><a href="#✅-基本语法" class="headerlink" title="✅ 基本语法"></a>✅ 基本语法</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::future&lt;T&gt; <span class="title">std::async</span><span class="params">(std::launch policy, Callable&amp;&amp; f, Args&amp;&amp;... args)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>f</code>：要执行的函数；</li>
+<li><code>args...</code>：传递给函数的参数；</li>
+<li><code>policy</code>：执行策略。</li>
+</ul>
+<hr>
+<h3 id="🔧-启动策略（policy）"><a href="#🔧-启动策略（policy）" class="headerlink" title="🔧 启动策略（policy）"></a>🔧 启动策略（policy）</h3><table>
+<thead>
+<tr>
+<th>策略</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>std::launch::async</code></td>
+<td>立即启动一个新线程执行任务</td>
+</tr>
+<tr>
+<td><code>std::launch::deferred</code></td>
+<td>延迟执行，直到调用 <code>.get()</code> 或 <code>.wait()</code> 时才执行</td>
+</tr>
+<tr>
+<td>&#96;std::launch::async</td>
+<td>std::launch::deferred&#96;</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="🌊-示例-1：结合-shared-future"><a href="#🌊-示例-1：结合-shared-future" class="headerlink" title="🌊 示例 1：结合 shared_future"></a>🌊 示例 1：结合 <code>shared_future</code></h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">std::shared_future&lt;<span class="type">int</span>&gt; sfut = std::<span class="built_in">async</span>(std::launch::async, add, <span class="number">10</span>, <span class="number">20</span>).<span class="built_in">share</span>();</span><br><span class="line"></span><br><span class="line"><span class="function">std::thread <span class="title">t1</span><span class="params">([sfut]() &#123; std::cout &lt;&lt; <span class="string">&quot;T1: &quot;</span> &lt;&lt; sfut.get() &lt;&lt; <span class="string">&quot;\n&quot;</span>; &#125;)</span></span>;</span><br><span class="line"><span class="function">std::thread <span class="title">t2</span><span class="params">([sfut]() &#123; std::cout &lt;&lt; <span class="string">&quot;T2: &quot;</span> &lt;&lt; sfut.get() &lt;&lt; <span class="string">&quot;\n&quot;</span>; &#125;)</span></span>;</span><br><span class="line"></span><br><span class="line">t<span class="number">1.</span><span class="built_in">join</span>();</span><br><span class="line">t<span class="number">2.</span><span class="built_in">join</span>();</span><br></pre></td></tr></table></figure>
+
+<p>多个线程都可以安全地获取结果。</p>
+<hr>
+<h2 id="🧠-四、其它实用操作"><a href="#🧠-四、其它实用操作" class="headerlink" title="🧠 四、其它实用操作"></a>🧠 四、其它实用操作</h2><h3 id="future-wait"><a href="#future-wait" class="headerlink" title="future.wait()"></a><code>future.wait()</code></h3><p>只等待结果可用，不取结果。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fut.<span class="built_in">wait</span>();</span><br><span class="line">std::cout &lt;&lt; <span class="string">&quot;Task done\n&quot;</span>;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="⚠️-五、常见坑点"><a href="#⚠️-五、常见坑点" class="headerlink" title="⚠️ 五、常见坑点"></a>⚠️ 五、常见坑点</h2><ol>
+<li><p><strong><code>future.get()</code> 只能调用一次</strong></p>
+<ul>
+<li>调用后结果被“取走”，future 失效；</li>
+<li>如果多线程都需要结果，请使用 <code>shared_future</code>。</li>
+</ul>
+</li>
+<li><p><strong><code>async</code> 默认策略可能不一定开线程</strong></p>
+<ul>
+<li>如果没有明确指定 <code>std::launch::async</code>，可能会延迟执行；</li>
+<li>要强制开线程，请指定策略。</li>
+</ul>
+</li>
+<li><p><strong>异常会自动传播</strong></p>
+<ul>
+<li>如果异步任务抛出异常，调用 <code>.get()</code> 时会重新抛出；</li>
+<li>要在 <code>.get()</code> 外层捕获。</li>
+</ul>
+</li>
+</ol>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> fut = std::<span class="built_in">async</span>([]() &#123; <span class="keyword">throw</span> std::<span class="built_in">runtime_error</span>(<span class="string">&quot;Error&quot;</span>); &#125;);</span><br><span class="line"><span class="keyword">try</span> &#123;</span><br><span class="line">    fut.<span class="built_in">get</span>();</span><br><span class="line">&#125; <span class="built_in">catch</span> (<span class="type">const</span> std::exception&amp; e) &#123;</span><br><span class="line">    std::cout &lt;&lt; <span class="string">&quot;Caught: &quot;</span> &lt;&lt; e.<span class="built_in">what</span>() &lt;&lt; <span class="string">&quot;\n&quot;</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="🧭-六、总结对比表"><a href="#🧭-六、总结对比表" class="headerlink" title="🧭 六、总结对比表"></a>🧭 六、总结对比表</h2><table>
+<thead>
+<tr>
+<th>名称</th>
+<th>功能</th>
+<th>可共享</th>
+<th>多线程安全</th>
+<th>常用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>std::future&lt;T&gt;</code></td>
+<td>异步结果占位符</td>
+<td>❌</td>
+<td>❌（单线程取结果）</td>
+<td>单一消费者异步任务</td>
+</tr>
+<tr>
+<td><code>std::shared_future&lt;T&gt;</code></td>
+<td>可共享结果</td>
+<td>✅</td>
+<td>✅</td>
+<td>多线程共享结果</td>
+</tr>
+<tr>
+<td><code>std::async()</code></td>
+<td>启动异步任务并返回 <code>future</code></td>
+<td>-</td>
+<td>-</td>
+<td>快速异步执行任务</td>
+</tr>
+</tbody></table>
+<hr>
+<p>✅ <strong>一句话记忆：</strong></p>
+<blockquote>
+<p><code>std::async</code> 启动异步任务，<br><code>std::future</code> 等待并取一次结果，<br><code>std::shared_future</code> 可以让多个线程共享这个结果。</p>
+</blockquote>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;type_traits&gt;</span><br><span class="line">#include &lt;utility&gt;</span><br><span class="line"></span><br><span class="line">// C++17 风格的改进 submit</span><br><span class="line">template&lt;typename F, typename... Args&gt;</span><br><span class="line">auto submit(F&amp;&amp; f, Args&amp;&amp;... args)</span><br><span class="line">&#123;</span><br><span class="line">    using return_type = std::invoke_result_t&lt;std::decay_t&lt;F&gt;, std::decay_t&lt;Args&gt;...&gt;;</span><br><span class="line"></span><br><span class="line">    // 用 shared_ptr 管理 packaged_task 的原因如上</span><br><span class="line">    auto task = std::make_shared&lt;std::packaged_task&lt;return_type()&gt;&gt;(</span><br><span class="line">        // lambda 把 f 和 args 全部 move 进来，避免 bind 的拷贝问题</span><br><span class="line">        [func = std::forward&lt;F&gt;(f), ... captured = std::forward&lt;Args&gt;(args)]() mutable -&gt; return_type &#123;</span><br><span class="line">            return std::invoke(func, std::move(captured)...);</span><br><span class="line">        &#125;</span><br><span class="line">    );</span><br><span class="line"></span><br><span class="line">    std::future&lt;return_type&gt; fut = task-&gt;get_future();</span><br><span class="line"></span><br><span class="line">    &#123;</span><br><span class="line">        std::lock_guard&lt;std::mutex&gt; lock(queueMutex);</span><br><span class="line">        tasks.emplace([task]()&#123; (*task)(); &#125;);</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    condition.notify_one();</span><br><span class="line">    return fut;</span><br><span class="line">&#125;</span><br><span class="line">一个异步的线程池例子</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;iostream&gt;</span><br><span class="line"></span><br><span class="line">int work(int x) &#123;</span><br><span class="line">    std::this_thread::sleep_for(std::chrono::seconds(1));</span><br><span class="line">    return x * 2;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">int main() &#123;</span><br><span class="line">    ThreadPool pool(4);</span><br><span class="line"></span><br><span class="line">    std::future&lt;int&gt; fut = pool.submit(work, 10);</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; &quot;Main thread working...\n&quot;;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; &quot;Result = &quot; &lt;&lt; fut.get() &lt;&lt; std::endl;</span><br><span class="line">&#125;</span><br><span class="line">使用实例</span><br></pre></td></tr></table></figure>
+
+<p>在这里我们认识了invoke,function，packaged_task这三个相似但完全不同的东西</p>
+<h2 id="三者的关系和区别"><a href="#三者的关系和区别" class="headerlink" title="三者的关系和区别"></a>三者的关系和区别</h2><h3 id="层次关系"><a href="#层次关系" class="headerlink" title="层次关系"></a>层次关系</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">std::invoke (调用工具)</span><br><span class="line">    ↓</span><br><span class="line">std::function (同步包装器)  </span><br><span class="line">    ↓</span><br><span class="line">std::packaged_task (异步包装器 + future)</span><br></pre></td></tr></table></figure>
+
+<h3 id="详细对比"><a href="#详细对比" class="headerlink" title="详细对比"></a>详细对比</h3><table>
+<thead>
+<tr>
+<th align="left">特性</th>
+<th align="left"><code>std::function</code></th>
+<th align="left"><code>std::packaged_task</code></th>
+<th align="left"><code>std::invoke</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>用途</strong></td>
+<td align="left">通用函数包装</td>
+<td align="left">异步任务包装</td>
+<td align="left">统一调用机制</td>
+</tr>
+<tr>
+<td align="left"><strong>存储</strong></td>
+<td align="left">✅ 可以存储可调用对象</td>
+<td align="left">✅ 可以存储可调用对象</td>
+<td align="left">❌ 只是调用工具</td>
+</tr>
+<tr>
+<td align="left"><strong>异步</strong></td>
+<td align="left">❌ 同步调用</td>
+<td align="left">✅ 支持异步执行</td>
+<td align="left">❌ 同步调用</td>
+</tr>
+<tr>
+<td align="left"><strong>Future</strong></td>
+<td align="left">❌ 无future支持</td>
+<td align="left">✅ 关联future获取结果</td>
+<td align="left">❌ 无future支持</td>
+</tr>
+<tr>
+<td align="left"><strong>成员函数</strong></td>
+<td align="left">❌ 不能直接包装</td>
+<td align="left">❌ 不能直接包装</td>
+<td align="left">✅ 支持成员函数</td>
+</tr>
+<tr>
+<td align="left"><strong>开销</strong></td>
+<td align="left">中等</td>
+<td align="left">较大</td>
+<td align="left">零运行时开销</td>
+</tr>
+</tbody></table>
+<p>invoke的本质是将函数指针，成员函数等特殊类型的函数调用统一，提供一个统一的调用方法，但是是一次性的（可以在编译期去推断调用函数的返回值类型，invoke_result_t，就是上面线程池做的)</p>
+<p>而function是一种可以多次调用的invoke，所以要起一个名字</p>
+<p>packaged_task就是支持异步返回值的function。</p>
+<p>packaged_task的内部本质是一个promise</p>
+<h2 id="std-promise：你手动提供结果"><a href="#std-promise：你手动提供结果" class="headerlink" title="std::promise：你手动提供结果"></a>std::promise：你手动提供结果</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    std::promise&lt;<span class="type">int</span>&gt; prom;          <span class="comment">// 创建 promise</span></span><br><span class="line">    std::future&lt;<span class="type">int</span>&gt; fut = prom.<span class="built_in">get_future</span>();  <span class="comment">// 获取关联的 future</span></span><br><span class="line"></span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">([&amp;prom]() &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">        std::this_thread::sleep_for(std::chrono::seconds(<span class="number">1</span>));</span></span></span><br><span class="line"><span class="params"><span class="function">        prom.set_value(<span class="number">42</span>);          <span class="comment">// 手动设置结果</span></span></span></span><br><span class="line"><span class="params"><span class="function">    &#125;)</span></span>;</span><br><span class="line"></span><br><span class="line">    std::cout &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl; <span class="comment">// 阻塞等待结果</span></span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>🔹特点：</p>
+<ul>
+<li><code>promise</code> 不执行任何函数；</li>
+<li>你必须在某个地方**手动调用 <code>set_value()</code>**；</li>
+<li>适合<strong>线程之间传递结果或信号</strong>。</li>
+</ul>
+<hr>
+<h2 id="std-packaged-task：任务自动产生结果"><a href="#std-packaged-task：任务自动产生结果" class="headerlink" title="std::packaged_task：任务自动产生结果"></a><code>std::packaged_task</code>：任务自动产生结果</h2><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;future&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;thread&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123; <span class="keyword">return</span> a + b; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="function">std::packaged_task&lt;<span class="title">int</span><span class="params">(<span class="type">int</span>,<span class="type">int</span>)</span>&gt; <span class="title">task</span><span class="params">(add)</span></span>; <span class="comment">// 打包函数</span></span><br><span class="line">    std::future&lt;<span class="type">int</span>&gt; fut = task.<span class="built_in">get_future</span>();</span><br><span class="line"></span><br><span class="line">    <span class="function">std::thread <span class="title">t</span><span class="params">(std::move(task), <span class="number">2</span>, <span class="number">3</span>)</span></span>; <span class="comment">// 任务执行自动填充结果</span></span><br><span class="line">    std::cout &lt;&lt; fut.<span class="built_in">get</span>() &lt;&lt; std::endl;  <span class="comment">// 输出 5</span></span><br><span class="line">    t.<span class="built_in">join</span>();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>显然promise更灵活，但packaged_task更方便。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">template&lt;class F&gt;</span><br><span class="line">class packaged_task &#123;</span><br><span class="line">    std::promise&lt;return_type&gt; promise_; // 内部的 promise</span><br><span class="line">    F func_;</span><br><span class="line"></span><br><span class="line">public:</span><br><span class="line">    void operator()() &#123;</span><br><span class="line">        try &#123;</span><br><span class="line">            promise_.set_value(func_()); // 自动调用并设置结果</span><br><span class="line">        &#125; catch (...) &#123;</span><br><span class="line">            promise_.set_exception(std::current_exception());</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    std::future&lt;return_type&gt; get_future() &#123;</span><br><span class="line">        return promise_.get_future();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">伪代码</span><br></pre></td></tr></table></figure>
+
+<p>对于packaged_task：</p>
+<ul>
+<li>构造时 ❌ 没执行</li>
+<li>get_future() ❌ 没执行</li>
+<li>调用 task() ✅ 开始执行</li>
+<li>get() 只是等待结果已经存在</li>
+</ul>
+<p>这里我们引入一点线程池的原理，众所周知，线程池需要一个东西：类型擦除，即将无论什么参数，什么返回值的函数，都用统一的包装和统一的调用。</p>
+<p>对于无返回值，有参数的函数，我们最先见到的往往是bind(函数名，（类的实例），参数1，参数2，Args…)，如果参数暂时不可用，就用占位符。这样，函数被包装成为了function&lt;void()&gt;,无函数签名。</p>
+<p>当然，lambda这个语法糖也可以做到，其值捕获可以代替函数参数</p>
+<hr>
+<h2 id="🧩-问题-1："><a href="#🧩-问题-1：" class="headerlink" title="🧩 问题 1："></a>🧩 问题 1：</h2><blockquote>
+<p>“正常情况下 packaged_task 的函数签名需要参数？<br>但是用 lambda 去初始化，捕获可以代替函数签名参数，是这个意思吗？”</p>
+</blockquote>
+<p>✅ 正确</p>
+<hr>
+<h3 id="🧠-1️⃣-std-packaged-task-的签名"><a href="#🧠-1️⃣-std-packaged-task-的签名" class="headerlink" title="🧠 1️⃣ std::packaged_task 的签名"></a>🧠 1️⃣ <code>std::packaged_task</code> 的签名</h3><p><code>std::packaged_task&lt;R(Args...)&gt;</code> 的模板参数 <code>Args...</code> 就是它要“接受的参数列表”。</p>
+<p>例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::packaged_task&lt;<span class="title">int</span><span class="params">(<span class="type">int</span>,<span class="type">int</span>)</span>&gt; <span class="title">task</span><span class="params">([](<span class="type">int</span> a, <span class="type">int</span> b)&#123;</span></span></span><br><span class="line"><span class="params"><span class="function">    <span class="keyword">return</span> a + b;</span></span></span><br><span class="line"><span class="params"><span class="function">&#125;)</span></span>;</span><br><span class="line"><span class="built_in">task</span>(<span class="number">2</span>,<span class="number">3</span>);  <span class="comment">// 传参数执行</span></span><br></pre></td></tr></table></figure>
+
+<p>这里：</p>
+<ul>
+<li><code>task</code> 的类型是 <code>std::packaged_task&lt;int(int,int)&gt;</code></li>
+<li>它的 <code>operator()(2,3)</code> 会把参数传递给 lambda。</li>
+</ul>
+<hr>
+<h3 id="🧩-2️⃣-为什么在你的代码中写成了-std-packaged-task"><a href="#🧩-2️⃣-为什么在你的代码中写成了-std-packaged-task" class="headerlink" title="🧩 2️⃣ 为什么在你的代码中写成了 std::packaged_task&lt;return_type()&gt;"></a>🧩 2️⃣ 为什么在你的代码中写成了 <code>std::packaged_task&lt;return_type()&gt;</code></h3><p>你的代码里写的是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">std::packaged_task&lt;<span class="title">return_type</span><span class="params">()</span>&gt; <span class="title">task</span><span class="params">(</span></span></span><br><span class="line"><span class="params"><span class="function">    [func = ..., ...captured = ...]() <span class="keyword">mutable</span> -&gt; return_type &#123;</span></span></span><br><span class="line"><span class="params"><span class="function">        <span class="keyword">return</span> std::invoke(func, std::move(captured)...);</span></span></span><br><span class="line"><span class="params"><span class="function">    &#125;</span></span></span><br><span class="line"><span class="params"><span class="function">)</span></span>;</span><br></pre></td></tr></table></figure>
+
+<p>👉 也就是说：</p>
+<ul>
+<li><code>packaged_task</code> 的签名是 <strong>无参</strong> 的；</li>
+<li>但是这个 lambda 内部<strong>捕获</strong>了 <code>f</code> 和所有的 <code>args...</code>；</li>
+<li>当调用 <code>(*task)()</code> 时，这个 lambda 内部执行：<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::<span class="built_in">invoke</span>(func, std::<span class="built_in">move</span>(captured)...);</span><br></pre></td></tr></table></figure>
+—— 实际上已经使用了原本的 <code>args...</code>。</li>
+</ul>
+<hr>
+<h3 id="✅-结论："><a href="#✅-结论：" class="headerlink" title="✅ 结论："></a>✅ 结论：</h3><blockquote>
+<p>捕获确实“替代”了函数签名的参数。<br>因为参数值在创建任务时就被拷贝（或移动）进了 lambda 的闭包体。</p>
+</blockquote>
+<p>所以：</p>
+<ul>
+<li>函数签名可以是 <code>()</code>，因为调用时不再需要额外的参数；</li>
+<li>所有参数都在创建时绑定（类似于 <code>std::bind</code> 的效果，但效率更高）。</li>
+</ul>
+<p>📦 <strong>总结一句话</strong>：</p>
+<blockquote>
+<p>在这个写法里，<code>lambda 捕获</code> 相当于“提前绑定参数”，<br>因此 <code>packaged_task</code> 的签名可以是 <code>()</code>。</p>
+</blockquote>
+<hr>
+<h2 id="🧩-问题-2："><a href="#🧩-问题-2：" class="headerlink" title="🧩 问题 2："></a>🧩 问题 2：</h2><blockquote>
+<p><code>[task]()&#123; (*task)(); &#125;</code> 在按值捕获的时候拷贝了 shared_ptr，那他是被再次包装成了 function？</p>
+</blockquote>
+<p>完全正确 ✅✅✅<br>这个过程其实就是“用一个小 lambda 包成 <code>std::function&lt;void()&gt;</code>”。</p>
+<hr>
+<h3 id="🧠-1️⃣-捕获行为"><a href="#🧠-1️⃣-捕获行为" class="headerlink" title="🧠 1️⃣ 捕获行为"></a>🧠 1️⃣ 捕获行为</h3><p><code>[task]</code> 是 <strong>按值捕获</strong>，<br>而 <code>task</code> 是一个 <code>std::shared_ptr&lt;std::packaged_task&lt;return_type()&gt;&gt;</code>。</p>
+<p>按值捕获 shared_ptr，会发生：</p>
+<blockquote>
+<p>拷贝 shared_ptr（引用计数 +1）</p>
+</blockquote>
+<p>因此：</p>
+<ul>
+<li>这个 lambda 内部有自己的 shared_ptr 副本；</li>
+<li>即使外层的 <code>task</code> 离开作用域销毁，队列里的 lambda 仍然持有一份 shared_ptr 引用，保证对象仍然存在。</li>
+</ul>
+<hr>
+<h3 id="🧱-2️⃣-lambda-被存进-std-function"><a href="#🧱-2️⃣-lambda-被存进-std-function" class="headerlink" title="🧱 2️⃣ lambda 被存进 std::function&lt;void()&gt;"></a>🧱 2️⃣ lambda 被存进 <code>std::function&lt;void()&gt;</code></h3><p><code>tasks.emplace([task]()&#123; (*task)(); &#125;);</code></p>
+<p>这里假设 <code>tasks</code> 是：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">std::queue&lt;std::function&lt;<span class="type">void</span>()&gt;&gt; tasks;</span><br></pre></td></tr></table></figure>
+
+<p>那么：</p>
+<ul>
+<li><code>[task]()&#123; (*task)(); &#125;</code> 是一个无参、无返回值的 lambda；</li>
+<li>它可以隐式转换成 <code>std::function&lt;void()&gt;</code>；</li>
+<li>队列里存放的是 <code>std::function&lt;void()&gt;</code> 类型；</li>
+<li>所以<strong>这个 lambda 被复制一份存入 <code>std::function</code></strong> 对象中。</li>
+</ul>
+<hr>
+<h3 id="⚙️-3️⃣-调用链"><a href="#⚙️-3️⃣-调用链" class="headerlink" title="⚙️ 3️⃣ 调用链"></a>⚙️ 3️⃣ 调用链</h3><p>当 worker 线程执行任务时：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">std::function&lt;<span class="type">void</span>()&gt; job = std::<span class="built_in">move</span>(tasks.<span class="built_in">front</span>());</span><br><span class="line"><span class="built_in">job</span>();  <span class="comment">// 执行</span></span><br></pre></td></tr></table></figure>
+
+<p>发生的调用链：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">job()                     --&gt; 调用 std::function&lt;void()&gt;::operator()</span><br><span class="line">  ↓</span><br><span class="line">lambda()                  --&gt; 调用 [task]()&#123; (*task)(); &#125;</span><br><span class="line">  ↓</span><br><span class="line">(*task)()                 --&gt; 调用 packaged_task 的 operator()</span><br><span class="line">  ↓</span><br><span class="line">执行捕获的 lambda         --&gt; 执行原始 f(args...)</span><br><span class="line">  ↓</span><br><span class="line">packaged_task 设置结果到 future</span><br></pre></td></tr></table></figure>
+
+<p>🎯 一整条调用链串起来，未来结果最终出现在 <code>future.get()</code>。</p>
+<hr>
+<h2 id="🧠-小结：两段的关系图"><a href="#🧠-小结：两段的关系图" class="headerlink" title="🧠 小结：两段的关系图"></a>🧠 小结：两段的关系图</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">submit(f, args...)</span><br><span class="line"></span><br><span class="line">  创建 lambda1: [func, captured...]() -&gt; return_type &#123; return invoke(func, args...); &#125;</span><br><span class="line">       ↓</span><br><span class="line">  用 lambda1 初始化 packaged_task&lt;return_type()&gt;（无参，因为参数都捕获了）</span><br><span class="line">       ↓</span><br><span class="line">  得到 shared_ptr&lt;packaged_task&lt;return_type()&gt;&gt;</span><br><span class="line">       ↓</span><br><span class="line">  创建 lambda2: [task]()&#123; (*task)(); &#125;  ← 捕获 shared_ptr（引用计数 +1）</span><br><span class="line">       ↓</span><br><span class="line">  lambda2 转成 std::function&lt;void()&gt; 放入任务队列</span><br><span class="line">       ↓</span><br><span class="line">  worker 执行 job() → 调用 (*task)() → 调用 lambda1 → 执行 func(args...)</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="✅-一句话总结"><a href="#✅-一句话总结" class="headerlink" title="✅ 一句话总结"></a>✅ 一句话总结</h2><table>
+<thead>
+<tr>
+<th>概念</th>
+<th>含义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>packaged_task&lt;return_type()&gt;</code></td>
+<td>无参数任务，但内部 lambda 捕获了所有实参（提前绑定）</td>
+</tr>
+<tr>
+<td><code>lambda</code> 捕获</td>
+<td>替代了函数签名参数，把参数“记住”在闭包里</td>
+</tr>
+<tr>
+<td><code>[task]()&#123; (*task)(); &#125;</code></td>
+<td>用 shared_ptr 拷贝持有任务对象，保证生命周期</td>
+</tr>
+<tr>
+<td>存入队列</td>
+<td>lambda 被再包装成 <code>std::function&lt;void()&gt;</code>，方便统一调度</td>
+</tr>
+</tbody></table>
+<p>而对于有返回值，有参数的函数，bind和lambda之外，我们就要再用packaged_task去包装，提前得到future(相当于返回值)，这样，我们就将有返回值有参数的函数，类型抹除成为了function&lt;void()&gt;这个无参无返回值的包装器（实际是转移了参数和返回值）</p>
+<p>同时这里用shared_ptr执行异步任务的操作，以及用lambda拷贝（值捕获）shared_ptr使其引用计数+1，防止提前销毁的策略在协程库的fire-and-forget里面也有体现。（有时间把协程库的东西也写在博客）</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/11/08/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0/">https://cmzcc.github.io/2025/11/08/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/c/">c++</a><a class="post-meta__tags" href="/tags/%E5%A4%9A%E7%BA%BF%E7%A8%8B/">多线程</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover3.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="prev-post pull-left" href="/2025/11/09/lambda%E5%86%8D%E6%8E%A2/" title="lambda再探"><img class="cover" src="/img/text-cover2.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="pagination-info"><div class="label">Previous</div><div class="prev_info">lambda再探</div></div></a><a class="next-post pull-right" href="/2025/11/05/TSDB-TDengine/" title="TSDB-TDengine"><img class="cover" src="/img/text-cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">TSDB-TDengine</div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a href="/2025/02/27/c++%E4%B8%AD%E7%9A%84%E5%A4%9A%E7%BA%BF%E7%A8%8B%E5%86%99%E6%97%B6%E5%A4%8D%E5%88%B6/" title="c++中的多线程写时复制"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-02-27</div><div class="title">c++中的多线程写时复制</div></div></a><a href="/2025/10/29/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E4%B8%89%E7%AB%A0/" title="《C++ Concurrency in Action》第三章"><img class="cover" src="/img/text-cover3.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="title">《C++ Concurrency in Action》第三章</div></div></a><a href="/2025/10/29/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E4%BA%8C%E7%AB%A0/" title="《C++ Concurrency in Action》第二章"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-29</div><div class="title">《C++ Concurrency in Action》第二章</div></div></a><a href="/2025/01/12/Lambda%E8%A1%A8%E8%BE%BE%E5%BC%8F/" title="Lambda表达式"><img class="cover" src="/img/text-cover1.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-12</div><div class="title">Lambda表达式</div></div></a><a href="/2025/06/30/atomic/" title="atomic"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-06-30</div><div class="title">atomic</div></div></a><a href="/2025/01/27/bind%E5%92%8C%E5%9B%9E%E8%B0%83%E5%87%BD%E6%95%B0%E7%9A%84%E5%85%B3%E7%B3%BB/" title="bind和回调函数的关系"><img class="cover" src="/img/text-cover2.jpg" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2025-01-27</div><div class="title">bind和回调函数的关系</div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">109</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">112</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">努力成为c++高手ing，专精多线程编程和性能优化方向，国内私募量化开发实习生（QD)牛马</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88%E4%BC%9A%E5%87%BA%E7%8E%B0%E4%BC%AA%E5%94%A4%E9%86%92%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">为什么会出现伪唤醒？</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B8%A6%E6%9D%A5%E7%9A%84%E9%97%AE%E9%A2%98"><span class="toc-number">2.</span> <span class="toc-text">带来的问题</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E9%81%BF%E5%85%8D%E4%BC%AA%E5%94%A4%E9%86%92%EF%BC%9F%E2%80%94%E2%80%94-%E6%AD%A3%E7%A1%AE%E7%9A%84%E4%BD%BF%E7%94%A8%E6%A8%A1%E5%BC%8F"><span class="toc-number">3.</span> <span class="toc-text">如何避免伪唤醒？—— 正确的使用模式</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#%E9%94%99%E8%AF%AF%E7%A4%BA%E4%BE%8B%EF%BC%88%E4%BD%BF%E7%94%A8-if%EF%BC%8C%E6%98%93%E5%8F%97%E4%BC%AA%E5%94%A4%E9%86%92%E5%BD%B1%E5%93%8D%EF%BC%89"><span class="toc-number">3.1.</span> <span class="toc-text">错误示例（使用 if，易受伪唤醒影响）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E6%AD%A3%E7%A1%AE%E7%A4%BA%E4%BE%8B%EF%BC%88%E4%BD%BF%E7%94%A8-while%EF%BC%8C%E9%98%B2%E6%AD%A2%E4%BC%AA%E5%94%A4%E9%86%92%EF%BC%89"><span class="toc-number">3.2.</span> <span class="toc-text">正确示例（使用 while，防止伪唤醒）</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#C-%E7%9A%84%E8%BF%9B%E4%B8%80%E6%AD%A5%E7%AE%80%E5%8C%96%EF%BC%9A%E5%B8%A6%E8%B0%93%E8%AF%8D%E7%9A%84-wait"><span class="toc-number">4.</span> <span class="toc-text">C++ 的进一步简化：带谓词的 wait</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%80%BB%E7%BB%93"><span class="toc-number">5.</span> <span class="toc-text">总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A9-%E4%B8%80%E3%80%81std-future-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number"></span> <span class="toc-text">🧩 一、std::future 是什么？</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8C%B1-%E5%AE%9A%E4%B9%89"><span class="toc-number">1.</span> <span class="toc-text">🌱 定义</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A0-%E4%BD%BF%E7%94%A8%E5%9C%BA%E6%99%AF"><span class="toc-number">2.</span> <span class="toc-text">🧠 使用场景</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95%E7%A4%BA%E4%BE%8B"><span class="toc-number">3.</span> <span class="toc-text">✅ 基本用法示例</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%A0%EF%B8%8F-%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="toc-number">4.</span> <span class="toc-text">⚠️ 注意事项</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8C%BF-%E4%BA%8C%E3%80%81std-shared-future-%E2%80%94%E2%80%94-%E5%8F%AF%E5%85%B1%E4%BA%AB%E7%9A%84-future"><span class="toc-number"></span> <span class="toc-text">🌿 二、std::shared_future —— 可共享的 future</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%9F%BA%E6%9C%AC%E7%94%A8%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">✅ 基本用法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-%E5%8C%BA%E5%88%AB%E6%80%BB%E7%BB%93"><span class="toc-number">2.</span> <span class="toc-text">⚙️ 区别总结</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%9A%80-%E4%B8%89%E3%80%81std-async-%E2%80%94%E2%80%94-%E5%BC%82%E6%AD%A5%E4%BB%BB%E5%8A%A1%E5%90%AF%E5%8A%A8%E5%99%A8"><span class="toc-number"></span> <span class="toc-text">🚀 三、std::async —— 异步任务启动器</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E5%9F%BA%E6%9C%AC%E8%AF%AD%E6%B3%95"><span class="toc-number">1.</span> <span class="toc-text">✅ 基本语法</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%94%A7-%E5%90%AF%E5%8A%A8%E7%AD%96%E7%95%A5%EF%BC%88policy%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">🔧 启动策略（policy）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8C%8A-%E7%A4%BA%E4%BE%8B-1%EF%BC%9A%E7%BB%93%E5%90%88-shared-future"><span class="toc-number">3.</span> <span class="toc-text">🌊 示例 1：结合 shared_future</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A0-%E5%9B%9B%E3%80%81%E5%85%B6%E5%AE%83%E5%AE%9E%E7%94%A8%E6%93%8D%E4%BD%9C"><span class="toc-number"></span> <span class="toc-text">🧠 四、其它实用操作</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#future-wait"><span class="toc-number">1.</span> <span class="toc-text">future.wait()</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9A%A0%EF%B8%8F-%E4%BA%94%E3%80%81%E5%B8%B8%E8%A7%81%E5%9D%91%E7%82%B9"><span class="toc-number"></span> <span class="toc-text">⚠️ 五、常见坑点</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%AD-%E5%85%AD%E3%80%81%E6%80%BB%E7%BB%93%E5%AF%B9%E6%AF%94%E8%A1%A8"><span class="toc-number"></span> <span class="toc-text">🧭 六、总结对比表</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E8%80%85%E7%9A%84%E5%85%B3%E7%B3%BB%E5%92%8C%E5%8C%BA%E5%88%AB"><span class="toc-number"></span> <span class="toc-text">三者的关系和区别</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%B1%82%E6%AC%A1%E5%85%B3%E7%B3%BB"><span class="toc-number">1.</span> <span class="toc-text">层次关系</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%AF%A6%E7%BB%86%E5%AF%B9%E6%AF%94"><span class="toc-number">2.</span> <span class="toc-text">详细对比</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#std-promise%EF%BC%9A%E4%BD%A0%E6%89%8B%E5%8A%A8%E6%8F%90%E4%BE%9B%E7%BB%93%E6%9E%9C"><span class="toc-number"></span> <span class="toc-text">std::promise：你手动提供结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#std-packaged-task%EF%BC%9A%E4%BB%BB%E5%8A%A1%E8%87%AA%E5%8A%A8%E4%BA%A7%E7%94%9F%E7%BB%93%E6%9E%9C"><span class="toc-number"></span> <span class="toc-text">std::packaged_task：任务自动产生结果</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A9-%E9%97%AE%E9%A2%98-1%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">🧩 问题 1：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A0-1%EF%B8%8F%E2%83%A3-std-packaged-task-%E7%9A%84%E7%AD%BE%E5%90%8D"><span class="toc-number">1.</span> <span class="toc-text">🧠 1️⃣ std::packaged_task 的签名</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A9-2%EF%B8%8F%E2%83%A3-%E4%B8%BA%E4%BB%80%E4%B9%88%E5%9C%A8%E4%BD%A0%E7%9A%84%E4%BB%A3%E7%A0%81%E4%B8%AD%E5%86%99%E6%88%90%E4%BA%86-std-packaged-task"><span class="toc-number">2.</span> <span class="toc-text">🧩 2️⃣ 为什么在你的代码中写成了 std::packaged_task&lt;return_type()&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E7%BB%93%E8%AE%BA%EF%BC%9A"><span class="toc-number">3.</span> <span class="toc-text">✅ 结论：</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A9-%E9%97%AE%E9%A2%98-2%EF%BC%9A"><span class="toc-number"></span> <span class="toc-text">🧩 问题 2：</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%A0-1%EF%B8%8F%E2%83%A3-%E6%8D%95%E8%8E%B7%E8%A1%8C%E4%B8%BA"><span class="toc-number">1.</span> <span class="toc-text">🧠 1️⃣ 捕获行为</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%A7%B1-2%EF%B8%8F%E2%83%A3-lambda-%E8%A2%AB%E5%AD%98%E8%BF%9B-std-function"><span class="toc-number">2.</span> <span class="toc-text">🧱 2️⃣ lambda 被存进 std::function&lt;void()&gt;</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9A%99%EF%B8%8F-3%EF%B8%8F%E2%83%A3-%E8%B0%83%E7%94%A8%E9%93%BE"><span class="toc-number">3.</span> <span class="toc-text">⚙️ 3️⃣ 调用链</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A0-%E5%B0%8F%E7%BB%93%EF%BC%9A%E4%B8%A4%E6%AE%B5%E7%9A%84%E5%85%B3%E7%B3%BB%E5%9B%BE"><span class="toc-number"></span> <span class="toc-text">🧠 小结：两段的关系图</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9C%85-%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93"><span class="toc-number"></span> <span class="toc-text">✅ 一句话总结</span></a></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/09/lambda%E5%86%8D%E6%8E%A2/" title="lambda再探"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="lambda再探"/></a><div class="content"><a class="title" href="/2025/11/09/lambda%E5%86%8D%E6%8E%A2/" title="lambda再探">lambda再探</a><time datetime="2025-11-09T03:43:06.000Z" title="Created 2025-11-09 11:43:06">2025-11-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/08/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0/" title="《C++-Concurrency-in-Action》第四章"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="《C++-Concurrency-in-Action》第四章"/></a><div class="content"><a class="title" href="/2025/11/08/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0/" title="《C++-Concurrency-in-Action》第四章">《C++-Concurrency-in-Action》第四章</a><time datetime="2025-11-08T14:04:05.000Z" title="Created 2025-11-08 22:04:05">2025-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/05/TSDB-TDengine/" title="TSDB-TDengine"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="TSDB-TDengine"/></a><div class="content"><a class="title" href="/2025/11/05/TSDB-TDengine/" title="TSDB-TDengine">TSDB-TDengine</a><time datetime="2025-11-05T08:39:16.000Z" title="Created 2025-11-05 16:39:16">2025-11-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/29/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E7%9A%84%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0/" title="线程池中的意外发现"><img src="/img/text-cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="线程池中的意外发现"/></a><div class="content"><a class="title" href="/2025/10/29/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E7%9A%84%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0/" title="线程池中的意外发现">线程池中的意外发现</a><time datetime="2025-10-29T13:28:03.000Z" title="Created 2025-10-29 21:28:03">2025-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/29/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E4%B8%89%E7%AB%A0/" title="《C++ Concurrency in Action》第三章"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="《C++ Concurrency in Action》第三章"/></a><div class="content"><a class="title" href="/2025/10/29/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E4%B8%89%E7%AB%A0/" title="《C++ Concurrency in Action》第三章">《C++ Concurrency in Action》第三章</a><time datetime="2025-10-29T13:27:33.000Z" title="Created 2025-10-29 21:27:33">2025-10-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>

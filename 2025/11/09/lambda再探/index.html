@@ -1,0 +1,581 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>lambda再探 | Ciallo～(∠・ω&lt; )⌒☆               ccのblog</title><meta name="author" content="cmz"><meta name="copyright" content="cmz"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="有一部分在第四章的讲解里面，我再单独为lambda开一章，因为发现这里也有很多可以讲的  ✅ Lambda 捕获的本质 lambda 捕获是把外部作用域的变量复制进 lambda 的闭包对象（closure object）里。  你可以把 lambda 看成一个“生成临时类的语法糖”： 1auto f &#x3D; [x]() &#123; return x + 1; &#125;; 其实等价于生成一个类：">
+<meta property="og:type" content="article">
+<meta property="og:title" content="lambda再探">
+<meta property="og:url" content="https://cmzcc.github.io/2025/11/09/lambda%E5%86%8D%E6%8E%A2/index.html">
+<meta property="og:site_name" content="Ciallo～(∠・ω&lt; )⌒☆               ccのblog">
+<meta property="og:description" content="有一部分在第四章的讲解里面，我再单独为lambda开一章，因为发现这里也有很多可以讲的  ✅ Lambda 捕获的本质 lambda 捕获是把外部作用域的变量复制进 lambda 的闭包对象（closure object）里。  你可以把 lambda 看成一个“生成临时类的语法糖”： 1auto f &#x3D; [x]() &#123; return x + 1; &#125;; 其实等价于生成一个类：">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cmzcc.github.io/img/text-cover2.jpg">
+<meta property="article:published_time" content="2025-11-09T03:43:06.000Z">
+<meta property="article:modified_time" content="2025-11-09T03:54:15.118Z">
+<meta property="article:author" content="cmz">
+<meta property="article:tag" content="lambda">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cmzcc.github.io/img/text-cover2.jpg"><link rel="shortcut icon" href="/img/logo.png"><link rel="canonical" href="https://cmzcc.github.io/2025/11/09/lambda%E5%86%8D%E6%8E%A2/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        if (name && globalFn[key][name]) return
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"/search.xml","preload":false,"top_n_per_article":1,"unescape":false,"languages":{"hits_empty":"No results found for: ${query}","hits_stats":"${hits} articles found"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: true,
+    post: true
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'lambda再探',
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2025-11-09 11:54:15'
+}</script><meta name="generator" content="Hexo 7.3.0"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+  window.addEventListener('load', preloader.endLoading)
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="web_bg" style="background-image: url(/img/background.jpg);"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img is-center"><img src="/img/personal-icon.png" onerror="onerror=null;src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data is-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">109</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">112</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">8</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url(/img/text-cover2.jpg);"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><img class="site-icon" src="/img/logo.png" alt="Logo"><span class="site-name">Ciallo～(∠・ω&lt; )⌒☆               ccのblog</span></a><a class="nav-page-title" href="/"><span class="site-name">lambda再探</span></a></span><div id="menus"><div id="search-button"><span class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> Search</span></span></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> Home</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> Archives</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> Tags</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> Categories</span></a></div><div class="menus_item"><a class="site-page" href="/music/"><i class="fa-fw fas fa-music"></i><span> Music</span></a></div><div class="menus_item"><a class="site-page" href="/link/"><i class="fa-fw fas fa-link"></i><span> Link</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> About</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">lambda再探</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2025-11-09T03:43:06.000Z" title="Created 2025-11-09 11:43:06">2025-11-09</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2025-11-09T03:54:15.118Z" title="Updated 2025-11-09 11:54:15">2025-11-09</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%80%9D%E8%80%83/">思考</a></span></div><div class="meta-secondline"></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><p>有一部分在第四章的讲解里面，我再单独为lambda开一章，因为发现这里也有很多可以讲的</p>
+<hr>
+<h1 id="✅-Lambda-捕获的本质"><a href="#✅-Lambda-捕获的本质" class="headerlink" title="✅ Lambda 捕获的本质"></a>✅ Lambda 捕获的本质</h1><blockquote>
+<p><strong>lambda 捕获是把外部作用域的变量复制进 lambda 的闭包对象（closure object）里</strong>。</p>
+</blockquote>
+<p>你可以把 lambda 看成一个“生成临时类的语法糖”：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> f = [x]() &#123; <span class="keyword">return</span> x + <span class="number">1</span>; &#125;;</span><br></pre></td></tr></table></figure>
+<p>其实等价于生成一个类：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">struct</span> <span class="title class_">__Lambda</span> &#123;</span><br><span class="line">    <span class="type">int</span> x;               <span class="comment">// 捕获变量</span></span><br><span class="line">    <span class="function"><span class="type">int</span> <span class="title">operator</span><span class="params">()</span><span class="params">()</span> </span>&#123; <span class="keyword">return</span> x + <span class="number">1</span>; &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h1 id="✅-一、按值捕获-x"><a href="#✅-一、按值捕获-x" class="headerlink" title="✅ 一、按值捕获 [x]"></a>✅ 一、按值捕获 <code>[x]</code></h1><p>含义：</p>
+<blockquote>
+<p>把外部变量 <strong>拷贝</strong> 一份到 lambda 内部。</p>
+</blockquote>
+<p>例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">auto</span> f = [a]() &#123; <span class="keyword">return</span> a; &#125;;</span><br><span class="line">a = <span class="number">20</span>;</span><br><span class="line">cout &lt;&lt; <span class="built_in">f</span>();   <span class="comment">// 输出 10</span></span><br></pre></td></tr></table></figure>
+
+<p>📌 <strong>特点：</strong>  </p>
+<ul>
+<li>captured 值不会随外面变化  </li>
+<li>内部只看到“值的快照”  </li>
+<li>拷贝副本，因此线程安全、无悬挂引用</li>
+</ul>
+<hr>
+<h1 id="✅-二、引用捕获-x"><a href="#✅-二、引用捕获-x" class="headerlink" title="✅ 二、引用捕获 [&amp;x]"></a>✅ 二、引用捕获 <code>[&amp;x]</code></h1><p>含义：</p>
+<blockquote>
+<p>lambda 内部保存的是 <strong>外部变量的引用</strong>，不拷贝。</p>
+</blockquote>
+<p>例子：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> a = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">auto</span> f = [&amp;a]() &#123; <span class="keyword">return</span> a; &#125;;</span><br><span class="line">a = <span class="number">20</span>;</span><br><span class="line">cout &lt;&lt; <span class="built_in">f</span>();  <span class="comment">// 输出 20</span></span><br></pre></td></tr></table></figure>
+
+<p>📌 <strong>特点：</strong>  </p>
+<ul>
+<li>外部的变化会反映进 lambda  </li>
+<li>危险：如果外部变量生命周期结束，则引用悬空！</li>
+</ul>
+<hr>
+<h1 id="✅-三、隐式捕获（最常用）"><a href="#✅-三、隐式捕获（最常用）" class="headerlink" title="✅ 三、隐式捕获（最常用）"></a>✅ 三、隐式捕获（最常用）</h1><h3 id="按值捕获所有用到的外部变量"><a href="#按值捕获所有用到的外部变量" class="headerlink" title="[=] 按值捕获所有用到的外部变量"></a><code>[=]</code> 按值捕获所有用到的外部变量</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x = <span class="number">1</span>, y = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">auto</span> f = [=]() &#123; <span class="keyword">return</span> x + y; &#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="引用捕获所有用到的外部变量"><a href="#引用捕获所有用到的外部变量" class="headerlink" title="[&amp;] 引用捕获所有用到的外部变量"></a><code>[&amp;]</code> 引用捕获所有用到的外部变量</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x = <span class="number">1</span>, y = <span class="number">2</span>;</span><br><span class="line"><span class="keyword">auto</span> f = [&amp;]() &#123; x = <span class="number">3</span>; y = <span class="number">4</span>; &#125;;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="✅-四、混合捕获"><a href="#✅-四、混合捕获" class="headerlink" title="✅ 四、混合捕获"></a>✅ 四、混合捕获</h1><p>可以混着写：</p>
+<h3 id="x"><a href="#x" class="headerlink" title="[=, &amp;x]"></a><code>[=, &amp;x]</code></h3><blockquote>
+<p>默认按值捕获，但 <code>x</code> 用引用捕获。</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> x=<span class="number">1</span>, y=<span class="number">2</span>;</span><br><span class="line"><span class="keyword">auto</span> f = [=, &amp;x]() &#123;</span><br><span class="line">    x = <span class="number">10</span>;   <span class="comment">// 修改 x</span></span><br><span class="line">    <span class="keyword">return</span> y; <span class="comment">// y 是值捕获</span></span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="x-1"><a href="#x-1" class="headerlink" title="[&amp;, x]"></a><code>[&amp;, x]</code></h3><blockquote>
+<p>默认引用捕获，但 <code>x</code> 是按值捕获。</p>
+</blockquote>
+<hr>
+<h1 id="✅-五、捕获-this-捕获-this"><a href="#✅-五、捕获-this-捕获-this" class="headerlink" title="✅ 五、捕获 this &#x2F; 捕获 *this"></a>✅ 五、捕获 this &#x2F; 捕获 *this</h1><h3 id="this"><a href="#this" class="headerlink" title="[this]"></a><code>[this]</code></h3><blockquote>
+<p>捕获当前对象的指针（隐式捕获所有成员）。</p>
+</blockquote>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">class</span> <span class="title class_">A</span> &#123;</span><br><span class="line">    <span class="type">int</span> x = <span class="number">10</span>;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">auto</span> <span class="title">func</span><span class="params">()</span> </span>&#123;</span><br><span class="line">        <span class="keyword">return</span> [<span class="keyword">this</span>]() &#123; <span class="keyword">return</span> x; &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="this-（C-17）"><a href="#this-（C-17）" class="headerlink" title="[=*this]（C++17）"></a><code>[=*this]</code>（C++17）</h3><blockquote>
+<p>深拷贝整个对象，捕获 this 指向的内容，而不是指针。</p>
+</blockquote>
+<hr>
+<h1 id="✅-六、初始化捕获（C-14-起）"><a href="#✅-六、初始化捕获（C-14-起）" class="headerlink" title="✅ 六、初始化捕获（C++14 起）"></a>✅ 六、初始化捕获（C++14 起）</h1><p>最强大、也是你当前线程池代码用到的：</p>
+<h3 id="name-expr"><a href="#name-expr" class="headerlink" title="[name = expr]"></a><code>[name = expr]</code></h3><p>把任意表达式的结果绑定到捕获变量。</p>
+<p>例如把参数 move 进 lambda：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> f = [p = std::<span class="built_in">move</span>(vec)]() &#123;</span><br><span class="line">    <span class="keyword">return</span> p.<span class="built_in">size</span>();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>这个语法就是：</p>
+<ul>
+<li>创建一个成员变量 <code>p</code></li>
+<li>初始化为 <code>std::move(vec)</code></li>
+<li>lambda 里使用的是内部的 <code>p</code>，不是外面的 <code>vec</code></li>
+</ul>
+<p>你的代码中就是用它来“提前绑定 f 和 args”：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[func = std::forward&lt;F&gt;(f), ... captured = std::forward&lt;Args&gt;(args)]()</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="✅-七、结构化绑定捕获（C-20）"><a href="#✅-七、结构化绑定捕获（C-20）" class="headerlink" title="✅ 七、结构化绑定捕获（C++20）"></a>✅ 七、结构化绑定捕获（C++20）</h1><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> [a, b] = pair;</span><br><span class="line"><span class="keyword">auto</span> f = [a, b]() &#123; <span class="keyword">return</span> a + b; &#125;;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h1 id="✅-八、完整捕获表总结"><a href="#✅-八、完整捕获表总结" class="headerlink" title="✅ 八、完整捕获表总结"></a>✅ 八、完整捕获表总结</h1><table>
+<thead>
+<tr>
+<th>捕获方式</th>
+<th>含义</th>
+<th>是否拷贝</th>
+<th>安全性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>[x]</code></td>
+<td>按值</td>
+<td>✅</td>
+<td>✅ 安全</td>
+</tr>
+<tr>
+<td><code>[&amp;x]</code></td>
+<td>引用</td>
+<td>❌</td>
+<td>⚠️ 外部变量不能提前析构</td>
+</tr>
+<tr>
+<td><code>[=]</code></td>
+<td>按值捕获所有用到的变量</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>[&amp;]</code></td>
+<td>引用捕获所有用到的变量</td>
+<td>❌</td>
+<td>⚠️</td>
+</tr>
+<tr>
+<td><code>[=, &amp;x]</code></td>
+<td>默认值捕获，x引用捕获</td>
+<td>混合</td>
+<td>依情况</td>
+</tr>
+<tr>
+<td><code>[&amp;, x]</code></td>
+<td>默认引用，x 按值</td>
+<td>混合</td>
+<td>依情况</td>
+</tr>
+<tr>
+<td><code>[this]</code></td>
+<td>捕获 this 指针</td>
+<td>❌</td>
+<td>⚠️ 成员变量可能悬空</td>
+</tr>
+<tr>
+<td><code>[=*this]</code></td>
+<td>深拷贝当前对象</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>[var = expr]</code></td>
+<td>初始化捕获</td>
+<td>✅</td>
+<td>✅ 最强大</td>
+</tr>
+<tr>
+<td><code>[a, b, c]</code></td>
+<td>精确指定按值捕获</td>
+<td>✅</td>
+<td>✅</td>
+</tr>
+</tbody></table>
+<hr>
+<h1 id="✅-九、结合你线程池代码解释（非常重要）"><a href="#✅-九、结合你线程池代码解释（非常重要）" class="headerlink" title="✅ 九、结合你线程池代码解释（非常重要）"></a>✅ 九、结合你线程池代码解释（非常重要）</h1><p>你问的这一行：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">tasks.<span class="built_in">emplace</span>([task]()&#123; (*task)(); &#125;);</span><br></pre></td></tr></table></figure>
+
+<p>这里的 <code>[task]</code> 是按值捕获<br>而 <code>task</code> 是一个 <code>std::shared_ptr&lt;packaged_task&lt;...&gt;&gt;</code></p>
+<p>✅ 按值捕获 shared_ptr &#x3D; 拷贝 shared_ptr（引用计数 +1）<br>✅ lambda 内部再调用 <code>(*task)();</code><br>✅ 这个 lambda 变成 <code>std::function&lt;void()&gt;</code> 放入队列<br>✅ worker 执行队列时执行 <code>task-&gt;operator()()</code><br>✅ 任务结束后未来值写进 future</p>
+<p>这正是正确的做法，因为：</p>
+<ul>
+<li>保证 packaged_task 的生命周期</li>
+<li>避免绑定参数被拷贝多次</li>
+<li>避免悬空指针</li>
+<li>lambda 必须是无参（绑定参数已提前捕获）</li>
+</ul>
+<hr>
+<h1 id="✅-十、一句话总结"><a href="#✅-十、一句话总结" class="headerlink" title="✅ 十、一句话总结"></a>✅ 十、一句话总结</h1><blockquote>
+<p><strong>按值捕获 &#x3D; 拷贝变量到 lambda 内</strong>  </p>
+<p><strong>引用捕获 &#x3D; 捕获外部变量的引用</strong>  </p>
+<p><strong>初始化捕获（[x&#x3D;expr]）&#x3D; 构造一个“新局部变量 x”存入 lambda，为对象绑定参数最常用</strong>  </p>
+<p><strong>lambda 存入 std::function 时会复制整个闭包对象，包括捕获的内容</strong></p>
+</blockquote>
+<hr>
+<p>注意捕获列表里面的，只能是已有的参数，不能是新的参数，初始化捕获除外（但其等号右边也必须是上下文已经有了的参数）</p>
+<p>初始化捕获用auto机制，解决了move的问题，减少了拷贝</p>
+<p>前面我们提到bind和lambda都能实现参数的绑定，但实际上lambda在某种意义上代替了bind的生态位。</p>
+<p>也就是说：  </p>
+<blockquote>
+<p>✅ **C++11 之前我们用 <code>std::bind</code>**（因为那时候还没有 lambda）<br>✅ <strong>C++11 之后 lambda 一出来，<code>std::bind</code> 基本就被淘汰了</strong></p>
+</blockquote>
+<hr>
+<h2 id="🧩-一、std-bind-的历史背景"><a href="#🧩-一、std-bind-的历史背景" class="headerlink" title="🧩 一、std::bind 的历史背景"></a>🧩 一、<code>std::bind</code> 的历史背景</h2><p>在 <strong>C++98&#x2F;03</strong> 时代，没有 lambda。<br>如果你想“预先绑定一些参数”，只能用 <code>std::bind1st</code>、<code>std::bind2nd</code>、<code>std::bind</code>、<code>std::mem_fn</code> 等函数适配器。</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">add</span><span class="params">(<span class="type">int</span> a, <span class="type">int</span> b)</span> </span>&#123; <span class="keyword">return</span> a + b; &#125;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    <span class="keyword">auto</span> add5 = std::<span class="built_in">bind</span>(add, <span class="number">5</span>, std::placeholders::_1);</span><br><span class="line">    cout &lt;&lt; <span class="built_in">add5</span>(<span class="number">3</span>); <span class="comment">// 输出 8</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>这相当于创建了一个新的函数对象：<br><code>add5(x)</code> &#x3D; <code>add(5, x)</code></p>
+</blockquote>
+<hr>
+<h2 id="🧠-二、lambda-出现后做了什么"><a href="#🧠-二、lambda-出现后做了什么" class="headerlink" title="🧠 二、lambda 出现后做了什么"></a>🧠 二、lambda 出现后做了什么</h2><p>C++11 引入 <strong>lambda 表达式</strong>，可以直接写出：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> add5 = [=](<span class="type">int</span> x)&#123; <span class="keyword">return</span> <span class="built_in">add</span>(<span class="number">5</span>, x); &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>完全等价于上面的 <code>std::bind(add, 5, _1)</code>，而且：</p>
+<ul>
+<li><strong>更直观</strong></li>
+<li><strong>能看出参数的名字和顺序</strong></li>
+<li><strong>支持完美转发</strong></li>
+<li><strong>调试友好（不会生成神秘模板类型）</strong></li>
+</ul>
+<p>所以现代写法几乎都变成了：</p>
+<table>
+<thead>
+<tr>
+<th>原来的 bind 写法</th>
+<th>现代 lambda 写法</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>std::bind(add, 5, _1)</code></td>
+<td><code>[=](auto x)&#123; return add(5, x); &#125;</code></td>
+</tr>
+<tr>
+<td><code>std::bind(&amp;X::f, &amp;obj, _1)</code></td>
+<td><code>[&amp;](auto x)&#123; obj.f(x); &#125;</code></td>
+</tr>
+<tr>
+<td><code>std::bind(&amp;X::set, &amp;obj, 42)</code></td>
+<td><code>[&amp;]&#123; obj.set(42); &#125;</code></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="🧩-三、为什么-lambda-能替代-bind？"><a href="#🧩-三、为什么-lambda-能替代-bind？" class="headerlink" title="🧩 三、为什么 lambda 能替代 bind？"></a>🧩 三、为什么 lambda 能替代 bind？</h2><table>
+<thead>
+<tr>
+<th>对比点</th>
+<th><code>std::bind</code></th>
+<th>lambda</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>引入版本</strong></td>
+<td>C++98</td>
+<td>C++11</td>
+</tr>
+<tr>
+<td><strong>可读性</strong></td>
+<td>差（<code>_1</code>, <code>_2</code> 模糊）</td>
+<td>高（参数清晰）</td>
+</tr>
+<tr>
+<td><strong>类型安全</strong></td>
+<td>不安全（模板推断复杂）</td>
+<td>完美类型推断</td>
+</tr>
+<tr>
+<td><strong>性能</strong></td>
+<td>可能多层包装</td>
+<td>编译期内联优化</td>
+</tr>
+<tr>
+<td><strong>调试体验</strong></td>
+<td>难读难看</td>
+<td>直接看 lambda 逻辑</td>
+</tr>
+<tr>
+<td><strong>完美转发支持</strong></td>
+<td>❌ 不支持</td>
+<td>✅ 支持（<code>std::forward</code>）</td>
+</tr>
+<tr>
+<td><strong>捕获外部变量</strong></td>
+<td>❌ 不能</td>
+<td>✅ 能捕获（按值、引用、自定义）</td>
+</tr>
+</tbody></table>
+<p>🔹 <strong>最大区别：</strong><br><code>std::bind</code> 只能绑定参数，不能捕获外部变量。<br>而 lambda 可以随意捕获任意作用域内的对象。</p>
+<hr>
+<h2 id="🧩-四、一个实际对比示例"><a href="#🧩-四、一个实际对比示例" class="headerlink" title="🧩 四、一个实际对比示例"></a>🧩 四、一个实际对比示例</h2><h3 id="🏷-用-bind-的旧写法（C-03-早期-C-11）"><a href="#🏷-用-bind-的旧写法（C-03-早期-C-11）" class="headerlink" title="🏷 用 bind 的旧写法（C++03 &#x2F; 早期 C++11）"></a>🏷 用 bind 的旧写法（C++03 &#x2F; 早期 C++11）</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;functional&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="keyword">include</span> <span class="string">&lt;iostream&gt;</span></span></span><br><span class="line"><span class="keyword">using</span> <span class="keyword">namespace</span> std;</span><br><span class="line"></span><br><span class="line"><span class="keyword">struct</span> <span class="title class_">Worker</span> &#123;</span><br><span class="line">    <span class="function"><span class="type">void</span> <span class="title">run</span><span class="params">(<span class="type">int</span> id)</span> </span>&#123; cout &lt;&lt; <span class="string">&quot;Run &quot;</span> &lt;&lt; id &lt;&lt; endl; &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line"><span class="function"><span class="type">int</span> <span class="title">main</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    Worker w;</span><br><span class="line">    <span class="keyword">auto</span> task = std::<span class="built_in">bind</span>(&amp;Worker::run, &amp;w, <span class="number">42</span>);</span><br><span class="line">    <span class="built_in">task</span>();  <span class="comment">// 输出 Run 42</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="🏷-现代-lambda-写法"><a href="#🏷-现代-lambda-写法" class="headerlink" title="🏷 现代 lambda 写法"></a>🏷 现代 lambda 写法</h3><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">Worker w;</span><br><span class="line"><span class="keyword">auto</span> task = [&amp;]() &#123; w.<span class="built_in">run</span>(<span class="number">42</span>); &#125;;</span><br><span class="line"><span class="built_in">task</span>();</span><br></pre></td></tr></table></figure>
+
+<p>看出来了吗？</p>
+<ul>
+<li><code>std::bind</code> 语法啰嗦；</li>
+<li>不支持捕获；</li>
+<li>编译错误信息又长又难懂；</li>
+<li>读起来不如 lambda 直觉。</li>
+</ul>
+<hr>
+<h2 id="🧩-五、lambda-语法层面的-bind-超集"><a href="#🧩-五、lambda-语法层面的-bind-超集" class="headerlink" title="🧩 五、lambda &#x3D; 语法层面的 bind 超集"></a>🧩 五、lambda &#x3D; 语法层面的 bind 超集</h2><p>可以认为：</p>
+<blockquote>
+<p><strong>lambda 是“语法层面内置”的 bind + function object + capture 支持</strong>。</p>
+</blockquote>
+<p>本质等价于：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> lam = [captured = std::<span class="built_in">move</span>(obj)](<span class="type">int</span> x, <span class="type">int</span> y) &#123; <span class="keyword">return</span> captured.<span class="built_in">func</span>(x, y); &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>vs</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> lam = std::<span class="built_in">bind</span>(&amp;Class::func, obj, std::placeholders::_1, std::placeholders::_2);</span><br></pre></td></tr></table></figure>
+
+<p>但 lambda：</p>
+<ul>
+<li>能 inline 编译</li>
+<li>能直接在模板中推断类型</li>
+<li>不需要占位符 <code>_1</code> <code>_2</code></li>
+<li>可以完美转发参数</li>
+</ul>
+<hr>
+<h2 id="🧩-六、在你的线程池上下文里"><a href="#🧩-六、在你的线程池上下文里" class="headerlink" title="🧩 六、在你的线程池上下文里"></a>🧩 六、在你的线程池上下文里</h2><p>你那段代码：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> task = std::make_shared&lt;std::packaged_task&lt;<span class="built_in">return_type</span>()&gt;&gt;(</span><br><span class="line">    [func = std::forward&lt;F&gt;(f), ... captured = std::forward&lt;Args&gt;(args)]() <span class="keyword">mutable</span> -&gt; return_type &#123;</span><br><span class="line">        <span class="keyword">return</span> std::<span class="built_in">invoke</span>(func, std::<span class="built_in">move</span>(captured)...);</span><br><span class="line">    &#125;</span><br><span class="line">);</span><br></pre></td></tr></table></figure>
+
+<p>如果没有 lambda，你只能这么写（旧时代的方式）：</p>
+<figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">auto</span> bound = std::<span class="built_in">bind</span>(std::forward&lt;F&gt;(f), std::forward&lt;Args&gt;(args)...);</span><br><span class="line"><span class="keyword">auto</span> task = std::make_shared&lt;std::packaged_task&lt;<span class="built_in">return_type</span>()&gt;&gt;(bound);</span><br></pre></td></tr></table></figure>
+
+<p>但是：</p>
+<ul>
+<li><code>std::bind</code> 会复制所有参数；</li>
+<li>无法 <code>move</code>；</li>
+<li>无法控制捕获方式；</li>
+<li>不支持完美转发；</li>
+<li>性能可能更差。</li>
+</ul>
+<p>所以现代线程池几乎都写成 lambda。</p>
+<hr>
+<h2 id="🧩-七、结论总结"><a href="#🧩-七、结论总结" class="headerlink" title="🧩 七、结论总结"></a>🧩 七、结论总结</h2><table>
+<thead>
+<tr>
+<th>项目</th>
+<th><code>std::bind</code></th>
+<th>lambda</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>定义时间</td>
+<td>C++98</td>
+<td>C++11</td>
+</tr>
+<tr>
+<td>功能</td>
+<td>绑定参数创建函数对象</td>
+<td>绑定外部变量创建函数对象</td>
+</tr>
+<tr>
+<td>是否立即调用</td>
+<td>❌ 延迟</td>
+<td>❌ 延迟</td>
+</tr>
+<tr>
+<td>语法可读性</td>
+<td>差</td>
+<td>高</td>
+</tr>
+<tr>
+<td>性能</td>
+<td>一般</td>
+<td>高（可内联）</td>
+</tr>
+<tr>
+<td>类型推断</td>
+<td>弱</td>
+<td>强（自动）</td>
+</tr>
+<tr>
+<td>捕获变量</td>
+<td>❌ 不支持</td>
+<td>✅ 支持任意方式</td>
+</tr>
+<tr>
+<td>是否推荐使用</td>
+<td>❌ 不推荐（现代C++弃用）</td>
+<td>✅ 推荐</td>
+</tr>
+</tbody></table>
+<hr>
+<h3 id="✅-一句话总结："><a href="#✅-一句话总结：" class="headerlink" title="✅ 一句话总结："></a>✅ 一句话总结：</h3><blockquote>
+<p><strong>lambda 是现代 C++ 的“语法级 bind”，功能更强、语法更直觉、性能更好。</strong></p>
+</blockquote>
+<p>可以这么说：</p>
+<blockquote>
+<p><strong><code>std::bind</code> 是旧时代没有 lambda 时的权宜之计，<br>lambda 是 C++ 正式把“函数式编程”纳入语言级语法的结果。</strong></p>
+</blockquote>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="cmz">cmz</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://cmzcc.github.io/2025/11/09/lambda%E5%86%8D%E6%8E%A2/">https://cmzcc.github.io/2025/11/09/lambda%E5%86%8D%E6%8E%A2/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/lambda/">lambda</a></div><div class="post-share"><div class="social-share" data-image="/img/text-cover2.jpg" data-sites="wechat,qq,weibo,qzone,facebook"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="next-post pull-full" href="/2025/11/08/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0/" title="《C++-Concurrency-in-Action》第四章"><img class="cover" src="/img/text-cover3.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">Next</div><div class="next_info">《C++-Concurrency-in-Action》第四章</div></div></a></nav><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div id="waline-wrap"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info is-center"><div class="avatar-img"><img src="/img/personal-icon.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">cmz</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">109</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">112</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">8</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/cmzcc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/cmzcc" target="_blank" title="Github"><i class="fab fa-github" style="color: #24292e;"></i></a><a class="social-icon" href="mailto:2721530241@qq.com" target="_blank" title="Email"><i class="fas fa-envelope" style="color: #4a7dbe;"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">努力成为c++高手ing，专精多线程编程和性能优化方向，国内私募量化开发实习生（QD)牛马</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%9C%85-Lambda-%E6%8D%95%E8%8E%B7%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="toc-number">1.</span> <span class="toc-text">✅ Lambda 捕获的本质</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%9C%85-%E4%B8%80%E3%80%81%E6%8C%89%E5%80%BC%E6%8D%95%E8%8E%B7-x"><span class="toc-number">2.</span> <span class="toc-text">✅ 一、按值捕获 [x]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%9C%85-%E4%BA%8C%E3%80%81%E5%BC%95%E7%94%A8%E6%8D%95%E8%8E%B7-x"><span class="toc-number">3.</span> <span class="toc-text">✅ 二、引用捕获 [&amp;x]</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%9C%85-%E4%B8%89%E3%80%81%E9%9A%90%E5%BC%8F%E6%8D%95%E8%8E%B7%EF%BC%88%E6%9C%80%E5%B8%B8%E7%94%A8%EF%BC%89"><span class="toc-number">4.</span> <span class="toc-text">✅ 三、隐式捕获（最常用）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%8C%89%E5%80%BC%E6%8D%95%E8%8E%B7%E6%89%80%E6%9C%89%E7%94%A8%E5%88%B0%E7%9A%84%E5%A4%96%E9%83%A8%E5%8F%98%E9%87%8F"><span class="toc-number">4.0.1.</span> <span class="toc-text">[&#x3D;] 按值捕获所有用到的外部变量</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%BC%95%E7%94%A8%E6%8D%95%E8%8E%B7%E6%89%80%E6%9C%89%E7%94%A8%E5%88%B0%E7%9A%84%E5%A4%96%E9%83%A8%E5%8F%98%E9%87%8F"><span class="toc-number">4.0.2.</span> <span class="toc-text">[&amp;] 引用捕获所有用到的外部变量</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%9C%85-%E5%9B%9B%E3%80%81%E6%B7%B7%E5%90%88%E6%8D%95%E8%8E%B7"><span class="toc-number">5.</span> <span class="toc-text">✅ 四、混合捕获</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#x"><span class="toc-number">5.0.1.</span> <span class="toc-text">[&#x3D;, &amp;x]</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#x-1"><span class="toc-number">5.0.2.</span> <span class="toc-text">[&amp;, x]</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%9C%85-%E4%BA%94%E3%80%81%E6%8D%95%E8%8E%B7-this-%E6%8D%95%E8%8E%B7-this"><span class="toc-number">6.</span> <span class="toc-text">✅ 五、捕获 this &#x2F; 捕获 *this</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#this"><span class="toc-number">6.0.1.</span> <span class="toc-text">[this]</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#this-%EF%BC%88C-17%EF%BC%89"><span class="toc-number">6.0.2.</span> <span class="toc-text">[&#x3D;*this]（C++17）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%9C%85-%E5%85%AD%E3%80%81%E5%88%9D%E5%A7%8B%E5%8C%96%E6%8D%95%E8%8E%B7%EF%BC%88C-14-%E8%B5%B7%EF%BC%89"><span class="toc-number">7.</span> <span class="toc-text">✅ 六、初始化捕获（C++14 起）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#name-expr"><span class="toc-number">7.0.1.</span> <span class="toc-text">[name &#x3D; expr]</span></a></li></ol></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%9C%85-%E4%B8%83%E3%80%81%E7%BB%93%E6%9E%84%E5%8C%96%E7%BB%91%E5%AE%9A%E6%8D%95%E8%8E%B7%EF%BC%88C-20%EF%BC%89"><span class="toc-number">8.</span> <span class="toc-text">✅ 七、结构化绑定捕获（C++20）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%9C%85-%E5%85%AB%E3%80%81%E5%AE%8C%E6%95%B4%E6%8D%95%E8%8E%B7%E8%A1%A8%E6%80%BB%E7%BB%93"><span class="toc-number">9.</span> <span class="toc-text">✅ 八、完整捕获表总结</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%9C%85-%E4%B9%9D%E3%80%81%E7%BB%93%E5%90%88%E4%BD%A0%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%BB%A3%E7%A0%81%E8%A7%A3%E9%87%8A%EF%BC%88%E9%9D%9E%E5%B8%B8%E9%87%8D%E8%A6%81%EF%BC%89"><span class="toc-number">10.</span> <span class="toc-text">✅ 九、结合你线程池代码解释（非常重要）</span></a></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E2%9C%85-%E5%8D%81%E3%80%81%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93"><span class="toc-number">11.</span> <span class="toc-text">✅ 十、一句话总结</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A9-%E4%B8%80%E3%80%81std-bind-%E7%9A%84%E5%8E%86%E5%8F%B2%E8%83%8C%E6%99%AF"><span class="toc-number">11.1.</span> <span class="toc-text">🧩 一、std::bind 的历史背景</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A0-%E4%BA%8C%E3%80%81lambda-%E5%87%BA%E7%8E%B0%E5%90%8E%E5%81%9A%E4%BA%86%E4%BB%80%E4%B9%88"><span class="toc-number">11.2.</span> <span class="toc-text">🧠 二、lambda 出现后做了什么</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A9-%E4%B8%89%E3%80%81%E4%B8%BA%E4%BB%80%E4%B9%88-lambda-%E8%83%BD%E6%9B%BF%E4%BB%A3-bind%EF%BC%9F"><span class="toc-number">11.3.</span> <span class="toc-text">🧩 三、为什么 lambda 能替代 bind？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A9-%E5%9B%9B%E3%80%81%E4%B8%80%E4%B8%AA%E5%AE%9E%E9%99%85%E5%AF%B9%E6%AF%94%E7%A4%BA%E4%BE%8B"><span class="toc-number">11.4.</span> <span class="toc-text">🧩 四、一个实际对比示例</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8F%B7-%E7%94%A8-bind-%E7%9A%84%E6%97%A7%E5%86%99%E6%B3%95%EF%BC%88C-03-%E6%97%A9%E6%9C%9F-C-11%EF%BC%89"><span class="toc-number">11.4.1.</span> <span class="toc-text">🏷 用 bind 的旧写法（C++03 &#x2F; 早期 C++11）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%8F%B7-%E7%8E%B0%E4%BB%A3-lambda-%E5%86%99%E6%B3%95"><span class="toc-number">11.4.2.</span> <span class="toc-text">🏷 现代 lambda 写法</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A9-%E4%BA%94%E3%80%81lambda-%E8%AF%AD%E6%B3%95%E5%B1%82%E9%9D%A2%E7%9A%84-bind-%E8%B6%85%E9%9B%86"><span class="toc-number">11.5.</span> <span class="toc-text">🧩 五、lambda &#x3D; 语法层面的 bind 超集</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A9-%E5%85%AD%E3%80%81%E5%9C%A8%E4%BD%A0%E7%9A%84%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%8A%E4%B8%8B%E6%96%87%E9%87%8C"><span class="toc-number">11.6.</span> <span class="toc-text">🧩 六、在你的线程池上下文里</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%A7%A9-%E4%B8%83%E3%80%81%E7%BB%93%E8%AE%BA%E6%80%BB%E7%BB%93"><span class="toc-number">11.7.</span> <span class="toc-text">🧩 七、结论总结</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E2%9C%85-%E4%B8%80%E5%8F%A5%E8%AF%9D%E6%80%BB%E7%BB%93%EF%BC%9A"><span class="toc-number">11.7.1.</span> <span class="toc-text">✅ 一句话总结：</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2025/11/09/lambda%E5%86%8D%E6%8E%A2/" title="lambda再探"><img src="/img/text-cover2.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="lambda再探"/></a><div class="content"><a class="title" href="/2025/11/09/lambda%E5%86%8D%E6%8E%A2/" title="lambda再探">lambda再探</a><time datetime="2025-11-09T03:43:06.000Z" title="Created 2025-11-09 11:43:06">2025-11-09</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/08/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0/" title="《C++-Concurrency-in-Action》第四章"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="《C++-Concurrency-in-Action》第四章"/></a><div class="content"><a class="title" href="/2025/11/08/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E5%9B%9B%E7%AB%A0/" title="《C++-Concurrency-in-Action》第四章">《C++-Concurrency-in-Action》第四章</a><time datetime="2025-11-08T14:04:05.000Z" title="Created 2025-11-08 22:04:05">2025-11-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/11/05/TSDB-TDengine/" title="TSDB-TDengine"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="TSDB-TDengine"/></a><div class="content"><a class="title" href="/2025/11/05/TSDB-TDengine/" title="TSDB-TDengine">TSDB-TDengine</a><time datetime="2025-11-05T08:39:16.000Z" title="Created 2025-11-05 16:39:16">2025-11-05</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/29/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E7%9A%84%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0/" title="线程池中的意外发现"><img src="/img/text-cover1.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="线程池中的意外发现"/></a><div class="content"><a class="title" href="/2025/10/29/%E7%BA%BF%E7%A8%8B%E6%B1%A0%E4%B8%AD%E7%9A%84%E6%84%8F%E5%A4%96%E5%8F%91%E7%8E%B0/" title="线程池中的意外发现">线程池中的意外发现</a><time datetime="2025-10-29T13:28:03.000Z" title="Created 2025-10-29 21:28:03">2025-10-29</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2025/10/29/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E4%B8%89%E7%AB%A0/" title="《C++ Concurrency in Action》第三章"><img src="/img/text-cover3.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="《C++ Concurrency in Action》第三章"/></a><div class="content"><a class="title" href="/2025/10/29/%E3%80%8AC++-Concurrency-in-Action%E3%80%8B%E7%AC%AC%E4%B8%89%E7%AB%A0/" title="《C++ Concurrency in Action》第三章">《C++ Concurrency in Action》第三章</a><time datetime="2025-10-29T13:27:33.000Z" title="Created 2025-10-29 21:27:33">2025-10-29</time></div></div></div></div></div></div></main><footer id="footer" style="background-image: url(/img/foot.jpg);"><div id="footer-wrap"><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div><div class="footer_custom_text">Hi, welcome to my <a href="https://cmzcc.github.io/">blog</a>!</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  let initFn = window.walineFn || null
+
+  const initWaline = (Fn) => {
+    const waline = Fn(Object.assign({
+      el: '#waline-wrap',
+      serverURL: 'https://cc-blog-blond.vercel.app/',
+      pageview: false,
+      dark: 'html[data-theme="dark"]',
+      path: window.location.pathname,
+      comment: false,
+    }, null))
+
+    const destroyWaline = () => {
+      waline.destroy()
+    }
+
+    btf.addGlobalFn('pjaxSendOnce', destroyWaline, 'destroyWaline')
+  }
+
+  const loadWaline = () => {
+    if (initFn) initWaline(initFn)
+    else {
+      btf.getCSS('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.css')
+        .then(() => import('https://cdn.jsdelivr.net/npm/@waline/client/dist/waline.min.js'))
+        .then(({ init }) => {
+          initFn = init || Waline.init
+          initWaline(initFn)
+          window.walineFn = initFn
+        })
+    }
+  }
+
+  if ('Waline' === 'Waline' || !false) {
+    if (false) btf.loadComment(document.getElementById('waline-wrap'),loadWaline)
+    else setTimeout(loadWaline, 0)
+  } else {
+    window.loadOtherComment = loadWaline
+  }
+})()</script></div><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/activate-power-mode.min.js"></script><script>POWERMODE.colorful = true;
+POWERMODE.shake = false;
+POWERMODE.mobile = false;
+document.body.addEventListener('input', POWERMODE);
+</script><script id="click-heart" src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/dist/click-heart.min.js" async="async" mobile="false"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script><div id="local-search"><div class="search-dialog"><nav class="search-nav"><span class="search-dialog-title">Search</span><span id="loading-status"></span><button class="search-close-button"><i class="fas fa-times"></i></button></nav><div class="is-center" id="loading-database"><i class="fas fa-spinner fa-pulse"></i><span>  Loading Database</span></div><div class="search-wrap"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="Search for Posts" type="text"/></div></div><hr/><div id="local-search-results"></div><div id="local-search-stats-wrap"></div></div></div><div id="search-mask"></div><script src="/js/search/local-search.js"></script></div></div></body></html>
